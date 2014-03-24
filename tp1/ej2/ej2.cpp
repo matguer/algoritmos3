@@ -1,21 +1,21 @@
 #include <list>
 #include <utility>
-#include <vector>
 #include <iostream>
 using namespace std;
 
 // Varios typedefs
+typedef int NroJoya;
 typedef pair<int, int> Joya;
 typedef list<Joya> LJoya;
 
 // Prototipado de funciones
 void mostrar(const LJoya& l);
-void mostrarResultado(list<pair<long double,Joya> > &l);
-list<pair<long double,Joya> > resolver(const LJoya& l);
-bool esOptimo(list<pair<long double,Joya> >& l);
-bool pairCompare(const std::pair<long double, Joya>& firstElem, const std::pair<long double, Joya>& secondElem);
-int perdida(const list<pair<long double,Joya> > &l);
-list<list<pair<long double,Joya> > > permute(list<pair<long double,Joya> > & L1);
+void mostrarResultado(list<pair<long double,pair<NroJoya,Joya> > > &l);
+list<pair<long double,pair<NroJoya,Joya> > > resolver(const LJoya& l);
+bool esOptimo(list<pair<long double,pair<NroJoya,Joya> > >& l);
+bool pairCompare(const std::pair<long double, pair<NroJoya,Joya > >& firstElem, const std::pair<long double,pair<NroJoya,Joya> >& secondElem);
+int perdida(const list<pair<long double,pair<NroJoya,Joya> > > &l);
+list<list<pair<long double,pair<NroJoya,Joya> > > > permute(list<pair<long double,pair<NroJoya,Joya> > > & L1);
 
 /**
  * La función main toma el listado de trabajos por std input:
@@ -40,7 +40,7 @@ int main()
 		}
 		
 		LJoya l = LJoya();
-		std::list<pair<long double,Joya> > r = list<pair<long double,Joya> >();
+		std::list<pair<long double,pair<NroJoya,Joya> > > r = list<pair<long double,pair<NroJoya,Joya> > >();
 		
 		for(int i=0;i<n;i++){
 			Joya j = Joya();
@@ -53,22 +53,12 @@ int main()
 		// Capturo el 0 final
 		cin >> separador;
 		
-		cout << "Lista obtenida:" << endl;
-		mostrar(l);
-		cout << endl;
-		
-		cout << "Resultado optimo:" << endl;
 		r = resolver(l);
 		mostrarResultado(r);
-		cout << endl;
-		
-		cout << "Es optimo?: " << endl;
-		if(esOptimo(r)){ cout << "TRUE"; }else{ cout << "FALSE"; } 
-		cout << endl;
+		cout << perdida(r) << endl;
 		
 		n = 0;
 		
-		cout << endl;
 	}
 
 	return 0;
@@ -80,9 +70,9 @@ int main()
  * donde porcentajePeso es el % del peso de la joya sobre el total de los pesos, 
  * y Joya los datos originales de input
  */
-std::list<pair<long double,Joya> > resolver(const LJoya& l){
+std::list<pair<long double,pair<NroJoya,Joya> > > resolver(const LJoya& l){
 	
-	list<pair<long double,Joya> > r = list<pair<long double,Joya> >();
+	list<pair<long double,pair<NroJoya,Joya> > > r = list<pair<long double,pair<NroJoya,Joya> > >();
 	long double sumatoria_pesos = 0.0;
 	long double peso;
 	
@@ -94,16 +84,18 @@ std::list<pair<long double,Joya> > resolver(const LJoya& l){
 	}
 	
 	// Ahora armo la lista final con los % de peso sobre el total de cada joya : O(n)
+	int i = 1;
 	for(LJoya::const_iterator iter = l.begin(); iter != l.end(); iter++){
-		pair<long double,Joya> pairResultado = pair<long double,Joya>();
+		pair<long double,pair<NroJoya,Joya> > pairResultado = pair<long double,pair<NroJoya,Joya> >();
 		
 		peso = iter->first / iter->second;
 		
 		pairResultado.first = peso / sumatoria_pesos;
-		pairResultado.second = *iter;
+		pairResultado.second.second = *iter;
+		pairResultado.second.first = i; // La posicion en la lista original
 			
 		r.push_back(pairResultado);
-	
+		i++;
 	}
 	
 	// Ordeno la lista de resultados segun el % de peso de mayor a menor: : O(n*log(n)) 
@@ -114,9 +106,9 @@ std::list<pair<long double,Joya> > resolver(const LJoya& l){
 }
 
 /**
- * Comparador para sort de list<pair<long double,Joya> >
+ * Comparador para sort de list<pair<long double,pair<NroJoya,Joya> > >
  */
-bool pairCompare(const std::pair<long double, Joya>& firstElem, const std::pair<long double, Joya>& secondElem) {
+bool pairCompare(const std::pair<long double,pair<NroJoya,Joya> > & firstElem, const std::pair<long double,pair<NroJoya,Joya> > & secondElem) {
   return firstElem.first > secondElem.first;
 }
 
@@ -134,26 +126,27 @@ void mostrar(const LJoya &l){
 /**
  * Muestra la lista del resultado
  */
-void mostrarResultado(list<pair<long double,Joya> > &l){
+void mostrarResultado(list<pair<long double,pair<NroJoya,Joya> > > &l){
 	
-	for(list<pair<long double,Joya> >::iterator iter = l.begin(); iter != l.end(); iter++){
-		cout << "(" << iter->first << ",(" << iter->second.first << "," << iter->second.second <<")) ";
+	for(list<pair<long double,pair<NroJoya,Joya> > >::iterator iter = l.begin(); iter != l.end(); iter++){
+		cout << iter->second.first << " ";
 	}
 	
 }
 
+
 /**
  * Comprueba si el valor devuelto por "resolver" es el optimo, comparando con todas las posibles permutaciones
  */
-bool esOptimo(list<pair<long double,Joya> > &l){
+bool esOptimo(list<pair<long double,pair<NroJoya,Joya> > > &l){
 	
 	int perdida_minima_permutaciones = 0;
 	int tmp = 0;
-	list<pair<long double,Joya> > l2 = l;
+	list<pair<long double,pair<NroJoya,Joya> > > l2 = l;
 	
-	list<list<pair<long double,Joya> > > permutaciones = permute(l2);
+	list<list<pair<long double,pair<NroJoya,Joya> > > > permutaciones = permute(l2);
 	
-	for(list<list<pair<long double,Joya> > >::iterator iter = permutaciones.begin(); iter != permutaciones.end(); iter++){
+	for(list<list<pair<long double,pair<NroJoya,Joya> > > >::iterator iter = permutaciones.begin(); iter != permutaciones.end(); iter++){
 		
 		tmp = perdida(*iter);
 		
@@ -172,14 +165,14 @@ bool esOptimo(list<pair<long double,Joya> > &l){
 /**
  * Calcula la perdida de dinero para una lista dada
  */
-int perdida(const list<pair<long double,Joya> > &l){
+int perdida(const list<pair<long double,pair<NroJoya,Joya> > > &l){
 	
 	int dias_transcurridos = 0;
 	int perdida_total = 0;
 	
-	for(list<pair<long double,Joya> >::const_iterator iter = l.begin(); iter != l.end(); iter++){
-		dias_transcurridos = dias_transcurridos + iter->second.second;
-		perdida_total = perdida_total + dias_transcurridos*iter->second.first;
+	for(list<pair<long double,pair<NroJoya,Joya> > >::const_iterator iter = l.begin(); iter != l.end(); iter++){
+		dias_transcurridos = dias_transcurridos + iter->second.second.second;
+		perdida_total = perdida_total + dias_transcurridos*iter->second.second.first;
 	}
 	
 	return perdida_total;
@@ -188,25 +181,25 @@ int perdida(const list<pair<long double,Joya> > &l){
 /**
  * Permuta la lista de un resultado
  */
-list<list<pair<long double,Joya> > > permute(list<pair<long double,Joya> > & L1){
+list<list<pair<long double,pair<NroJoya,Joya> > > > permute(list<pair<long double,pair<NroJoya,Joya> > > & L1){
     if (L1.size() == 1)
-        return std::list<list<pair<long double,Joya> > >(1,L1);
+        return std::list<list<pair<long double,pair<NroJoya,Joya> > > >(1,L1);
 
-    std::list<list<pair<long double,Joya> > > res;
-    for (list<pair<long double,Joya> >::iterator i = L1.begin(); i != L1.end();)
+    std::list<list<pair<long double,pair<NroJoya,Joya> > > > res;
+    for (list<pair<long double,pair<NroJoya,Joya> > >::iterator i = L1.begin(); i != L1.end();)
     {
         // remember this
-        pair<long double,Joya> x = (*i);
+        pair<long double,pair<NroJoya,Joya> > x = (*i);
 
         // make a list without the current element
-        list<pair<long double,Joya> > tmp(L1.begin(), i++);
+        list<pair<long double,pair<NroJoya,Joya> > > tmp(L1.begin(), i++);
         tmp.insert(tmp.end(), i, L1.end());
 
         // recurse to get all sub-permutations
-        std::list<list<pair<long double,Joya> > > sub = permute(tmp);
+        std::list<list<pair<long double,pair<NroJoya,Joya> > > > sub = permute(tmp);
 
         // amend sub-permutations by adding the element
-        for (std::list<list<pair<long double,Joya> > >::iterator j=sub.begin(); j!=sub.end();j++)
+        for (std::list<list<pair<long double,pair<NroJoya,Joya> > > >::iterator j=sub.begin(); j!=sub.end();j++)
             (*j).push_front(x);
 
         // finally append modified results to our running collection.
