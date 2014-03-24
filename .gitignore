@@ -1,0 +1,9 @@
+*.log
+*.aux
+*.toc
+tp1/informe.pdf
+*.gz
+*.out
+*.o
+*.a
+*.idx
