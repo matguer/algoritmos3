@@ -1,7 +1,7 @@
 *.log
 *.aux
 *.toc
-tp1/informe.pdf
+tp1/informe/informe.pdf
 *.gz
 *.out
 *.o
