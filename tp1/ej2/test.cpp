@@ -37,16 +37,20 @@ int main()
 		}
 		// Capturo el 0 final
 		cin >> separador;
-		
+
 		r = resolver(l);
-		mostrarResultado(r);
-		cout << perdida(r) << endl;
+		
+		if(esOptimo(r)){
+			cout << "TEST: OK";
+		}else{
+			cout << "TEST: FAILED";
+		}
+		cout << endl;
 		
 		n = 0;
 		
 	}
 
 	return 0;
+	
 }
-
-
