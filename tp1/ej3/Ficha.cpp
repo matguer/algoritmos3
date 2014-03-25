@@ -4,16 +4,26 @@
 using namespace std;
 
 Ficha::Ficha() {
+	_numero = 0;
+	_superior = NO_COLOR;
 	_izquierda = NO_COLOR;
 	_derecha = NO_COLOR;
-	_superior = NO_COLOR;
 	_inferior = NO_COLOR;
 }
 
-Ficha::Ficha(Color izquierda, Color superior, Color derecha, Color inferior) {
+Ficha::Ficha(const Ficha& otra) {
+	_numero = otra._numero;
+	_superior = otra._superior;
+	_izquierda = otra._izquierda;
+	_derecha = otra._derecha;
+	_inferior = otra._inferior;
+}
+
+Ficha::Ficha(int numero, Color superior, Color izquierda, Color derecha, Color inferior) {
+	_numero = numero;
+	_superior = superior;
 	_izquierda = izquierda;
 	_derecha = derecha;
-	_superior = superior;
 	_inferior = inferior;
 }
 
@@ -21,7 +31,12 @@ Ficha::~Ficha() {
 }
 
 void Ficha::print() {
-	cout << "Izq: " << _izquierda << " Sup: " << _superior << " Der: " << _derecha << " Inf: " << _inferior << endl;
+	cout << _numero;
+	// cout << "Sup: " << _superior << " Izq: " << _izquierda << " Der: " << _derecha << " Inf: " << _inferior << endl;
+}
+
+int Ficha::getNumero() {
+	return _numero;
 }
 
 Color Ficha::getIzquierda() {

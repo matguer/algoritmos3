@@ -7,6 +7,7 @@ typedef int Color;
 class Ficha {
 	
 	private:
+		int _numero;
 		Color _izquierda;
 		Color _derecha;
 		Color _superior;
@@ -14,9 +15,11 @@ class Ficha {
 
 	public:
 		Ficha();
-		Ficha(Color izquierda, Color superior, Color derecha, Color inferior);
+		Ficha(const Ficha& otra);
+		Ficha(int numero, Color superior, Color izquierda, Color derecha, Color inferior);
 		~Ficha();
 		void print();
+		int getNumero();
 		Color getIzquierda();
 		Color getDerecha();
 		Color getSuperior();

@@ -7,13 +7,13 @@
 using namespace std;
 
 typedef pair<int, int> Coord;
-typedef vector<Ficha> Vec;
+typedef vector<Ficha*> Vec;
 typedef vector<Vec> Matriz;
 
 class Tablero {
 	
 	private:
-		Matriz _tablero;
+		Matriz* _tablero;
 		int _ancho;
 		int _alto;
 		int _fichas_puestas;
@@ -21,9 +21,9 @@ class Tablero {
 	public:
 		Tablero(int alto, int ancho);
 		~Tablero();
-		void agregarFicha(Coord coord, Ficha ficha);
+		void agregarFicha(Coord coord, Ficha& ficha);
 		void quitarFicha(Coord coord);
-		void imprimir();
+		void print();
 };
 
 #endif
