@@ -9,6 +9,12 @@ int main()
 {
 	int n;
 	int separador;
+	LJoya l;
+	list<pair<PorcentajePeso,pair<NroJoya,Joya> > > r;
+	LJoya * l2;
+	Joya * j;
+	
+	// Lee el input y realiza los tests
 
 	while(true) {
 		
@@ -24,8 +30,8 @@ int main()
 			break;
 		}
 		
-		LJoya l = LJoya();
-		std::list<pair<PorcentajePeso,pair<NroJoya,Joya> > > r = list<pair<PorcentajePeso,pair<NroJoya,Joya> > >();
+		l = LJoya();
+		r = list<pair<PorcentajePeso,pair<NroJoya,Joya> > >();
 		
 		for(int i=0;i<n;i++){
 			Joya j = Joya();
@@ -50,6 +56,35 @@ int main()
 		n = 0;
 		
 	}
+	
+	// Tests aleatorios	
+	for(int i=0;i<100;i++){
+		
+		l2 = new LJoya();
+		n = rand() % 5 + 1;
+		cout << n << endl;
+		for(int k=0;k<n;k++){
+			j = new Joya();
+			j->first = rand() % 10 + 1;
+			j->second = rand() % 10 + 1;
+			
+			l2->push_back(*j);
+		}
+		
+		r = resolver(*l2);
+		
+		if(esOptimo(r)){
+			cout << "TEST: OK";
+		}else{
+			cout << "TEST: FAILED";
+		}
+		
+		delete l2;
+		
+		cout << endl;
+		
+	}
+	
 
 	return 0;
 	
