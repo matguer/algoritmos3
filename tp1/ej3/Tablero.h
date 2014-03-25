@@ -4,10 +4,16 @@
 #include "Ficha.h"
 #include <vector>
 
+using namespace std;
+
+typedef pair<int, int> Coord;
+typedef vector<Ficha> Vec;
+typedef vector<Vec> Matriz;
+
 class Tablero {
 	
 	private:
-		vector<vector<Ficha>> _tablero;
+		Matriz _tablero;
 		int _ancho;
 		int _alto;
 		int _fichas_puestas;
@@ -15,8 +21,8 @@ class Tablero {
 	public:
 		Tablero(int alto, int ancho);
 		~Tablero();
-		void agregarFicha(int x, int y, Ficha ficha);
-		void quitarFicha(int x, int y);
+		void agregarFicha(Coord coord, Ficha ficha);
+		void quitarFicha(Coord coord);
 		void imprimir();
 };
 
