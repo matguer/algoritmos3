@@ -1,4 +1,5 @@
 #include "ej2.h"
+#include <time.h>
 
 using namespace std;
 
@@ -15,7 +16,11 @@ int main()
 	Joya * j;
 	
 	// Lee el input y realiza los tests
-
+	/*
+	clock_t t;
+	t = clock();
+	*/
+	
 	while(true) {
 		
 		// Si termine de leer el archivo salgo
@@ -85,7 +90,11 @@ int main()
 		
 	}
 	
-
+	/*
+	t = clock() - t;
+	cout << t << endl;
+	*/
+	
 	return 0;
 	
 }

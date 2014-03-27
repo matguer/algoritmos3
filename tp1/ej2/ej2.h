@@ -9,7 +9,9 @@
 using namespace std;
 
 typedef int NroJoya;
-typedef pair<int, int> Joya;
+typedef int TiempoFabricacion;
+typedef int Devaluacion;
+typedef pair<Devaluacion, TiempoFabricacion> Joya;
 typedef list<Joya> LJoya;
 typedef long double PorcentajePeso;
 
