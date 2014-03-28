@@ -54,6 +54,28 @@ Con esa idea, el algoritmo pretende ordenar las joyas de manera tal que la joya 
 
 \subsection{Complejidad del algoritmo}
 
+Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando el pseudo c\'odigo como gu\'ia.\\
+
+\hangindent=\parindent
+\begin{tabbing}
+para c\=ada  joya en input						\/// O(n) \\
+	\>poner listaTrabajos.ultimo = joya	\\ \\
+
+poner acumPesos = 0				\/// O(1) \\
+para cada joya en listaTrabajos \/// O(n) \\
+	\>poner acumPesos = acumPesos + peso de la joya  \\
+	
+para cada joya en listaTrabajos \/// O(n) \\
+	\>poner listaPorcentajes.ultimo = porcentaje de peso de la joya con respecto al resto   \/// O(1) \\
+
+ordenar listaPorcentajes de mayor a menor   \///O(n*log(n)) \\
+\end{tabbing}
+\hangindent=\parindent
+
+Notar que n es la cantidad de trabajos/joyas a confeccionar y que se simplific\'o el algoritmo para que fuera m\'as simple ver la complejidad. Por ejemplo, en el \'ultimo ciclo se guarda m\'as de un dato en listaPorcentajes.\\
+
+Como se puede ver en el seguimiento, la complejidad del algoritmo elegido es O(n*log(n)) ya que es la complejidad predominante.\\
+
 \subsection{Codigo fuente}
 
 \subsection{Casos de prueba}
