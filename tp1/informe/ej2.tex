@@ -19,11 +19,11 @@ Por ejemplo, dadas las joyas $j_{0}$, $j_{1}$ y $j_{2}$ con tiempos de fabricaci
 
 Esta disposici\'on se calcula con la siguiente formula:
 
-$d_{1}*5 + d_{0}*8 + d_{2}*16 = 455$
+$d_{1}*5 + d_{0}*8 + d_{2}*16 = 470$
 
 Se puede comprobar calculando la misma formula para todas las permutaciones posibles del problema que esta es la \'optima: \\
 
-$d_{1}*5 + d_{0}*8 + d_{2}*16 = 455$ \\
+$d_{1}*5 + d_{0}*8 + d_{2}*16 = 470$ \\
 $d_{0}*3 + d_{1}*8 + d_{2}*16 = 510$ \\
 $d_{2}*8 + d_{0}*11 + d_{1}*16 = 710$ \\
 $d_{0}*3 + d_{2}*11 + d_{1}*16 = 675$ \\
@@ -34,7 +34,7 @@ $d_{2}*8 + d_{1}*13 + d_{0}*16 = 670$ \\
 
 Para resolver el problema se decidio elegir algun tipo de medida de $peso$ para poder clasificar las joyas, donde $peso$ refiere especificamente a la siguiente ecuaci\'on: \\
 
-$peso\_j_{i} = \frac{d_{i} / t_{i}}{\sum\limits_{i=0}^n d_{i} / t_{i}}$
+$peso\_j_{i} = \frac{d_{i} / t_{i}}{\sum\limits_{i=0}^{n-1} d_{i} / t_{i}}$
 
 Esta formula entrega un porcentaje de peso relativo de una joya al resto. Una vez medido el peso de todas las joyas, el algoritmo procede a ordenar la fabricaci\'on de las joyas por su peso de mayor a menor. \\
 
@@ -78,7 +78,56 @@ Notar que n es la cantidad de trabajos/joyas a confeccionar y que se simplific\'
 
 Como se puede ver en el seguimiento, la complejidad del algoritmo elegido es O(n*log(n)) ya que es la complejidad predominante.\\
 
+\newpage
+
 \subsection{Codigo fuente}
+
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+               
+typedef long double PorcentajePeso;
+
+struct Joya {
+	int identificador;
+	int tiempo_fabricacion;
+	int devaluacion_diaria;
+	PorcentajePeso porcentaje_peso;
+};
+
+void resolver(list<Joya>& l){
+	
+	PorcentajePeso sumatoria_pesos = 0.0;
+	
+	// Recorro las joyas para calcular el total de pesos : O(n)
+	for(list<Joya>::iterator joya = l.begin(); joya != l.end(); joya++){
+		// El "peso" de la joya se calcula como D / T
+		joya->porcentaje_peso = ((PorcentajePeso) joya->devaluacion_diaria) / ((PorcentajePeso) joya->tiempo_fabricacion);
+		sumatoria_pesos = sumatoria_pesos + joya->porcentaje_peso;
+	}
+	
+	// Ahora armo la lista final con los % de peso sobre el total de cada joya : O(n)
+	int i = 1;
+	for(list<Joya>::iterator joya = l.begin(); joya != l.end(); joya++){
+		
+		joya->porcentaje_peso = ((PorcentajePeso) joya->devaluacion_diaria) / ((PorcentajePeso) joya->tiempo_fabricacion);
+		joya->identificador = i; // La posicion en la lista original
+		
+		i++;
+	}
+	
+	// Ordeno la lista de resultados segun el % de peso de mayor a menor: : O(n*log(n)) 
+	// http://www.cplusplus.com/reference/list/list/sort/
+	l.sort(pairCompare);
+
+}
+\end{lstlisting}
 
 \subsection{Casos de prueba}
 

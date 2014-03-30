@@ -8,19 +8,21 @@
 
 using namespace std;
 
-typedef int NroJoya;
-typedef int TiempoFabricacion;
-typedef int Devaluacion;
-typedef pair<Devaluacion, TiempoFabricacion> Joya;
-typedef list<Joya> LJoya;
 typedef long double PorcentajePeso;
 
+struct Joya {
+	int identificador;
+	int tiempo_fabricacion;
+	int devaluacion_diaria;
+	PorcentajePeso porcentaje_peso;
+};
+
 // Prototipado de funciones
-void mostrarResultado(list<pair<PorcentajePeso,pair<NroJoya,Joya> > > &l);
-list<pair<PorcentajePeso,pair<NroJoya,Joya> > > resolver(const LJoya& l);
-bool pairCompare(const std::pair<PorcentajePeso, pair<NroJoya,Joya > >& firstElem, const std::pair<PorcentajePeso,pair<NroJoya,Joya> >& secondElem);
-int perdida(const list<pair<PorcentajePeso,pair<NroJoya,Joya> > > &l);
-bool esOptimo(list<pair<PorcentajePeso,pair<NroJoya,Joya> > >& l);
-list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > > permute(list<pair<PorcentajePeso,pair<NroJoya,Joya> > > & L1);
+void mostrarResultado(list<Joya> &l);
+void resolver(list<Joya>& l);
+bool pairCompare(const Joya& firstElem, const Joya& secondElem);
+int perdida(const list<Joya> &l);
+bool esOptimo(list<Joya>& l);
+list<list<Joya> > permute(list<Joya> & L1);
 
 #endif

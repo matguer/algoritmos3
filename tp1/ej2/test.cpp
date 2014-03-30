@@ -10,9 +10,9 @@ int main()
 {
 	int n;
 	int separador;
-	LJoya l;
-	list<pair<PorcentajePeso,pair<NroJoya,Joya> > > r;
-	LJoya * l2;
+	list<Joya> l;
+	list<Joya> r;
+	list<Joya> * l2;
 	Joya * j;
 	
 	// Lee el input y realiza los tests
@@ -35,13 +35,12 @@ int main()
 			break;
 		}
 		
-		l = LJoya();
-		r = list<pair<PorcentajePeso,pair<NroJoya,Joya> > >();
+		l = list<Joya>();
 		
 		for(int i=0;i<n;i++){
 			Joya j = Joya();
-			cin >> j.first;
-			cin >> j.second;
+			cin >> j.devaluacion_diaria;
+			cin >> j.tiempo_fabricacion;
 			
 			l.push_back(j);
 			
@@ -49,9 +48,9 @@ int main()
 		// Capturo el 0 final
 		cin >> separador;
 
-		r = resolver(l);
+		resolver(l);
 		
-		if(esOptimo(r)){
+		if(esOptimo(l)){
 			cout << "TEST: OK";
 		}else{
 			cout << "TEST: FAILED";
@@ -65,20 +64,20 @@ int main()
 	// Tests aleatorios	
 	for(int i=0;i<100;i++){
 		
-		l2 = new LJoya();
+		l2 = new list<Joya>();
 		n = rand() % 5 + 1;
-		cout << n << endl;
+
 		for(int k=0;k<n;k++){
 			j = new Joya();
-			j->first = rand() % 10 + 1;
-			j->second = rand() % 10 + 1;
+			j->devaluacion_diaria = rand() % 10 + 1;
+			j->tiempo_fabricacion = rand() % 10 + 1;
 			
 			l2->push_back(*j);
 		}
 		
-		r = resolver(*l2);
+		resolver(*l2);
 		
-		if(esOptimo(r)){
+		if(esOptimo(*l2)){
 			cout << "TEST: OK";
 		}else{
 			cout << "TEST: FAILED";

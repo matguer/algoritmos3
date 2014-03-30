@@ -24,23 +24,23 @@ int main()
 			break;
 		}
 		
-		LJoya l = LJoya();
-		std::list<pair<PorcentajePeso,pair<NroJoya,Joya> > > r = list<pair<PorcentajePeso,pair<NroJoya,Joya> > >();
+		list<Joya> l = list<Joya>();
 		
 		for(int i=0;i<n;i++){
-			Joya j = Joya();
-			cin >> j.first;
-			cin >> j.second;
 			
+			Joya j = Joya();
+			cin >> j.devaluacion_diaria;
+			cin >> j.tiempo_fabricacion;
+
 			l.push_back(j);
 			
 		}
 		// Capturo el 0 final
 		cin >> separador;
 		
-		r = resolver(l);
-		mostrarResultado(r);
-		cout << perdida(r) << endl;
+		resolver(l);
+		mostrarResultado(l);
+		cout << perdida(l) << endl;
 		
 		n = 0;
 		
