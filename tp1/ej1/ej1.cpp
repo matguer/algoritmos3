@@ -31,14 +31,14 @@ int main()
 		cin >> totalCamiones;
 		cout << "total camiones: " << totalCamiones << endl;
 		
-		LCamiones c = LCamiones();
+		LCamiones* c = new LCamiones();
 		intervalo res = intervalo();
 
 		// Armo la lista de camiones
 		for(int i=0;i<totalCamiones;i++){
 			cin >> camionI;
 			cout << camionI << endl;
-			c.push_back(camionI);
+			c->push_back(camionI);
 		}
 
 		//return 0;
@@ -46,10 +46,12 @@ int main()
 		// Capturo el 0 final
 		cin >> separador;
 		
-		res = resolver(c, periodo, totalCamiones);
+		res = resolver(*c, periodo);
 		mostrarResultado(res);
 		
 		periodo = 0;
+
+		delete(c);
 		
 	}
 
