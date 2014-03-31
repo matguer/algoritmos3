@@ -9,16 +9,7 @@ using namespace std;
  */
 void resolver(list<Joya>& l){
 	
-	PorcentajePeso sumatoria_pesos = 0.0;
-	
-	// Recorro las joyas para calcular el total de pesos : O(n)
-	for(list<Joya>::iterator joya = l.begin(); joya != l.end(); joya++){
-		// El "peso" de la joya se calcula como D / T
-		joya->porcentaje_peso = ((PorcentajePeso) joya->devaluacion_diaria) / ((PorcentajePeso) joya->tiempo_fabricacion);
-		sumatoria_pesos = sumatoria_pesos + joya->porcentaje_peso;
-	}
-	
-	// Ahora armo la lista final con los % de peso sobre el total de cada joya : O(n)
+	// Calculo la relacion entre la devaluacion diaria y el tiempo de cada joya : O(n)
 	int i = 1;
 	for(list<Joya>::iterator joya = l.begin(); joya != l.end(); joya++){
 		

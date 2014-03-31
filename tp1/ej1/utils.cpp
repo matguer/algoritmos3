@@ -2,8 +2,8 @@
 
 using namespace std;
 
-/**
-
+/* 
+ *
  */
 intervalo resolver(LCamiones& c, int periodo){
 	
