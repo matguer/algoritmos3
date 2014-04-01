@@ -121,3 +121,18 @@ Se incluye entre los adjuntos el archivo TP:/ej2/casos\_borde.txt donde se detal
 Se puede observar ejecutando el programa TP:/ej2/ej2 enviando como input el archivo mencionado que estos casos son resueltos correctamente.
 
 \subsection{Performance}
+
+Fueron generados casos de test aleateorios con el ejecutable TP:/ej2/test, que toma como parametro una semilla para el generador de n\'umeros pseudo aleatorios y luego el programa genera una determinada cantidad de listados de trabajos con un numero de joyas y valores al azar.\\
+
+Para los casos "Datos aleatorios" fueron generadas 50 ejecuciones en cada una, ingresando como par\'ametro los n\'umeros de semilla 2 y 3. Estas ejecuciones tienen un numero de joyas al azar entre 1 y 1.000.000
+
+Consideramos que no era apropiado evaluar casos bordes ya que, seg\'un se vi\'o en la secci\'on de Complejidad del algoritmo, recorremos la lista, realizamos operaciones y luego la ordenamos. Este algoritmo de sorting esta acotado por O(n*log(n)) a\'un considerando peores casos.
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[scale=0.4]{./img/ej2_chart2.png}
+\caption{Tiempo transcurrido por encargos de joyas}
+\end{figure}
+\end{center}
+
+Como se puede observar el algoritmo corre en tiempos de ejecuci\'on bastante inferiores a la cota m\'axima propuesta por la c\'atedra de $O(n^2)$, a partir de un $n_{0}$
