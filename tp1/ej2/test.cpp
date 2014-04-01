@@ -6,93 +6,54 @@ using namespace std;
 /**
  * La función main toma el listado de trabajos por std input:
  */
-int main()
+int main(int argc, char *argv[])
 {
 	int n;
-	int separador;
-	list<Joya> l;
-	list<Joya> r;
-	list<Joya> * l2;
+	int seed = (int) *argv[1]; // Semilla para los rand()
+	list<Joya> * l;
 	Joya * j;
 	
-	// Lee el input y realiza los tests
-	/*
-	clock_t t;
-	t = clock();
-	*/
-	
-	while(true) {
+	if(seed>0){
+				
+		srand(seed);
 		
-		// Si termine de leer el archivo salgo
-		if(cin.eof()){
-			break;
-		}
-
-		// Primera linea es la cantidad de joyas
-		cin >> n;
-
-		if(n==0){
-			break;
-		}
-		
-		l = list<Joya>();
-		
-		for(int i=0;i<n;i++){
-			Joya j = Joya();
-			cin >> j.devaluacion_diaria;
-			cin >> j.tiempo_fabricacion;
+		// Tests aleatorios	
+		for(int i=0;i<50;i++){
 			
-			l.push_back(j);
+			l = new list<Joya>();
+			n = rand() % 1000000 + 1;
+
+			for(int k=0;k<n;k++){
+				j = new Joya();
+				j->devaluacion_diaria = rand() % 100 + 1;
+				j->tiempo_fabricacion = rand() % 100 + 1;
+				
+				l->push_back(*j);
+			}
+			clock_t t = clock();
+			resolver(*l);
+			t = clock() - t;
+			
+			cout << n << "\t" << t << endl;
+			
+			/*
+			if(esOptimo(*l2)){
+				cout << "TEST: OK";
+			}else{
+				cout << "TEST: FAILED";
+			}
+			*/
+			
+			delete l;
 			
 		}
-		// Capturo el 0 final
-		cin >> separador;
-
-		resolver(l);
 		
-		if(esOptimo(l)){
-			cout << "TEST: OK";
-		}else{
-			cout << "TEST: FAILED";
-		}
-		cout << endl;
-		
-		n = 0;
+		/*
+		t = clock() - t;
+		cout << t << endl;
+		*/
 		
 	}
-	
-	// Tests aleatorios	
-	for(int i=0;i<100;i++){
-		
-		l2 = new list<Joya>();
-		n = rand() % 5 + 1;
-
-		for(int k=0;k<n;k++){
-			j = new Joya();
-			j->devaluacion_diaria = rand() % 10 + 1;
-			j->tiempo_fabricacion = rand() % 10 + 1;
-			
-			l2->push_back(*j);
-		}
-		
-		resolver(*l2);
-		
-		if(esOptimo(*l2)){
-			cout << "TEST: OK";
-		}else{
-			cout << "TEST: FAILED";
-		}
-		
-		delete l2;
-		
-		cout << endl;
-		
-	}
-	
-	/*
-	t = clock() - t;
-	cout << t << endl;
-	*/
 	
 	return 0;
 	
