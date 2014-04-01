@@ -1,17 +1,135 @@
 \subsection{Descripci\'on del problema}
 
 En este ejercicio se plantea la necesidad de inspeccionar los camiones de una determinada empresa; para lo cual se puede contratar a un inspector durante un intervalo de d\'ias D. \\ 
-Dados el intervalo y la cantidad de camiones c de dicha empresa, junto con la lista de d\'ias en que va a pasar cada cami\'on por el lugar donde estar\'a el inspector, la idea es elegir el d\'ia inicial de contrataci\'on tal que maximice la cantidad de camiones inspeccionados. \\
+Dados el intervalo y la cantidad de camiones c de dicha empresa, junto con la lista de d\'ias en que va a pasar cada cami\'on por el lugar donde estar\'a el inspector, la idea es elegir el d\'ia inicial de contrataci\'on tal que se maximice la cantidad de camiones inspeccionados. En caso de haber varios d\'ias iniciales que permitan controlar la misma cantidad de camiones (siempre y cuando esta cantidad sea m\'axima), cualquiera de estas opciones ser\'a correcta. \\
+
+Por ejemplo, suponiendo que podemos contratar al inspector por 5 d\'ias consecutivos y dada una lista de d\'ias en que pasan los camiones L=[1,2,6,7,8,10,11] se puede ver en el siguiente diagrama que tanto el d\'ia 6 como el 7 son posibles respuestas.\\
+
+TODO: grafico que muestre una linea con los dias y las dos opciones posibles
 
 \subsection{Resoluci\'on}
 
+Para resolver el problema partimos de la idea de recorrer cada elemento de la lista de d\'ias en que pasan camiones, es decir cada posible d\'ia inicial, y a partir de ah\'i sumar uno por cada d\'ia que entrara en el rango de contrataci\'on.\\
+Sin embargo, como ese algoritmo no cumpl\'ia la complejidad pedida (estrictamente menor que O($n^2$)) decidimos mejorarlo reemplazando la segunda iteraci\'on sobre la lista por una b\'usqueda binaria.\\
+De esta forma llegamos a un algoritmo que hace lo siguiente:
+\begin{itemize}
+\item poner maximo = 0
+\item poner i = 0
+\item mientras i<long(listaDias)
+\begin{itemize}
+	\item poner ultimoDia = listaDias[i] + rangoContratacion - 1
+	\item poner primeroFueraRango = bbinaria(ultimoDia, listaDias)
+	\item poner inspeccionados = primeroFueraRango - i
+	\item si inspeccionados > maximo poner maximo = inspeccionados
+	\item poner i = i + 1
+\end{itemize}
+\item devolver maximo
+\end{itemize}
 
+Donde $bbinaria$ es una b\'usqueda binaria implementada por nosotros que hace lo mismo que el algoritmo de b\'usqueda binaria normal pero en lugar de devolver si el elemento buscado est\'a devuelve el \'indice del primer elemento mayor al buscado. Esto nos sirve para luego restar \'indices y saber c\'uantos camiones cayeron en el rango.\\
+
+Como tipo de datos elegimos:
+\begin{itemize}
+\item Arreglo: para la lista de d\'ias. Este tipo de datos nos permiteordenarlo en O(n*log(n)), hacer b\'usqueda binaria en O(log(n)) y nos da la ventaja extra de los \'indices, que nos permiten saber c\'uantos elementos hay dentro de un rango con una simple resta de $fin$ menos $inicio$.
+\end{itemize}
 
 \subsection{Demostraci\'on de la resoluci\'on}
 
 \subsection{Complejidad del algoritmo}
 
+Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando un pseudoc\'odigo simplificado como gu\'ia.
+
+\begin{itemize}
+\item ordenar listaDias, $O(n*log(n))$
+\item para cada dia en listaDias, $O(n)$
+\begin{itemize}
+	\item poner ultimoDia = dia + rangoContratacion - 1
+	\item poner primeroFueraRango = buscar(ultimoDia, listaDias), $O(log(n))$
+	\item poner inspeccionados = primeroFueraRango - i
+	\item si inspeccionados es mayor que maximo poner maximo = inspeccionados
+\end{itemize}
+\end{itemize}
+
+Como la b\'usqueda binaria fue implementada por nosotros ya que necesit\'abamos que cumpliera ciertas particularidades, analizaremos la complejidad de ese algoritmo tambi\'en.\\
+Al tratarse de un algoritmo de divide \& conquer que a cada iteraci\'on va recortando el rango del arreglo recibe como par\'ametros, adem\'as del arreglo y el elemento a buscar, los \'indices inicial y final sobre los cuales trabajar y un registro temporal del candidato a respuesta.
+
 \subsection{Codigo fuente}
+
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+
+typedef std::vector<int> LCamiones;
+typedef pair<int, int> intervalo;
+
+intervalo resolver(LCamiones& c, int periodo){
+	
+	int inicio;
+	int maxInspec = 0;
+	intervalo resultado = intervalo();
+
+	// Ordeno la lista de camiones en O(n*log(n))
+	// http://www.cplusplus.com/reference/list/list/sort/
+	sort(c.begin(), c.end());
+
+	int ultimoCamion;
+	int inspecTemp = 0;
+	int cantCamiones = int(c.size());
+	int finContrato;
+	int ultimoVisto = 0;
+
+	// Recorro los dias en que pasan camiones
+	for(int i=0;i<cantCamiones;i++){
+		
+		// me fijo si el ultimo que verifique no es igual al actual en caso de que hayan repetidos
+		if(ultimoVisto != c.at(i)){
+			// Primer dia fuera del rango
+			finContrato = c.at(i) + periodo - 1;
+			ultimoCamion = primeroMayor(c, finContrato, 0, cantCamiones-1, cantCamiones-1);
+			inspecTemp = ultimoCamion - i;
+
+			// Si encontre un inicio mejor(o igual) reemplazo el anterior
+			if(inspecTemp >= maxInspec){
+				maxInspec = inspecTemp;
+				inicio = i;
+			}
+			inspecTemp = 0;
+		}
+		ultimoVisto = c.at(i);
+
+	}
+
+	resultado.first = c.at(inicio);
+	resultado.second = maxInspec;
+	
+	return resultado;
+}
+
+int primeroMayor(LCamiones& c, int elem, int p, int f, int ultimoEncontrado){
+	
+	if((f-p) <= 1){
+		if(c.at(p) > elem){
+			return f;
+		}else{
+			return ultimoEncontrado;
+		}
+	}else{
+		int medio = p + (f-p)/2;
+		if(c.at(medio) <= elem){
+			return primeroMayor(c, elem, medio, f, ultimoEncontrado);
+		}else{
+			return primeroMayor(c, elem, p, medio, medio);
+		}
+	}
+}
+
+\end{lstlisting}
 
 \subsection{Casos de prueba}
 

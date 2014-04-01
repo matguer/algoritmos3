@@ -19,21 +19,27 @@ intervalo resolver(LCamiones& c, int periodo){
 	int inspecTemp = 0;
 	int cantCamiones = int(c.size());
 	int finContrato;
+	int ultimoVisto = 0;
 
 	// Recorro los dias en que pasan camiones
 	for(int i=0;i<cantCamiones;i++){
 		
-		// Primer dia fuera del rango
-		finContrato = c.at(i) + periodo - 1;
-		ultimoCamion = primeroMayor(c, finContrato, 0, cantCamiones-1, cantCamiones-1);
-		inspecTemp = ultimoCamion - i;
+		// me fijo si el ultimo que verifique no es igual al actual en caso de que hayan repetidos
+		if(ultimoVisto != c.at(i)){
+			// Primer dia fuera del rango
+			finContrato = c.at(i) + periodo - 1;
+			ultimoCamion = primeroMayor(c, finContrato, 0, cantCamiones-1, cantCamiones-1);
+			inspecTemp = ultimoCamion - i;
 
-		// Si encontre un inicio mejor(o igual) reemplazo el anterior
-		if(inspecTemp >= maxInspec){
-			maxInspec = inspecTemp;
-			inicio = i;
+			// Si encontre un inicio mejor(o igual) reemplazo el anterior
+			if(inspecTemp >= maxInspec){
+				maxInspec = inspecTemp;
+				inicio = i;
+			}
+			inspecTemp = 0;
 		}
-		inspecTemp = 0;
+		ultimoVisto = c.at(i);
+
 	}
 
 	resultado.first = c.at(inicio);
