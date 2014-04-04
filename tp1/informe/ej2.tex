@@ -8,7 +8,11 @@ $\sum\limits_{i=0}^n d_{i}*dia\_finalizacion\_joya_{i}$
 
 Donde $n$ es la cantidad de joyas menos uno, y $dia\_finalizacion\_joya_{i}$ es el dia global en el que se termina de fabricar la joya.\\
 
-Por ejemplo, dadas las joyas $j_{0}$, $j_{1}$ y $j_{2}$ con tiempos de fabricaci\'on 3, 5 y 8, y valor de devaluaci\'on 10, 30 y 15 respectivamente, la soluci\'on \'optima ser\'ia el siguiente orden de fabricaci\'on:
+El caso trivial ser\'ia una lista de joyas con todos los valores de devaluaci\'on diaria y tiempo de fabricaci\'on iguales, cualquier permutaci\'on de estas joyas sirve como soluci\'on optima. \\ 
+
+Observemos algunos ejemplos mas interesantes: \\
+
+Ejemplo 1) Dadas las joyas $j_{0}$, $j_{1}$ y $j_{2}$ con tiempos de fabricaci\'on 3, 5 y 8, y valor de devaluaci\'on 10, 30 y 15 respectivamente, la soluci\'on \'optima ser\'ia el siguiente orden de fabricaci\'on:
 
 \begin{center}
 \begin{figure}[h]
@@ -19,9 +23,9 @@ Por ejemplo, dadas las joyas $j_{0}$, $j_{1}$ y $j_{2}$ con tiempos de fabricaci
 
 Esta disposici\'on se calcula con la siguiente formula:
 
-$d_{0}*8 + d_{1}*5 + d_{2}*16 = 470$
+$d_{0}*8 + d_{1}*5 + d_{2}*16 = 470$ \\
 
-Se puede comprobar calculando la misma formula para todas las permutaciones posibles del problema que esta es la \'optima: \\
+Se puede comprobar calculando la misma formula para todas las permutaciones posibles del problema que \'esta es la \'optima: \\
 
 $d_{0}*8 + d_{1}*5 + d_{2}*16 = 470$ \\
 $d_{0}*16 + d_{1}*5 + d_{2}*13 +  = 505$ \\
@@ -30,6 +34,16 @@ $d_{0}*16 + d_{1}*13 + d_{2}*8 = 670$ \\
 $d_{0}*3 + d_{1}*16 + d_{2}*11 = 675$ \\
 $d_{0}*11 + d_{1}*16 + d_{2}*8 = 710$ \\
 
+Ejemplo 2) Tambien puede suceder que haya mas de una soluci\'on \'optima, osea, varias permutaciones dan el valor de perdida menor. Supongamos un listado de joyas con tiempos de fabricaci\'on 5, 2 y 10 y devaluaci\'on diaria 10 40 y 20. \\
+
+Realicemos el mismo calculo que para el ejemplo anterior y comprobemos que tiene 2 soluciones \'optimas:
+
+$d_{0}*7 + d_{1}*2 + d_{2}*17 = 490$ \\
+$d_{0}*17 + d_{1}*2 + d_{2}*12 +  = 490$ \\
+$d_{0}*5 + d_{1}*7 + d_{2}*17 = 670$ \\
+$d_{0}*5 + d_{1}*17 + d_{2}*15 = 1030$ \\
+$d_{0}*15 + d_{1}*17 + d_{2}*10 = 1030$ \\
+$d_{0}*17 + d_{1}*12 + d_{2}*10 = 850$ \\
 
 \subsection{Resoluci\'on}
 
@@ -37,7 +51,7 @@ Para resolver el problema se decidio elegir algun tipo de medida de $peso$ para 
 
 $peso\_j_{i} = \frac{d_{i}}{t_{i}}$
 
-Esta formula entrega el costo de fabricaci\'on por dia de cada joya. Luego el algoritmo procede a ordenar la fabricaci\'on de las joyas por costo por dia de mayor a menor. \\
+Esta f\'ormula entrega una relacion entre ambas variables, luego el algoritmo procede a ordenar la fabricaci\'on de las joyas por estas relaciones de mayor a menor. \\
 
 Una descripci\'on del algoritmo en pseudo codigo:
 
@@ -57,7 +71,7 @@ Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando 
 \begin{itemize}
 \item para cada  joya en input, $O(n)$
 \begin{itemize}
-\item poner joya.porcentaje\_peso = joya.devaluacion / joya.tiempo\_fabricacion
+\item poner joya.porcentaje\_peso = joya.devaluacion / joya.tiempo\_fabricacion, $O(1)$
 \end{itemize}
 
 \item ordenar joyas de mayor a menor por joya.porcentaje\_peso , $O(n*log(n))$
@@ -68,6 +82,7 @@ Notar que n es la cantidad de trabajos/joyas a confeccionar y que se simplific\'
 
 Como se puede ver en el seguimiento, la complejidad del algoritmo elegido es O(n*log(n)) ya que es la complejidad predominante.\\
 
+\newpage
 \subsection{Codigo fuente}
 
 \lstset{language=C++,
@@ -106,6 +121,13 @@ void resolver(list<Joya>& l){
 	l.sort(pairCompare);
 
 }
+
+/**
+ * Comparador para sort de list<Joya>
+ */
+bool pairCompare(const Joya & firstElem, const Joya & secondElem) {
+  return firstElem.porcentaje_peso > secondElem.porcentaje_peso;
+}
 \end{lstlisting}
 
 \subsection{Casos de prueba}
@@ -129,7 +151,7 @@ Para los casos "Datos aleatorios" fueron generadas 50 ejecuciones en cada una, i
 Consideramos que no era apropiado evaluar casos bordes ya que, seg\'un se vi\'o en la secci\'on de Complejidad del algoritmo, recorremos la lista, realizamos operaciones y luego la ordenamos. Este algoritmo de sorting esta acotado por O(n*log(n)) a\'un considerando peores casos.
 
 \begin{center}
-\begin{figure}[h]
+\begin{figure}[h!]
 \includegraphics[scale=0.4]{./img/ej2_chart2.png}
 \caption{Tiempo transcurrido por encargos de joyas}
 \end{figure}
