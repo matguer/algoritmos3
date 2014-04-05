@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include "vector"
+#include "iterator"
 
 using namespace std;
 
@@ -16,6 +17,5 @@ typedef pair<int, int> intervalo;
 // Prototipado de funciones
 void mostrarResultado(intervalo);
 intervalo resolver(LCamiones& c, int periodo);
-int primeroMayor(LCamiones& c, int elem, int p, int f, int ultimoEncontrado);
 
 #endif

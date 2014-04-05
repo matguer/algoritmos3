@@ -10,16 +10,19 @@ intervalo resolver(LCamiones& c, int periodo){
 	int inicio = 1;
 	int maxInspec = 0;
 	intervalo resultado = intervalo();
+	//vector<int>::iterator itCamiones;
+
 
 	// Ordeno la lista de camiones en O(n*log(n))
 	// http://www.cplusplus.com/reference/list/list/sort/
 	sort(c.begin(), c.end());
 
-	int ultimoCamion;
+	vector<int>::iterator ultimoCamion;
 	int inspecTemp = 0;
 	int cantCamiones = int(c.size());
 	int finContrato;
 	int ultimoVisto = 0;
+	int index;
 
 	// Recorro los dias en que pasan camiones
 	for(int i=0;i<cantCamiones;i++){
@@ -28,8 +31,16 @@ intervalo resolver(LCamiones& c, int periodo){
 		if(ultimoVisto != c.at(i)){
 			// Primer dia fuera del rango
 			finContrato = c.at(i) + periodo - 1;
-			ultimoCamion = primeroMayor(c, finContrato, 0, cantCamiones-1, cantCamiones-1);
-			inspecTemp = ultimoCamion - i;
+			cout << "fin contrato: " << finContrato << endl;
+			
+			// Obtengo el primer camion fuera del rango O(log2(N)+1) donde N es la distancia entre inicio y final
+			// http://www.cplusplus.com/reference/algorithm/upper_bound/
+			ultimoCamion = upper_bound(c.begin(), c.end(), finContrato);
+			cout << "primero fuera de rango: " << *ultimoCamion << endl;
+			
+			index = ultimoCamion - c.begin();
+			inspecTemp = index - i;
+			cout << "camiones: " << inspecTemp << endl;
 
 			// Si encontre un inicio mejor(o igual) reemplazo el anterior
 			if(inspecTemp >= maxInspec){
@@ -47,28 +58,6 @@ intervalo resolver(LCamiones& c, int periodo){
 	
 	return resultado;
 }
-
-/* Devuelve el indice del primer elemento mayor a elem
- *
-*/
-int primeroMayor(LCamiones& c, int elem, int p, int f, int ultimoEncontrado){
-	
-	if((f-p) <= 1){
-		if(c.at(p) > elem){
-			return f;
-		}else{
-			return ultimoEncontrado;
-		}
-	}else{
-		int medio = p + (f-p)/2;
-		if(c.at(medio) <= elem){
-			return primeroMayor(c, elem, medio, f, ultimoEncontrado);
-		}else{
-			return primeroMayor(c, elem, p, medio, medio);
-		}
-	}
-}
-
 /**
  * Muestra la lista del resultado
  */

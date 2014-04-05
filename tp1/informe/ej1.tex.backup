@@ -40,17 +40,12 @@ Como tipo de datos elegimos:
 
 \subsection{Demostraci\'on de la resoluci\'on}
 
-Para ver que el algoritmo propuesto resuelve el problema de obtener el m\'aximo de camiones inspeccionados vamos a abstraernos del problema concreto y decir que, dada una lista de n\'umeros y un offset buscamos, en esa lista, cu\'al ser\'ia el n\'umero inicial $i$ tal que haya m\'as elementos que est\'en dentro del rango $[i, i+offset]$ pedido.\\
-Llamemos n a la cantidad de elementos de la lista y o al offset. \\
+Para ver que el algoritmo propuesto resuelve el problema de obtener el m\'aximo de camiones inspeccionados vamos a abstraernos del problema concreto y decir que, dada una lista de n\'umeros y un rango buscamos, en esa lista, cu\'al ser\'ia el n\'umero inicial tal que haya m\'as elementos que est\'en dentro del rango pedido.\\
+Llamemos n a la cantidad de elementos de la lista y m al rango.\\
+Antes de empezar ordenamos la lista, ya que puede venir desordenada, as\'i que a partir de ahora vamos a asumir que la lista de n\'umeros est\'a ordenada de manera creciente. \\ \\
 
-Antes de empezar ordenamos la lista, ya que podr\'ia venir desordenada; as\'i que a partir de ahora vamos a asumir que la lista de n\'umeros est\'a ordenada de manera creciente. \\ \\
-
-Para comenzar notemos que estamos considerando s\'olo los intervalos que comienzan con cada elemento de la lista; es decir que si nuestra lista es [1, 3, 5, 6] y nuestro rango es 2, s\'olo vamos a mirar los intervalos [1,2], [3,4], [5,6] y [6, 7].
-Demostremos entonces que con los intervalos que estamos considerando alcanza ya que entre ellos se encuentra el que tiene la sublista m\'as larga:
-\begin{itemize}
- \item Supongamos que, dada una lista l, de n elementos y un offset o 
-\end{itemize}
-
+Demostramos primero que con los intervalos que estamos considerando alcanza, y que entre ellos se encuentra el que tiene la sublista m\'as larga. 
+Veamos primero que con mirar s\'olo las sublistas  que tengan al menos un n\'umero de la lista dentro del rango.
 
 
 \subsection{Complejidad del algoritmo}
