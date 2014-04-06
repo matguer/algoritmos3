@@ -1,72 +1,75 @@
 #include "Ficha.h"
+#include "assert.h"
 #include <iostream>
 
 using namespace std;
 
 Ficha::Ficha() {
 	_numero = 0;
-	_superior = NO_COLOR;
-	_izquierda = NO_COLOR;
-	_derecha = NO_COLOR;
-	_inferior = NO_COLOR;
+	_colores[SUPERIOR] = NO_COLOR;
+	_colores[IZQUIERDA] = NO_COLOR;
+	_colores[DERECHA] = NO_COLOR;
+	_colores[INFERIOR] = NO_COLOR;
 }
 
 Ficha::Ficha(const Ficha& otra) {
 	_numero = otra._numero;
-	_superior = otra._superior;
-	_izquierda = otra._izquierda;
-	_derecha = otra._derecha;
-	_inferior = otra._inferior;
+	_colores[SUPERIOR] = otra._colores[SUPERIOR];
+	_colores[IZQUIERDA] = otra._colores[IZQUIERDA];
+	_colores[DERECHA] = otra._colores[DERECHA];
+	_colores[INFERIOR] = otra._colores[INFERIOR];
 }
 
 Ficha::Ficha(int numero, Color superior, Color izquierda, Color derecha, Color inferior) {
 	_numero = numero;
-	_superior = superior;
-	_izquierda = izquierda;
-	_derecha = derecha;
-	_inferior = inferior;
+	_colores[SUPERIOR] = superior;
+	_colores[IZQUIERDA] = izquierda;
+	_colores[DERECHA] = derecha;
+	_colores[INFERIOR] = inferior;
+
+	/* validacion:
+		Se corrobora que todos sean de un color o ninguno.
+	*/
+	int cant_no_color = 0;
+	for(int i=0; i<4; i++) {
+		if(_colores[i] == NO_COLOR) cant_no_color++;
+	}
+	assert((cant_no_color == 0) || (cant_no_color == 4));
+	/* ! validacion */
+
+}
+
+Ficha Ficha::operator=(const Ficha& otra) {
+	Ficha nueva;
+	nueva._numero = otra._numero;
+	nueva._colores[SUPERIOR] = otra._colores[SUPERIOR];
+	nueva._colores[IZQUIERDA] = otra._colores[IZQUIERDA];
+	nueva._colores[DERECHA] = otra._colores[DERECHA];
+	nueva._colores[INFERIOR] = otra._colores[INFERIOR];
+	return nueva; 
 }
 
 Ficha::~Ficha() {
 }
 
+/* La funcion print debe imprimir el numero de ficha */
 void Ficha::print() {
 	cout << _numero;
-	// cout << "Sup: " << _superior << " Izq: " << _izquierda << " Der: " << _derecha << " Inf: " << _inferior << endl;
 }
 
+/* La funcion getLado debe recibir uno de los cuatros lados de la ficha
+   y retornar el color del lado correspondiente
+*/
+Color Ficha::getLado(Lado lado) {
+	return _colores[lado];
+}
+
+/* La funcion getNumero debe retornar el numero de la ficha */
 int Ficha::getNumero() {
 	return _numero;
 }
 
-Color Ficha::getIzquierda() {
-	return _izquierda;
-}
-
-Color Ficha::getDerecha() {
-	return _derecha;
-}
-
-Color Ficha::getSuperior() {
-	return _superior;
-}
-
-Color Ficha::getInferior() {
-	return _inferior;
-}
-
-void Ficha::setIzquierda(Color color) {
-	_izquierda = color;
-}
-
-void Ficha::setDerecha(Color color) {
-	_derecha = color;
-}
-
-void Ficha::setSuperior(Color color) {
-	_superior = color;
-}
-
-void Ficha::setInferior(Color color) {
-	_inferior = color;
+/* La funcion isVacia debe retornar un booleano indicando si la ficha es vacia o no */
+bool Ficha::isVacia() {
+	return _colores[SUPERIOR] == NO_COLOR;
 }
