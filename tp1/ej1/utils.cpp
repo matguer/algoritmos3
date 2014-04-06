@@ -2,45 +2,62 @@
 
 using namespace std;
 
-/**
-
+/* 
+ *
  */
-intervalo resolver(LCamiones& c, int periodo, int totalCamiones){
+intervalo resolver(LCamiones& c, int periodo){
 	
 	int inicio = 1;
 	int maxInspec = 0;
 	intervalo resultado = intervalo();
+	//vector<int>::iterator itCamiones;
+
 
 	// Ordeno la lista de camiones en O(n*log(n))
 	// http://www.cplusplus.com/reference/list/list/sort/
-	c.sort();
+	sort(c.begin(), c.end());
 
-	int ultimoDia;
+	vector<int>::iterator ultimoCamion;
 	int inspecTemp = 0;
-	// Recorro los dias en que pasan camiones
-	for(LCamiones::const_iterator iter = c.begin(); iter != c.end(); iter++){
-		// Seteo cual seria el ultimo dia de contratacion
-		ultimoDia = *iter + periodo - 1;
-		// Me paro en cada dia y me fijo cuantos camiones agarraria si contrato al inspector ese dia
-		for (LCamiones::const_iterator iterInterno = iter; (iterInterno != c.end() && *iterInterno <= ultimoDia); iterInterno++){
-			inspecTemp++;
-		}
+	int cantCamiones = int(c.size());
+	int finContrato;
+	int ultimoVisto = 0;
+	int index;
 
-		// Si encontre un inicio mejor(o igual) reemplazo el anterior
-		if(inspecTemp >= maxInspec){
-			maxInspec = inspecTemp;
-			inicio = *iter;
+	// Recorro los dias en que pasan camiones
+	for(int i=0;i<cantCamiones;i++){
+		
+		// me fijo si el ultimo que verifique no es igual al actual en caso de que hayan repetidos
+		if(ultimoVisto != c.at(i)){
+			// Primer dia fuera del rango
+			finContrato = c.at(i) + periodo - 1;
+			cout << "fin contrato: " << finContrato << endl;
+			
+			// Obtengo el primer camion fuera del rango O(log2(N)+1) donde N es la distancia entre inicio y final
+			// http://www.cplusplus.com/reference/algorithm/upper_bound/
+			ultimoCamion = upper_bound(c.begin(), c.end(), finContrato);
+			cout << "primero fuera de rango: " << *ultimoCamion << endl;
+			
+			index = ultimoCamion - c.begin();
+			inspecTemp = index - i;
+			cout << "camiones: " << inspecTemp << endl;
+
+			// Si encontre un inicio mejor(o igual) reemplazo el anterior
+			if(inspecTemp >= maxInspec){
+				maxInspec = inspecTemp;
+				inicio = i;
+			}
+			inspecTemp = 0;
 		}
-		inspecTemp = 0;
+		ultimoVisto = c.at(i);
+
 	}
 
-	resultado.first = inicio;
+	resultado.first = c.at(inicio);
 	resultado.second = maxInspec;
 	
 	return resultado;
 }
-
-
 /**
  * Muestra la lista del resultado
  */

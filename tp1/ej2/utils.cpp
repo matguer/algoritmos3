@@ -7,71 +7,54 @@ using namespace std;
  * donde porcentajePeso es el % del peso de la joya sobre el total de los pesos, 
  * y Joya los datos originales de input
  */
-std::list<pair<PorcentajePeso,pair<NroJoya,Joya> > > resolver(const LJoya& l){
+void resolver(list<Joya>& l){
 	
-	list<pair<PorcentajePeso,pair<NroJoya,Joya> > > r = list<pair<PorcentajePeso,pair<NroJoya,Joya> > >();
-	PorcentajePeso sumatoria_pesos = 0.0;
-	PorcentajePeso peso;
-	
-	// Recorro las joyas para calcular el total de pesos : O(n)
-	for(LJoya::const_iterator iter = l.begin(); iter != l.end(); iter++){
-		// El "peso" de la joya se calcula como D / T
-		peso = ((PorcentajePeso) iter->first) / ((PorcentajePeso) iter->second);
-		sumatoria_pesos = sumatoria_pesos + peso;
-	}
-	
-	// Ahora armo la lista final con los % de peso sobre el total de cada joya : O(n)
+	// Calculo la relacion entre la devaluacion diaria y el tiempo de cada joya : O(n)
 	int i = 1;
-	for(LJoya::const_iterator iter = l.begin(); iter != l.end(); iter++){
-		pair<PorcentajePeso,pair<NroJoya,Joya> > pairResultado = pair<PorcentajePeso,pair<NroJoya,Joya> >();
+	for(list<Joya>::iterator joya = l.begin(); joya != l.end(); joya++){
 		
-		peso = ((PorcentajePeso) iter->first) / ((PorcentajePeso) iter->second);
-	
-		pairResultado.first = ((PorcentajePeso) peso) / ((PorcentajePeso) sumatoria_pesos);
-		pairResultado.second.second = *iter;
-		pairResultado.second.first = i; // La posicion en la lista original
+		joya->porcentaje_peso = ((PorcentajePeso) joya->devaluacion_diaria) / ((PorcentajePeso) joya->tiempo_fabricacion);
+		joya->identificador = i; // La posicion en la lista original
 		
-		r.push_back(pairResultado);
 		i++;
 	}
 	
 	// Ordeno la lista de resultados segun el % de peso de mayor a menor: : O(n*log(n)) 
 	// http://www.cplusplus.com/reference/list/list/sort/
-	r.sort(pairCompare);
-	
-	return r;
+	l.sort(pairCompare);
+
 }
 
 /**
  * Calcula la perdida de dinero para una lista dada
  */
-int perdida(const list<pair<PorcentajePeso,pair<NroJoya,Joya> > > &l){
+int perdida(const list<Joya> &l){
 	
 	int dias_transcurridos = 0;
 	int perdida_total = 0;
 	
-	for(list<pair<PorcentajePeso,pair<NroJoya,Joya> > >::const_iterator iter = l.begin(); iter != l.end(); iter++){
-		dias_transcurridos = dias_transcurridos + iter->second.second.second;
-		perdida_total = perdida_total + dias_transcurridos*iter->second.second.first;
+	for(list<Joya>::const_iterator joya = l.begin(); joya != l.end(); joya++){
+		dias_transcurridos = dias_transcurridos + joya->tiempo_fabricacion;
+		perdida_total = perdida_total + dias_transcurridos * (joya->devaluacion_diaria);
 	}
 	
 	return perdida_total;
 }
 
 /**
- * Comparador para sort de list<pair<PorcentajePeso,pair<NroJoya,Joya> > >
+ * Comparador para sort de list<Joya>
  */
-bool pairCompare(const std::pair<PorcentajePeso,pair<NroJoya,Joya> > & firstElem, const std::pair<PorcentajePeso,pair<NroJoya,Joya> > & secondElem) {
-  return firstElem.first > secondElem.first;
+bool pairCompare(const Joya & firstElem, const Joya & secondElem) {
+  return firstElem.porcentaje_peso > secondElem.porcentaje_peso;
 }
 
 /**
  * Muestra la lista del resultado
  */
-void mostrarResultado(list<pair<PorcentajePeso,pair<NroJoya,Joya> > > &l){
+void mostrarResultado(list<Joya> &l){
 	
-	for(list<pair<PorcentajePeso,pair<NroJoya,Joya> > >::iterator iter = l.begin(); iter != l.end(); iter++){
-		cout << iter->second.first << " ";
+	for(list<Joya>::iterator joya = l.begin(); joya != l.end(); joya++){
+		cout << joya->identificador << " ";
 	}
 	
 }
@@ -79,16 +62,16 @@ void mostrarResultado(list<pair<PorcentajePeso,pair<NroJoya,Joya> > > &l){
 /**
  * Comprueba si el valor devuelto por "resolver" es el optimo, comparando con todas las posibles permutaciones
  */
-bool esOptimo(list<pair<PorcentajePeso,pair<NroJoya,Joya> > > &l){
+bool esOptimo(list<Joya> &l){
 	
 	int perdida_minima_permutaciones = 0;
 	int perdida_maxima_permutaciones = 0;
 	int tmp = 0;
-	list<pair<PorcentajePeso,pair<NroJoya,Joya> > > l2 = l;
+	list<Joya> l2 = l;
 	
-	list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > > permutaciones = permute(l2);
+	list<list<Joya> > permutaciones = permute(l2);
 	
-	for(list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > >::iterator iter = permutaciones.begin(); iter != permutaciones.end(); iter++){
+	for(list<list<Joya> >::iterator iter = permutaciones.begin(); iter != permutaciones.end(); iter++){
 		
 		tmp = perdida(*iter);
 		
@@ -116,25 +99,25 @@ bool esOptimo(list<pair<PorcentajePeso,pair<NroJoya,Joya> > > &l){
 /**
  * Permuta la lista de un resultado
  */
-list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > > permute(list<pair<PorcentajePeso,pair<NroJoya,Joya> > > & L1){
+list<list<Joya> > permute(list<Joya> & L1){
     if (L1.size() == 1)
-        return std::list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > >(1,L1);
+        return std::list<list<Joya> >(1,L1);
 
-    std::list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > > res;
-    for (list<pair<PorcentajePeso,pair<NroJoya,Joya> > >::iterator i = L1.begin(); i != L1.end();)
+    std::list<list<Joya> > res;
+    for (list<Joya>::iterator i = L1.begin(); i != L1.end();)
     {
         // remember this
-        pair<PorcentajePeso,pair<NroJoya,Joya> > x = (*i);
+        Joya x = (*i);
 
         // make a list without the current element
-        list<pair<PorcentajePeso,pair<NroJoya,Joya> > > tmp(L1.begin(), i++);
+        list<Joya> tmp(L1.begin(), i++);
         tmp.insert(tmp.end(), i, L1.end());
 
         // recurse to get all sub-permutations
-        std::list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > > sub = permute(tmp);
+        std::list<list<Joya> > sub = permute(tmp);
 
         // amend sub-permutations by adding the element
-        for (std::list<list<pair<PorcentajePeso,pair<NroJoya,Joya> > > >::iterator j=sub.begin(); j!=sub.end();j++)
+        for (std::list<list<Joya> >::iterator j=sub.begin(); j!=sub.end();j++)
             (*j).push_front(x);
 
         // finally append modified results to our running collection.

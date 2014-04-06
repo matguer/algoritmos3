@@ -4,15 +4,18 @@
 #include <list>
 #include <utility>
 #include <iostream>
+#include <algorithm>
 #include <stdlib.h>
+#include "vector"
+#include "iterator"
 
 using namespace std;
 
-typedef list<int> LCamiones;
+typedef std::vector<int> LCamiones;
 typedef pair<int, int> intervalo;
 
 // Prototipado de funciones
 void mostrarResultado(intervalo);
-intervalo resolver(LCamiones& c, int periodo, int totalCamiones);
+intervalo resolver(LCamiones& c, int periodo);
 
 #endif
