@@ -45,13 +45,25 @@ Llamemos n a la cantidad de elementos de la lista y o al offset. \\
 
 Antes de empezar ordenamos la lista, ya que podr\'ia venir desordenada; as\'i que a partir de ahora vamos a asumir que la lista de n\'umeros est\'a ordenada de manera creciente. \\ \\
 
-Para comenzar notemos que estamos considerando s\'olo los intervalos que comienzan con cada elemento de la lista; es decir que si nuestra lista es [1, 3, 5, 6] y nuestro rango es 2, s\'olo vamos a mirar los intervalos [1,2], [3,4], [5,6] y [6, 7].
-Demostremos entonces que con los intervalos que estamos considerando alcanza ya que entre ellos se encuentra el que tiene la sublista m\'as larga:
+Para comenzar notemos que, de todo el universo de posibles intervalos, estamos considerando s\'olo los que comienzan con cada elemento de la lista; es decir que si nuestra lista es [1, 3, 5, 6] y nuestro rango es 2, s\'olo vamos a mirar los intervalos [1,2], [3,4], [5,6] y [6, 7].\\
+Demostremos entonces que con los intervalos que estamos considerando alcanza ya que entre ellos se encuentra el que tiene la sublista m\'as larga.\\
+Dados un offset $o$ y una lista ordenada de manera creciente $l$ y sea $S$ el subconjunto de posibles sublistas expresada como % $S={s_i = [e \rightarrow l| l_i \leqslant e \leqslant l_i + o]} \forall 0 \leqslant i \leqslant long(l)$.
+Es decir, es un conjunto de listas tal que todos los elementos de cada lista $s_i$ pertenecen a $l$ y est\'an dentro del rango $l_i$-$l_i + o$.\\
+Supongamos ahora que existe una lista ordenada $a$ que cumple con lo pedido y que es \'optima. Y supongamos adem\'as que esta lista \'optima no est\'a en S; es decir que no est\'a siendo considerada por nuestra resoluci\'on.\\
+Sabemos que, como la lista es finita y los n\'umeros que pueden entrar en los intervalos est\'an ah\'i, entonces \\
+($\forall$ elem $\in$ a) elem $\in$ l, \\
+y en particular, \\
+$a_1$ $\in$ l. \\
+Adem\'as, como la lista est\'a ordenada y cumple con la condici\'on de que todos sus elementos est\'an dentro de un rango determinado por $inicio$-$inicio + o$\\
+($\forall$ elem $\in$ a) $a_1 \leq$ elem $\leq inicio + o$.\\
+Notemos ahora que $inicio$ $\leq$ $a_1$, es decir que \\ 
+$inicio$ $\leq$ $a_1$ $\Leftrightarrow$ $inicio + o$ $\leq$ $a_1 + o$
+(aclarar en algun lado que son todos enteros positivos para poder asumir esto).\\
+Miremos ambos casos:
 \begin{itemize}
- \item Supongamos que, dada una lista l, de n elementos y un offset o 
+\item %inicio $\eq a_1$. En este caso a pertenecer\'ia a S, ya que considera como inicio del rango a un elemento de l.
+\item 
 \end{itemize}
-
-
 
 \subsection{Complejidad del algoritmo}
 
@@ -88,19 +100,22 @@ typedef pair<int, int> intervalo;
 
 intervalo resolver(LCamiones& c, int periodo){
 	
-	int inicio;
+	int inicio = 1;
 	int maxInspec = 0;
 	intervalo resultado = intervalo();
+	//vector<int>::iterator itCamiones;
+
 
 	// Ordeno la lista de camiones en O(n*log(n))
 	// http://www.cplusplus.com/reference/list/list/sort/
 	sort(c.begin(), c.end());
 
-	int ultimoCamion;
+	vector<int>::iterator ultimoCamion;
 	int inspecTemp = 0;
 	int cantCamiones = int(c.size());
 	int finContrato;
 	int ultimoVisto = 0;
+	int index;
 
 	// Recorro los dias en que pasan camiones
 	for(int i=0;i<cantCamiones;i++){
@@ -109,8 +124,16 @@ intervalo resolver(LCamiones& c, int periodo){
 		if(ultimoVisto != c.at(i)){
 			// Primer dia fuera del rango
 			finContrato = c.at(i) + periodo - 1;
-			ultimoCamion = primeroMayor(c, finContrato, 0, cantCamiones-1, cantCamiones-1);
-			inspecTemp = ultimoCamion - i;
+			cout << "fin contrato: " << finContrato << endl;
+			
+			// Obtengo el primer camion fuera del rango O(log2(N)+1) donde N es la distancia entre inicio y final
+			// http://www.cplusplus.com/reference/algorithm/upper_bound/
+			ultimoCamion = upper_bound(c.begin(), c.end(), finContrato);
+			cout << "primero fuera de rango: " << *ultimoCamion << endl;
+			
+			index = ultimoCamion - c.begin();
+			inspecTemp = index - i;
+			cout << "camiones: " << inspecTemp << endl;
 
 			// Si encontre un inicio mejor(o igual) reemplazo el anterior
 			if(inspecTemp >= maxInspec){
@@ -127,24 +150,6 @@ intervalo resolver(LCamiones& c, int periodo){
 	resultado.second = maxInspec;
 	
 	return resultado;
-}
-
-int primeroMayor(LCamiones& c, int elem, int p, int f, int ultimoEncontrado){
-	
-	if((f-p) <= 1){
-		if(c.at(p) > elem){
-			return f;
-		}else{
-			return ultimoEncontrado;
-		}
-	}else{
-		int medio = p + (f-p)/2;
-		if(c.at(medio) <= elem){
-			return primeroMayor(c, elem, medio, f, ultimoEncontrado);
-		}else{
-			return primeroMayor(c, elem, p, medio, medio);
-		}
-	}
 }
 
 \end{lstlisting}
