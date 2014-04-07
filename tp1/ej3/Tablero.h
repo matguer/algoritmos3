@@ -20,7 +20,9 @@ class Tablero {
 		int _posiciones_vacias;
 
 	public:
+		Tablero();
 		Tablero(int alto, int ancho);
+		Tablero(const Tablero& otro);
 		~Tablero();
 		int getFilas();
 		int getColumnas();
