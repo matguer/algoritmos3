@@ -48,37 +48,37 @@ Antes de empezar ordenamos la lista, ya que inicialmente podr\'ia estar desorden
 Para comenzar notemos que, de todo el universo de posibles intervalos, consideraremos s\'olo los que comienzan con cada elemento de la lista; es decir que si nuestra lista es [1, 3, 5, 6] y nuestro rango es 2, s\'olo vamos a mirar los intervalos [1,2], [3,4], [5,6] y [6, 7].\\ \\
 
 Demostremos entonces que con los intervalos que estamos considerando alcanza ya que entre ellos hay al menos uno que tiene la sublista m\'as larga.\\
-Dados un offset $o$ y una lista ordenada de manera creciente $l$ y sea $S$ el subconjunto de intervalos que vamos a considerar, expresada como: \\
+Dados un offset $off$ y una lista ordenada de manera creciente $l$ y sea $S$ el subconjunto de intervalos que vamos a considerar, expresada como: \\
 \begin{center}
-$ S = \left\lbrace s_i = \left[ e \rightarrow l | l_i \leq e \leq l_i + o - 1 \right] \right\rbrace \forall 0 \leq i \leq long(l) $ 
+$ S = \left\lbrace s_i = \left[ e \rightarrow l | l_i \leq e \leq l_i + o - 1 \right] \right\rbrace \forall 1 \leq i \leq long(l) $ 
 \end{center}
 Es decir, es un conjunto de listas tal que todos los elementos de cada lista $s_i$ pertenecen a $l$ y est\'an dentro del rango $l_i$-$l_i + o - 1$. \\
-Supongamos ahora que existe una lista ordenada $a$ que cumple con lo pedido y que es \'optima.\\
+Supongamos ahora que existe una lista ordenada $s'$ que cumple con lo pedido y que es \'optima.\\
 Supongamos adem\'as que esta lista \'optima no est\'a en S; es decir que no est\'a siendo considerada en nuestra resoluci\'on.\\
 Sabemos que, como la lista es finita y los n\'umeros que pueden entrar en los intervalos est\'an ah\'i, entonces \\
 \begin{center}
-($\forall$ elem $\in$ a) elem $\in$ l, \\
+($\forall$ elem $\in$ s') elem $\in$ l, \\
 \end{center}
 y en particular, \\
 \begin{center}
-$a_1$ $\in$ l. \\
+$s'_1$ $\in$ l. \\
 \end{center}
 
-Adem\'as, como la lista est\'a ordenada y cumple con la condici\'on de que todos sus elementos est\'an dentro de un rango determinado por $inicio$-$inicio + o$\\
+Adem\'as, como la lista est\'a ordenada y cumple con la condici\'on de que todos sus elementos est\'an dentro de un rango determinado por $inicio$-$inicio + o - 1$\\
 \begin{center}
-($\forall$ elem $\in$ a) $a_1 \leq$ elem $\leq inicio + o$.\\
+($\forall$ elem $\in$ s') $s'_1 \leq$ elem $\leq inicio + o - 1$.\\
 \end{center}
 
-Notemos ahora que $inicio$ $\leq$ $a_1$, es decir que \\ 
+Notemos ahora que $inicio$ $\leq$ $s'_1$, es decir que \\ 
 \begin{center}
-$inicio$ $\leq$ $a_1$ $\Leftrightarrow$ $inicio + o$ $\leq$ $a_1 + o$
+$inicio$ $\leq$ $s'_1$ $\Leftrightarrow$ $inicio + o - 1$ $\leq$ $s'_1 + o - 1$
 \end{center}
 Porque, recordemos, se trata de enteros positivos, con lo cual vale la desigualdad.\\
 
 Miremos ambos casos:
 \begin{itemize}
-\item inicio + o = $a_1$ + o. En este caso a pertenecer\'ia a S, ya que inicio = $a_1$ y $a_1$ es un elemento de l.
-\item inicio + o < $a_1$ + o. En este caso el per\'iodo comienza antes que $a_1$, pero el primer elemento de l que entra en el rango es $a_1$, con lo cual ninguna de las listas de S se est\'a perdiendo elementos previos a $a_1$. Por otro lado, llamemos $s_i$ a la lista de S que comienza con $a_1$; como $inicio + o$ < $a_1$ + o, podemos deducir que a $\leq$ $ s_i$. Ac\'a llegamos a una contradicci\'on: no puede haber una lista \'optima que no est\'e en S.
+\item inicio + o = $s'_1$ + o. En este caso a pertenecer\'ia a S, ya que inicio = $s'_1$ y $s'_1$ es un elemento de l.
+\item inicio + o - 1 < $s'_1$ + o - 1. En este caso el per\'iodo comienza antes que $s'_1$, pero el primer elemento de l que entra en el rango es $s'_1$, con lo cual ninguna de las listas de S se est\'a perdiendo elementos previos a $s'_1$. Por otro lado, llamemos $s_i$ a la lista de S que comienza con $s'_1$; como $inicio + o - 1$ < $s'_1$ + o - 1, podemos deducir que a $\leq$ $ s_i$. Ac\'a llegamos a una contradicci\'on: no puede haber una lista \'optima que no est\'e en S.
 \end{itemize}
 
 Una vez probado lo anterior, es trivial saber que comparando uno a uno los tama\~nos de las listas de S vamos a encontrar cu\'al es \'optima.\\
@@ -98,8 +98,8 @@ Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando 
 \end{itemize}
 \end{itemize}
 
-Como la b\'usqueda binaria fue implementada por nosotros ya que necesit\'abamos que cumpliera ciertas particularidades, analizaremos la complejidad de ese algoritmo tambi\'en.\\
-Al tratarse de un algoritmo de divide \& conquer que a cada iteraci\'on va recortando el rango del arreglo recibe como par\'ametros, adem\'as del arreglo y el elemento a buscar, los \'indices inicial y final sobre los cuales trabajar y un registro temporal del candidato a respuesta.
+Decimos que ordenar la lista toma O(n*log(n)) ya que en nuestra implementaci\'on usamos std::sort.\cite{sort}\\
+Lo mismo pasa cuando decimos que encontrar el primero fuera de rango toma $O(log(n))$, para lo cual usamos std::upper\_bound.\cite{upper} \\ 
 
 \subsection{Codigo fuente}
 
