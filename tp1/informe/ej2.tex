@@ -62,7 +62,97 @@ Una descripci\'on del algoritmo en pseudo codigo:
 
 \subsection{Demostraci\'on de la resoluci\'on}
 
+Para poder demostrar que el algoritmo funciona, recordemos como se expresaban las p\'erdidas segun la distrubuci\'on de las joyas:
 
+$P = \sum\limits_{i=1}^n (d_{i}*( \sum\limits_{k=1}^i t_k ))$
+
+Donde cada $d_i$ corresponde a la devaluaci\'on de la joya elegida a ocupar la posici\'on $i$ \\
+
+La hip\'otesis que decidimos utilizar para garantizar que esa f\'ormula da un P \'optimo es:
+
+$ \frac{d_{i}}{t_{i}} \geq \frac{d_{i+1}}{t_{i+1}} \Longleftrightarrow d_i*t_{i+1} \geq d_{i+1}*t_i $
+
+Intentemos ver que ocurre para algunos casos:
+
+\subsubsection*{Caso dos joyas}
+
+Nuestra hip\'otesis es:
+
+$d_1*t_2 \geq d_2*t_1$ \\
+
+Veamos si podemos decidir el orden \'optimo para este caso:
+
+$d_1*t_1 + d_2*(t_1 + t_2) \leq d_2*t_2 + d_1*(t_1 + t_2) \Longleftrightarrow $ (Distributiva)
+
+$d_1*t_1 + d_2*t_1 + d_2*t_2 \leq  d_2*t_2 + d_1*t_1 + d_1*t_2 \Longleftrightarrow$ (Simplifico terminos)
+
+$d_2*t_1 \leq d_1*t_2$
+
+Si se cumple nuestra hip\'otesis podemos decidir que el orden propuesto era el \'optimo, si no, era el inverso. \\
+
+\subsubsection*{Caso tres joyas}
+
+Para el caso de tres joyas aumentan las posibles combinaciones, nuestras hip\'otesis son:
+
+\begin{itemize}
+\item $d_1*t_2 \geq d_2*t_1$
+\item $d_2*t_3 \geq d_3*t_2$
+\item $d_1*t_3 \geq d_3*t_1$
+\end{itemize}
+
+Veamos una de las posibles combinaciones a probar, nuestra propuesta de \'optima contra la que intercambia las dos primeras posiciones:
+
+$d_1*t_1 + d_2*(t_1 + t_2) + d_3*(t_1+t_2+t_3) \leq d_2*t_2 + d_1*(t_1 + t_2) + d_3*(t_1+t_2+t_3) \Longleftrightarrow$ (Distributiva)
+
+$d_1*t_1 + d_2*t_1 + d_2*t_2 + d_3*t_1+d_3*t_2+d_3*t_3 \leq d_2*t_2 + d_1*t_1 + d_1*t_2 + d_3*t_1+d_3*t_2+d_3*t_3 \Longleftrightarrow$ (Simplifico t\'erminos)
+
+$d_2*t_1 \leq d_1*t_2$
+
+Aqu\'i todav\'ia podemos seguir determinando la desigualdad ya que coincide con una de nuestras hip\'otesis, pero observemos este caso:
+
+$d_1*t_1 + d_2*(t_1 + t_2) + d_3*(t_1+t_2+t_3) \leq d_2*t_2 + d_3*(t_2 + t_3) + d_1*(t_1+t_2+t_3) \Longleftrightarrow$ (Distributiva)
+
+$d_1*t_1 + d_2*t_1 + d_2*t_2 + d_3*t_1+d_3*t_2+d_3*t_3 \leq d_2*t_2 + d_3*t_2 + d_3*t_3 + d_1*t_1+d_1*t_2+d_1*t_3 \Longleftrightarrow$ (Simplifico t\'erminos)
+
+$d_2*t_1 + d_3*t_1 \leq d_1*t_2 + d_1*t_3$
+
+No queda claro que ocurre si no se cumple alguna de nuestras hip\'otesis. Como podemos observar nuestra hip\'otesis solo nos ayuda en los casos en los que los intercambios se producen entre joyas vecinas, osea, entre $d_i$ y $d_{i+1}$. \\
+
+\subsubsection*{Demostraci\'on}
+
+Intentemos generalizar la idea, sean $j_i = (d_i, t_i)$ y $j_{i+1} = (d_{i+1}, t_{i+1})$ joyas tales que $d_i*t_{i+1} < d_{i+1}*t_i$, dicho de otra forma, existen dos joyas vecinas que no cumplen nuestra hip\'otesis. \\
+
+Sean: \\
+$P = d_1*t_1 + ... + d_i*(\sum\limits_{k=1}^i t_k) + d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) + ... + d_n*(\sum\limits_{k=1}^n t_k)$ \\
+$P' = d_1*t_1 + ... + d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_i*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1} + t_i) + ... + d_n*(\sum\limits_{k=1}^n t_k)$
+
+Queremos ver que $P'$ (una permutaci\'on identica a P, salvo que se invierte el orden entre las joyas $j_i$ y $j_{i+1}$) cumple que $P > P'$, osea, lograr una versi\'on con una perdida menor restaurando nuestra hip\'otesis. \\
+
+Para ver esto, podemos simplificar todos los t\'erminos que implican joyas $j_k$ con $1 \leq k < d_i$ y $d_{i+1} < k \leq n $ \\
+
+$\overbrace{d_i*(\sum\limits_{k=1}^i t_k) + d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k)}^{\text{P}} > \overbrace{d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_i*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1} + t_i)}^{\text{P'}}$
+
+ya que estos elementos son iguales en ambos lados de la desigualdad.
+
+$d_i*(\sum\limits_{k=1}^i t_k) + d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) > d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_i*(\underbrace{(\sum\limits_{k=1}^{i-1} t_k) + t_{i+1} + t_i}_{= \sum\limits_{k=1}^{i+1} t_k}) \Longleftrightarrow$
+
+$d_i*(\sum\limits_{k=1}^i t_k) + d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) > d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_i*(\underbrace{\sum\limits_{k=1}^{i+1} t_k}_{= (\sum\limits_{k=1}^{i} t_k) + t_{i+1}}) \Longleftrightarrow$
+
+$d_i*(\sum\limits_{k=1}^i t_k) + d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) > d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + \underbrace{d_i*((\sum\limits_{k=1}^{i} t_k) + t_{i+1})}_{= d_i*(\sum\limits_{k=1}^{i} t_k) + d_i*t_{i+1}} \Longleftrightarrow$
+
+$d_i*(\sum\limits_{k=1}^i t_k) + d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) > d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_i*(\sum\limits_{k=1}^{i} t_k) + d_i*t_{i+1} \Longleftrightarrow$ (Simplifico sumatorias)
+
+$d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) > d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_i*t_{i+1} \Longleftrightarrow$ (Sumo $d_{i+1}*t_i$ de cada lado)
+
+$d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) + d_{i+1}*t_i > \underbrace{d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_{i+1}*t_i}_{= d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i} + t_{i+1})} + d_i*t_{i+1} \Longleftrightarrow$ (Saco factor com\'un $d_{i+1}$)
+
+$d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) + d_{i+1}*t_i > \underbrace{d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i} + t_{i+1})}_{= d_{i+1}*((\sum\limits_{k=1}^{i+1} t_k)} + d_i*t_{i+1} \Longleftrightarrow$
+
+$d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) + d_{i+1}*t_i > d_{i+1}*((\sum\limits_{k=1}^{i+1} t_k) + d_i*t_{i+1} \Longleftrightarrow$ (Simplifico sumatorias)
+
+$d_{i+1}*t_i > d_i*t_{i+1}$ \\
+
+Podemos ver que $P > P' \Longleftrightarrow d_{i+1}*t_i > d_i*t_{i+1}$ que era la hip\'otesis de nuestra demostraci\'on, entonces logramos demostrar que $P'$ era una permutaci\'on mejor que $P$.
 
 \subsection{Complejidad del algoritmo}
 
@@ -77,8 +167,9 @@ Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando 
 \item ordenar joyas de mayor a menor por joya.porcentaje\_peso , $O(n*log(n))$
 \end{itemize}
 
-
 Notar que n es la cantidad de trabajos/joyas a confeccionar y que se simplific\'o el algoritmo para que fuera m\'as simple ver la complejidad.
+
+Estamos utilizando el algoritmo de sorting de la STL asociado a las listas, el mismo garantiza una complejidad de O(n*log(n)) como se puede observar en su documentaci\'on: http://www.cplusplus.com/reference/list/list/sort/
 
 Como se puede ver en el seguimiento, la complejidad del algoritmo elegido es O(n*log(n)) ya que es la complejidad predominante.\\
 
@@ -157,4 +248,4 @@ Consideramos que no era apropiado evaluar casos bordes ya que, seg\'un se vi\'o 
 \end{figure}
 \end{center}
 
-Como se puede observar el algoritmo corre en tiempos de ejecuci\'on bastante inferiores a la cota m\'axima propuesta por la c\'atedra de $O(n^2)$, a partir de un $n_{0}$
+Como se puede observar el algoritmo corre en tiempos de ejecuci\'on bastante inferiores a la cota m\'axima propuesta de $O(n*log(n))$, a partir de un $n_{0}$

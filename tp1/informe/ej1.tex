@@ -47,8 +47,11 @@ Antes de empezar ordenamos la lista, ya que podr\'ia venir desordenada; as\'i qu
 
 Para comenzar notemos que, de todo el universo de posibles intervalos, estamos considerando s\'olo los que comienzan con cada elemento de la lista; es decir que si nuestra lista es [1, 3, 5, 6] y nuestro rango es 2, s\'olo vamos a mirar los intervalos [1,2], [3,4], [5,6] y [6, 7].\\
 Demostremos entonces que con los intervalos que estamos considerando alcanza ya que entre ellos se encuentra el que tiene la sublista m\'as larga.\\
-Dados un offset $o$ y una lista ordenada de manera creciente $l$ y sea $S$ el subconjunto de posibles sublistas expresada como % $S={s_i = [e \rightarrow l| l_i \leqslant e \leqslant l_i + o]} \forall 0 \leqslant i \leqslant long(l)$.
-Es decir, es un conjunto de listas tal que todos los elementos de cada lista $s_i$ pertenecen a $l$ y est\'an dentro del rango $l_i$-$l_i + o$.\\
+Dados un offset $o$ y una lista ordenada de manera creciente $l$ y sea $S$ el subconjunto de posibles sublistas expresada como: \\
+
+$ S = \left\lbrace s_i = \left[ e \rightarrow l | l_i \leq e \leq l_i + o \right] \right\rbrace \forall 0 \leq i \leq long(l) $ \\ 
+\\
+Es decir, es un conjunto de listas tal que todos los elementos de cada lista $s_i$ pertenecen a $l$ y est\'an dentro del rango $l_i$-$l_i + o$ \\
 Supongamos ahora que existe una lista ordenada $a$ que cumple con lo pedido y que es \'optima. Y supongamos adem\'as que esta lista \'optima no est\'a en S; es decir que no est\'a siendo considerada por nuestra resoluci\'on.\\
 Sabemos que, como la lista es finita y los n\'umeros que pueden entrar en los intervalos est\'an ah\'i, entonces \\
 ($\forall$ elem $\in$ a) elem $\in$ l, \\
@@ -61,7 +64,7 @@ $inicio$ $\leq$ $a_1$ $\Leftrightarrow$ $inicio + o$ $\leq$ $a_1 + o$
 (aclarar en algun lado que son todos enteros positivos para poder asumir esto).\\
 Miremos ambos casos:
 \begin{itemize}
-\item %inicio $\eq a_1$. En este caso a pertenecer\'ia a S, ya que considera como inicio del rango a un elemento de l.
+\item inicio = $a_1$. En este caso a pertenecer\'ia a S, ya que considera como inicio del rango a un elemento de l.
 \item 
 \end{itemize}
 
