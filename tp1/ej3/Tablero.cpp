@@ -4,12 +4,31 @@
 
 using namespace std;
 
+Tablero::Tablero() {
+}
+
 Tablero::Tablero(int alto, int ancho) {
 	_filas = alto;
 	_columnas = ancho;
 	_posiciones_ocupadas = 0;
 	_posiciones_vacias = alto * ancho;
 	_tablero = new Matriz(_filas, Vec(_columnas, new Ficha()));
+}
+
+Tablero::Tablero(const Tablero& otro) {
+	_filas = otro._filas;
+	_columnas = otro._columnas;
+	_posiciones_ocupadas = otro._posiciones_ocupadas;
+	_posiciones_vacias = otro._posiciones_vacias;
+	_tablero = new Matriz(_filas, Vec(_columnas, new Ficha()));
+	Matriz* otro_tablero = otro._tablero;
+	for(int i=0; i<_filas; i++) {
+		Vec columna = (*otro_tablero)[i];
+		for(int j=0; j<_columnas; j++) {
+			Ficha* ficha = columna[j];
+			(*_tablero)[i][j] = new Ficha(*ficha);
+		}
+	}
 }
 
 Tablero::~Tablero() {
@@ -120,6 +139,7 @@ bool Tablero::completo() {
 void Tablero::print() {
 	for(int i=0; i<_filas; i++) {
 		for(int j=0; j<_columnas; j++) {
+			//cout << (*_tablero)[i][j];
 			(*_tablero)[i][j]->print();
 			cout << " ";
 		}

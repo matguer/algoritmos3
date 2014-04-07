@@ -21,7 +21,7 @@ bool backtrack(Tablero tablero, Diccionario dic, Coord coord);
 Estado check(Tablero& tablero, Coord coord);
 
 
-Tablero* t_mejor_solucion;
+Tablero t_mejor_solucion;
 int cant_colores;
 
 
@@ -53,10 +53,10 @@ Ficha** parseInput(int cant_fichas) {
 */
 void generarMejorSolucionDefault(Ficha** fichas) {
 	int i_fichas = 0;
-	for(int i=0; i<t_mejor_solucion->getFilas(); i++) {
-		for(int j=0; j<t_mejor_solucion->getColumnas(); j++) {
-			if((i%2 == 0) && (j%2 == 0)) t_mejor_solucion->agregarFicha(Coord(i,j), *(fichas[i_fichas])), i_fichas++;
-			if((i%2 != 0) && (j%2 != 0)) t_mejor_solucion->agregarFicha(Coord(i,j), *(fichas[i_fichas])), i_fichas++;
+	for(int i=0; i<t_mejor_solucion.getFilas(); i++) {
+		for(int j=0; j<t_mejor_solucion.getColumnas(); j++) {
+			if((i%2 == 0) && (j%2 == 0)) t_mejor_solucion.agregarFicha(Coord(i,j), *(fichas[i_fichas])), i_fichas++;
+			if((i%2 != 0) && (j%2 != 0)) t_mejor_solucion.agregarFicha(Coord(i,j), *(fichas[i_fichas])), i_fichas++;
 		}
 	}
 }
@@ -155,7 +155,10 @@ void resolver(Tablero tablero, Diccionario* dic) {
 */
 bool backtrack(Tablero tablero, Diccionario dic, Coord coord) {
 
+	cout << "TABLERO MEJOR PARCIAL AL VOLVER AL BACKTRACK: " << t_mejor_solucion.getCantidadFichas() << endl;
 	Estado estado = check(tablero, coord);
+	cout << "TABLERO MEJOR PARCIAL AL VOLVER AL BACKTRACK: " << t_mejor_solucion.getCantidadFichas() << endl;
+	t_mejor_solucion.print();
 
 	if(estado == MEJOR_SOLUCION) {
 		return true;
@@ -234,19 +237,26 @@ Estado check(Tablero& tablero, Coord coord) {
 
 	/* Si el tablero esta completo encontre una solucion inmejorable */
 	if(tablero.completo()) {
-		*t_mejor_solucion = tablero;
+		cout << "entro por mejor" << endl;
+		t_mejor_solucion = tablero;
 		return MEJOR_SOLUCION;
 	}
 
 	/* Si llegue al final del tablero y tengo menos fichas puestas que la mejor solucion */
 	if((coord.first == tablero.getFilas() - 1)
 		&& (coord.second == tablero.getColumnas() - 1)
-		&& (tablero.getCantidadFichas() <= t_mejor_solucion->getCantidadFichas())) {
+		&& (tablero.getCantidadFichas() <= t_mejor_solucion.getCantidadFichas())) {
 		return SOLUCION_INVIABLE;	
 	}
 
 	/* ESTE LINEA NO ME ESTA GUARDANDO EL TABLERO BIEN, CREO QUE ES PORQUE LE FALTA ESE TIPO DE CONSTRUCTOR A LA CLASE TABLERO */
-	if(tablero.getCantidadFichas() > t_mejor_solucion->getCantidadFichas()) t_mejor_solucion = new Tablero(tablero);
+	if(tablero.getCantidadFichas() > t_mejor_solucion.getCantidadFichas()) { 
+		//cout << "TABLERO MEJOR PARCIAL: " << endl;
+		//tablero.print();
+		t_mejor_solucion = tablero;
+		//cout << "TABLERO MEJOR PARCIAL POST ASIGNACION: " << endl;
+		//t_mejor_solucion.print();
+	}
 	
 	
 	/* IMPLEMENTAR ACA LA PODA QUE CHEQUE SI AUN COMPLETANDO LA FILA DE ABAJO Y LAS RESTANTES NO LLEGA A LA MEJOR.
@@ -290,7 +300,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	/* Generacion de la mejor solucion default */
-	t_mejor_solucion = new Tablero(alto, ancho);
+	t_mejor_solucion = Tablero(alto, ancho);
 	generarMejorSolucionDefault(fichas);
 	//cout << "MEJOR SOLUCION: " << t_mejor_solucion->getCantidadFichas() << endl;
 	//t_mejor_solucion->print();
@@ -299,7 +309,7 @@ int main(int argc, char* argv[]) {
 
 	resolver(tablero, dic);
 
-	cout << "MEJOR SOLUCION: " << t_mejor_solucion->getCantidadFichas() << endl;
-	t_mejor_solucion->print();
+	cout << "MEJOR SOLUCION: " << t_mejor_solucion.getCantidadFichas() << endl;
+	t_mejor_solucion.print();
 }
 
