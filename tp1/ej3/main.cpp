@@ -7,7 +7,7 @@
 
 using namespace std;
 
-enum Estado {MEJOR_SOLUCION, SOLUCION_VIABLE, SOLUCION_INVIABLE}; 
+enum Estado {MEJOR_SOLUCION, SOLUCION_VIABLE, SOLUCION_INVIABLE, FINAL_TABLERO}; 
 typedef map< pair<Color, Color>, list<Ficha> > Diccionario;
 
 
@@ -164,9 +164,10 @@ bool backtrack(Tablero tablero, Diccionario dic, Coord coord) {
 		return true;
 	}
 
-	if(estado == SOLUCION_INVIABLE) {
+	if(estado == SOLUCION_INVIABLE || estado == FINAL_TABLERO) {
 		return false;
 	}
+
 
 	else {
 		coord = tablero.siguientePosicion(coord);	
@@ -222,6 +223,7 @@ bool backtrack(Tablero tablero, Diccionario dic, Coord coord) {
 				}
 			}
 		}
+		if (backtrack(tablero, dic, coord)) return true;
 		return false;
 	
 	}
@@ -265,6 +267,8 @@ Estado check(Tablero& tablero, Coord coord) {
 	   CUANTAS COLUMNAS MAS PUEDO LLENAR EN LA FILA MAS LAS DEMAS FILAS Y VER SI ES VIABLE O NO. COMO QUE EN REALIDAD
 	   SIGUE SIENDO MAS DE LA ANTERIOR PERO LE AGREGARIAMOS UN POQUITITO MAS.	
 	*/
+
+	if(tablero.posicionesRecorridas(coord) == (tablero.getFilas() * tablero.getColumnas())) return FINAL_TABLERO;
 
 	return SOLUCION_VIABLE;
 }
