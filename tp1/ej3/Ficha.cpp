@@ -39,14 +39,19 @@ Ficha::Ficha(int numero, Color superior, Color izquierda, Color derecha, Color i
 
 }
 
-Ficha Ficha::operator=(const Ficha& otra) {
-	Ficha nueva;
-	nueva._numero = otra._numero;
-	nueva._colores[SUPERIOR] = otra._colores[SUPERIOR];
-	nueva._colores[IZQUIERDA] = otra._colores[IZQUIERDA];
-	nueva._colores[DERECHA] = otra._colores[DERECHA];
-	nueva._colores[INFERIOR] = otra._colores[INFERIOR];
-	return nueva; 
+bool Ficha::operator==(const Ficha& otra) {
+	return (otra._numero == _numero);
+}
+
+Ficha & Ficha::operator=(const Ficha& otra) {
+
+	_numero = otra._numero;
+	_colores[SUPERIOR] = otra._colores[SUPERIOR];
+	_colores[IZQUIERDA] = otra._colores[IZQUIERDA];
+	_colores[DERECHA] = otra._colores[DERECHA];
+	_colores[INFERIOR] = otra._colores[INFERIOR];
+	
+	return *this; 
 }
 
 Ficha::~Ficha() {
@@ -55,6 +60,12 @@ Ficha::~Ficha() {
 /* La funcion print debe imprimir el numero de ficha */
 void Ficha::print() {
 	cout << _numero;
+}
+
+void Ficha::printDetailed() {
+	cout << " " << _colores[SUPERIOR] << endl;
+	cout << _colores[IZQUIERDA] << " " << _colores[DERECHA] << endl;
+	cout << " " << _colores[INFERIOR] << endl;
 }
 
 /* La funcion getLado debe recibir uno de los cuatros lados de la ficha

@@ -5,6 +5,7 @@
 #include <list>
 #include <iostream>
 #include "Ficha.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -16,9 +17,13 @@ class DiccionarioFichas {
 	public:
 		DiccionarioFichas();
 		~DiccionarioFichas();
-		DiccionarioFichas(Ficha** fichas, int cant_fichas);
-		void imprimirDiccionarioFichas(DiccionarioFichas dic);
+		DiccionarioFichas(list<Ficha> fichas);
+		DiccionarioFichas(const DiccionarioFichas& otro);
+		DiccionarioFichas operator=(const DiccionarioFichas& otra);
+		void imprimirDiccionarioFichas();
 		void imprimirListaFichas(list<Ficha> valor);
+		list<Ficha> * dameFichas(pair<Color, Color> & restriccion);
+		void sacarFicha(Ficha & ficha);
 
 };
 

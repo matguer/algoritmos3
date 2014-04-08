@@ -19,9 +19,11 @@ class Ficha {
 		Ficha();
 		Ficha(const Ficha& otra);
 		Ficha(int numero, Color superior, Color izquierda, Color derecha, Color inferior);
-		Ficha operator= (const Ficha&);
+		Ficha & operator=(const Ficha& otra);
+		bool operator== (const Ficha&);
 		~Ficha();
 		void print();
+		void printDetailed();
 		Color getLado(Lado lado);
 		int getNumero();
 		bool isVacia();

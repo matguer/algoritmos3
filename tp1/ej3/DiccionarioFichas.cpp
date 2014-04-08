@@ -7,39 +7,91 @@ DiccionarioFichas::DiccionarioFichas() {
 	_delegate = map<pair<Color,Color>, list<Ficha> >();
 }
 
-DiccionarioFichas::DiccionarioFichas(const DiccionarioFichas& otra) {
-	_delegate = otra._delegate;
+DiccionarioFichas::DiccionarioFichas(const DiccionarioFichas& otro) {
+	_delegate = otro._delegate;
 }
 
-DiccionarioFichas::DiccionarioFichas(Ficha** fichas, int cant_fichas) {
+// Esta funcion clasifica las fichas por sus colores sup e izq
+DiccionarioFichas::DiccionarioFichas(list<Ficha> fichas) {
 	
-	DiccionarioFichas::iterator it_dic;
-	for(int i=0; i<cant_fichas; i++) {
-		pair<Color,Color> clave(fichas[i]->getLado(SUPERIOR),fichas[i]->getLado(IZQUIERDA));
-		list<Ficha> lista;
-		it_dic = _delegate.find(clave);
-		if(it_dic != _delegate.end()) lista = it_dic->second;
-		lista.push_back(*fichas[i]);
-		_delegate[clave] = lista; 
+	for(list<Ficha>::iterator f = fichas.begin(); f != fichas.end(); f++){
+		
+		pair<Color,Color> clave(f->getLado(IZQUIERDA), f->getLado(SUPERIOR));
+
+		if(_delegate.count(clave)==0){
+			_delegate[clave] = list<Ficha>();
+		}		
+		_delegate[clave].push_back(*f);
 	}
-	
-	_delegate = d;
 }
 
 DiccionarioFichas DiccionarioFichas::operator=(const DiccionarioFichas& otra) {
+	
+	DiccionarioFichas nueva = DiccionarioFichas();
 	nueva._delegate = otra._delegate;
 	
 	return nueva; 
 }
 
+void DiccionarioFichas::sacarFicha(Ficha & ficha) {
+	pair<Color, Color> key(ficha.getLado(IZQUIERDA), ficha.getLado(SUPERIOR));
+	(_delegate[key]).remove(ficha);
+}
+
+list<Ficha> * DiccionarioFichas::dameFichas(pair<Color, Color> & restriccion){
+	
+	list<Ficha> * fichas_posibles = new list<Ficha>();
+	
+	typedef std::map<pair<Color, Color>, list<Ficha> >::iterator it_type;
+	
+	// Indexo directo por la restriccion
+	if(restriccion.first != NO_COLOR && restriccion.second != NO_COLOR){
+		fichas_posibles = new list<Ficha>(_delegate[restriccion]);
+	// No hay restriccion, son todas
+	}else if(restriccion.first == NO_COLOR && restriccion.second == NO_COLOR){
+		
+		for(it_type iterator = _delegate.begin(); iterator != _delegate.end(); iterator++) {
+			fichas_posibles->insert(fichas_posibles->end(), iterator->second.begin(), iterator->second.end());
+		}
+		
+	// Acumulo todas las fichas que cumplen la unica restriccion
+	}else{
+	
+		if(restriccion.first == NO_COLOR && restriccion.second != NO_COLOR){
+			
+			for(it_type iterator = _delegate.begin(); iterator != _delegate.end(); iterator++) {
+				// Si la clave del diccionario coincide con <___, COLOR> las agrego
+				if(iterator->first.second == restriccion.second){
+					fichas_posibles->insert(fichas_posibles->end(), iterator->second.begin(), iterator->second.end());
+				}
+			}
+			
+		}
+		
+		if(restriccion.first != NO_COLOR && restriccion.second == NO_COLOR){
+			
+			typedef std::map<pair<Color, Color>, list<Ficha> >::iterator it_type;
+			for(it_type iterator = _delegate.begin(); iterator != _delegate.end(); iterator++) {
+				// Si la clave del diccionario coincide con <___, COLOR> las agrego
+				if(iterator->first.first == restriccion.first){
+					fichas_posibles->insert(fichas_posibles->end(), iterator->second.begin(), iterator->second.end());
+				}
+			}
+			
+		}
+	
+	}
+	
+	return fichas_posibles;
+	
+}
+
 DiccionarioFichas::~DiccionarioFichas() {
 }
 
-void DiccionarioFichas::imprimirDiccionarioFichas(DiccionarioFichas dic){
-	
-	cout << endl << "DICCIONARIO" << endl;
+void DiccionarioFichas::imprimirDiccionarioFichas(){
 
-	DiccionarioFichas::iterator it_clave;
+	map<pair<Color,Color>, list<Ficha> >::iterator it_clave;
 	for(it_clave = _delegate.begin(); it_clave != _delegate.end(); ++it_clave) {
 		list<Ficha> valor = (*it_clave).second;
 		imprimirListaFichas(valor);
