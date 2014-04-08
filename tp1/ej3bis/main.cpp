@@ -34,39 +34,61 @@ list<Ficha> * parseInput(int cant_fichas) {
 	return fichas;
 }
 
-
-bool backtrack(Tablero & tablero, list<Ficha> & fichas, DiccionarioFichas & fichas_ordenadas, Tablero & mejor_tablero) {
-
-	if(tablero.reject()){ return false; }
+bool backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero & mejor_tablero) {
 	
+	list<Ficha> * fichas_posibles;
+	
+	if(tablero.reject(mejor_tablero, fichas_ordenadas)){ return false; }
+	
+	/*
 	if(tablero.accept(mejor_tablero)){ 
 		return true; 
 	}
+	*/
+	
+	// Voy guardando el mejor tablero
+	if(tablero.getPosicionesOcupadas() > mejor_tablero.getPosicionesOcupadas()){
+		mejor_tablero = tablero;
+	}
+		
+	// Solo recorro las fichas que pueden ir en ese lugar, osea, las que coinciden el color superior e izquierdo con la ficha de arriba y la de atras
+	// Si es la 1ra posicion o no tengo fichas arriba o atras, puedo poner todas
+	pair<Color, Color> restriccion = tablero.restriccionFicha(tablero.getPosicionLibre());
+	fichas_posibles = fichas_ordenadas.dameFichas(restriccion);
+	
+	cout << "Fichas posibles:";
+	fichas_ordenadas.imprimirListaFichas(*fichas_posibles);
+	
+	// Recorro las fichas que vale la pena ubicar
+	for(list<Ficha>::iterator f = fichas_posibles->begin(); f != fichas_posibles->end(); f++){
 
-	for(list<Ficha>::iterator f = fichas.begin(); f != fichas.end(); f++){
-			
 		// Para cada ficha restante, llamo un backtracking con el tablero
 		// y agrego la proxima ficha al nuevo tablero
 		Tablero * tablero_con_una = new Tablero(tablero);
 		tablero_con_una->agregarFicha(*f);
-		//tablero_con_una->print();
+
 		// Le paso al proximo bt las fichas sin la que puse para no repetir
-		list<Ficha> * fichas_sin_una = new list<Ficha>(fichas); // O(fichas)
-		fichas_sin_una->remove(*f); // O(fichas)
+		fichas_ordenadas.sacarFicha(*f);		
+		//fichas_ordenadas.imprimirDiccionarioFichas();
+
+		tablero_con_una->print();
 		
-		//tablero_con_una->print();
+		// Limpio las fichas temporales
+		delete fichas_posibles;
 			
-		return backtrack(*tablero_con_una, *fichas_sin_una, fichas_ordenadas, mejor_tablero);
+		return backtrack(*tablero_con_una, fichas_ordenadas, mejor_tablero);
 	}
+	
+	// Limpio las fichas temporales
+	delete fichas_posibles;
 	
 	// Siempre considero el caso de no agregar ficha
 	Tablero * tablero_con_una = new Tablero(tablero);
 	Ficha fvacia = Ficha();
 	tablero_con_una->agregarFicha(fvacia);
-	list<Ficha> * fichas_sin_una = new list<Ficha>(fichas);
 		
-	return backtrack(*tablero_con_una, *fichas_sin_una, fichas_ordenadas, mejor_tablero);
-	
+	return backtrack(*tablero_con_una, fichas_ordenadas, mejor_tablero);
+
 }
 
 /* ************************************************************************* */
@@ -87,12 +109,13 @@ int main(int argc, char* argv[]) {
 	// Datos para la 1er llamada
 	Tablero * tablero_inicial = new Tablero(alto, ancho);
 	list<Ficha> * fichas_iniciales = parseInput(cant_fichas);
-	DiccionarioFichas * fichas_iniciales_ordenadas = new DiccionarioFichas(*fichas_iniciales);
+	DiccionarioFichas * fichas_ordenadas = new DiccionarioFichas(*fichas_iniciales);
 
-	if(backtrack(*tablero_inicial, *fichas_iniciales, *fichas_iniciales_ordenadas, mejor_tablero)){
+	if(backtrack(*tablero_inicial, *fichas_ordenadas, mejor_tablero)){
 		cout << endl << "Mejor tablero" << endl;
 		mejor_tablero.print();
 	}
+
 
 }
 

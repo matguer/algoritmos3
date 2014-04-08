@@ -2,6 +2,7 @@
 #define __TABLERO_H__
 
 #include "Ficha.h"
+#include "DiccionarioFichas.h"
 #include <vector>
 
 using namespace std;
@@ -39,8 +40,9 @@ class Tablero {
 		Tablero& operator=(const Tablero& otra);
 		
 		//Funciones para backtracking
-		bool reject();
+		bool reject(Tablero& mejor_tablero, DiccionarioFichas & fichas_ordenadas);
 		bool accept(Tablero& mejor_tablero);
+		pair<Color,Color> restriccionFicha(Coord coord);
 };
 
 #endif

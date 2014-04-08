@@ -50,6 +50,7 @@ Ficha & Ficha::operator=(const Ficha& otra) {
 	_colores[IZQUIERDA] = otra._colores[IZQUIERDA];
 	_colores[DERECHA] = otra._colores[DERECHA];
 	_colores[INFERIOR] = otra._colores[INFERIOR];
+	
 	return *this; 
 }
 

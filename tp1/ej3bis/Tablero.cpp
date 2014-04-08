@@ -42,8 +42,10 @@ Tablero & Tablero::operator=(const Tablero& otra) {
 Tablero::Tablero(const Tablero& otro) {
 	_filas = otro._filas;
 	_columnas = otro._columnas;
+	_posiciones_recorridas = otro._posiciones_recorridas;
 	_posiciones_ocupadas = otro._posiciones_ocupadas;
 	_posiciones_vacias = otro._posiciones_vacias;
+	_proxima_posicion_libre = otro._proxima_posicion_libre;
 	_tablero = Matriz(_filas, vector<Ficha>(_columnas, Ficha()));
 	Matriz otro_tablero = otro._tablero;
 	for(int i=0; i<_filas; i++) {
@@ -59,25 +61,49 @@ Tablero::~Tablero() {
 
 }
 
-bool Tablero::reject() {
-	if(_posiciones_recorridas == (_filas * _columnas)){
+bool Tablero::reject(Tablero& mejor_tablero, DiccionarioFichas & fichas_ordenadas) {
+		
+	// PODAS
+	if(_posiciones_recorridas == (_filas * _columnas) && getPosicionesOcupadas() <= mejor_tablero.getPosicionesOcupadas()){
 		return true;
 	}
-	
+
 	return false;
 }
 
 bool Tablero::accept(Tablero& mejor_tablero) {
 	/* Si el tablero esta completo encontre una solucion inmejorable */
 	if(completo()) {
+		mejor_tablero = *this;
 		return true;
 	}
 	
-	if(getPosicionesOcupadas() > mejor_tablero.getPosicionesOcupadas()) { 
-		mejor_tablero = *this;
+	if(_posiciones_recorridas == (_filas * _columnas)){
+		return true;
+	}
+		
+	return false;
+}
+
+pair<Color,Color> Tablero::restriccionFicha(Coord coord){
+	
+	pair<Color, Color> result(NO_COLOR,NO_COLOR);
+	
+	if(coord == Coord(0,0)){
+		return result;
 	}
 	
-	return false;
+	// Reviso la posicion a la izquierda
+	if(coord.second > 0 && (_tablero[coord.first][coord.second-1]).getLado(DERECHA) != NO_COLOR){
+		result.first = (_tablero[coord.first][coord.second-1]).getLado(DERECHA);
+	}
+	
+	// Reviso la posicion de arriba
+	if(coord.first > 0 && (_tablero[coord.first-1][coord.second]).getLado(INFERIOR) != NO_COLOR){
+		result.second = (_tablero[coord.first-1][coord.second]).getLado(INFERIOR);
+	}
+	
+	return result;
 }
 
 /* La funcion getFilas debe retornar la cantidad de filas del tablero */
@@ -96,6 +122,7 @@ int Tablero::getColumnas() {
 */
 void Tablero::agregarFicha(Ficha& ficha) {
 	Coord coord = getPosicionLibre();
+	
 	_tablero[coord.first][coord.second] = Ficha(ficha);
 	
 	if (!ficha.isVacia()){ 
@@ -106,7 +133,6 @@ void Tablero::agregarFicha(Ficha& ficha) {
 	
 	_proxima_posicion_libre = Coord(_posiciones_recorridas / _filas, _posiciones_recorridas % _columnas);
 	
-	//cout << _posiciones_recorridas << endl;
 	//cout << _proxima_posicion_libre.first << " " << _proxima_posicion_libre.second << endl;
 
 }
