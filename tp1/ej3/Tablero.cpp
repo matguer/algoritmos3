@@ -220,3 +220,24 @@ void Tablero::printDetailed() {
 	
 	cout << endl;
 }
+
+void Tablero::llenarTableroConDiagonales(list<Ficha> & fichas) {
+	
+	Ficha fvacia = Ficha();
+	
+	for(list<Ficha>::iterator f = fichas.begin(); f != fichas.end(); f++){
+		
+		if(getPosicionesRecorridas() == getFilas()*getColumnas()){
+			break;
+		}
+		
+		agregarFicha(*f);
+
+		if(getPosicionesRecorridas() == getFilas()*getColumnas()){
+			break;
+		}
+		
+		agregarFicha(fvacia);
+
+	}
+}

@@ -40,6 +40,7 @@ class Tablero {
 		bool completo();
 		void print();
 		void printDetailed();
+		void llenarTableroConDiagonales(list<Ficha> & fichas);
 		Tablero& operator=(const Tablero& otra);
 		
 		//Funciones para backtracking
