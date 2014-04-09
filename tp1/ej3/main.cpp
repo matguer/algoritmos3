@@ -10,8 +10,7 @@
 using namespace std;
 
 list<Ficha> * parseInput(int cant_fichas);
-list<Tablero*>* punteros = new list<Tablero*>;
-void backtrack(Tablero & tablero, list<Ficha> & fichas, DiccionarioFichas & fichas_ordenadas, Tablero & mejor_tablero);
+void backtrack(Tablero * tablero, DiccionarioFichas * fichas_ordenadas, Tablero & mejor_tablero);
 
 /* La funcion parseInput debe recibir la cantidad de fichas a generar y 
    debe crear un arreglo de longitud cant_fichas de punteros a Ficha 
@@ -35,28 +34,26 @@ list<Ficha> * parseInput(int cant_fichas) {
 
 
 
-void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero & mejor_tablero) {
+void backtrack(Tablero * tablero, DiccionarioFichas * fichas_ordenadas, Tablero & mejor_tablero) {
 	
 	list<Ficha> * fichas_posibles;
 	
 	// Podas
-	if(tablero.reject(mejor_tablero)){ 
-		//delete &tablero;
+	if(tablero->reject(mejor_tablero)){ 
 		return; 
 	}
 	
 	// Si encuentro un tablero completo termino, si es un tablero mejor que el mejor actual lo reemplazo
-	if(tablero.accept(mejor_tablero)){ 
-		//delete &tablero;
+	if(tablero->accept(mejor_tablero)){ 
 		return; 
 	}
 	
-	if(tablero.getPosicionesRecorridas() < (tablero.getFilas() * tablero.getColumnas())){
+	if(tablero->getPosicionesRecorridas() < (tablero->getFilas() * tablero->getColumnas())){
 				
 		// Solo recorro las fichas que pueden ir en ese lugar, osea, las que coinciden el color superior e izquierdo con la ficha de arriba y la de atras
 		// Si es la 1ra posicion o no tengo fichas arriba o atras, puedo poner todas
-		pair<Color, Color> restriccion = tablero.restriccionFicha(tablero.getPosicionLibre());
-		fichas_posibles = fichas_ordenadas.dameFichas(restriccion);
+		pair<Color, Color> restriccion = tablero->restriccionFicha(tablero->getPosicionLibre());
+		fichas_posibles = fichas_ordenadas->dameFichas(restriccion);
 		
 
 		// Recorro las fichas que vale la pena ubicar
@@ -64,15 +61,15 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 
 			// Para cada ficha restante, llamo un backtracking con el tablero
 			// y agrego la proxima ficha al nuevo tablero
-			Tablero* tablero_con_una = new Tablero(tablero);
-			punteros->push_back(tablero_con_una);
+			Tablero* tablero_con_una = new Tablero(*tablero);
 			tablero_con_una->agregarFicha(*f);
 
 			// Le paso al proximo bt las fichas sin la que puse para no repetir
-			DiccionarioFichas * fichas_ordenadas_sin_una = new DiccionarioFichas(fichas_ordenadas);
-			fichas_ordenadas_sin_una->sacarFicha(*f);		
+			DiccionarioFichas * fichas_ordenadas_sin_una = new DiccionarioFichas(*fichas_ordenadas);
+			fichas_ordenadas_sin_una->sacarFicha(*f);	
 
-			backtrack(*tablero_con_una, *fichas_ordenadas_sin_una, mejor_tablero);
+			backtrack(tablero_con_una, fichas_ordenadas_sin_una, mejor_tablero);
+			
 			delete tablero_con_una;
 			delete fichas_ordenadas_sin_una;
 		}
@@ -81,17 +78,14 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 		delete fichas_posibles;
 		
 		// Siempre considero el caso de no agregar ficha
-		Tablero* tablero_con_vacia = new Tablero(tablero);
+		Tablero* tablero_con_vacia = new Tablero(*tablero);
 		Ficha fvacia = Ficha();
 		tablero_con_vacia->agregarFicha(fvacia);
 			
-		backtrack(*tablero_con_vacia, fichas_ordenadas, mejor_tablero);
-
+		backtrack(tablero_con_vacia, fichas_ordenadas, mejor_tablero);
+		
 		delete tablero_con_vacia;
 	
-	}else{
-		//delete &tablero;
-		//delete &fichas_ordenadas;
 	}
 	
 }
@@ -125,7 +119,7 @@ int main(int argc, char* argv[]) {
 	Tablero * tablero_inicial = new Tablero(alto, ancho);
 	DiccionarioFichas * fichas_ordenadas = new DiccionarioFichas(*fichas_iniciales);
 
-	backtrack(*tablero_inicial, *fichas_ordenadas, mejor_tablero);
+	backtrack(tablero_inicial, fichas_ordenadas, mejor_tablero);
 	
 	cout << endl << "Mejor tablero" << endl;
 	mejor_tablero.printDetailed();
