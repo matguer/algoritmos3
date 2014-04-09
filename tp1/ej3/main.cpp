@@ -69,7 +69,7 @@ void backtrack(Tablero * tablero, DiccionarioFichas * fichas_ordenadas, Tablero 
 			fichas_ordenadas_sin_una->sacarFicha(*f);	
 
 			backtrack(tablero_con_una, fichas_ordenadas_sin_una, mejor_tablero);
-			
+
 			delete tablero_con_una;
 			delete fichas_ordenadas_sin_una;
 		}

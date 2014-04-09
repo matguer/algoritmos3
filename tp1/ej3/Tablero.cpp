@@ -122,7 +122,8 @@ int Tablero::getColumnas() {
    la misma en la coordenada indicada. A su vez si la ficha agregada no es vacia debe 
    incrementar la cantidad de posiciones ocupadas y decrementar las vacias
 */
-void Tablero::agregarFicha(Ficha& ficha) {
+void Tablero::agregarFicha(Ficha ficha) {
+	
 	Coord coord = getPosicionLibre();
 	
 	_tablero[coord.first][coord.second] = Ficha(ficha);
@@ -130,12 +131,18 @@ void Tablero::agregarFicha(Ficha& ficha) {
 	if (!ficha.isVacia()){ 
 		_posiciones_ocupadas++;
 		_posiciones_vacias--;
-	}else{
-		
-	}
+	}	
+	
+	coord.second++;
 	_posiciones_recorridas++;
 	
-	_proxima_posicion_libre = Coord(_posiciones_recorridas / _filas, _posiciones_recorridas % _columnas);
+	if(coord.second==_columnas){
+		coord.second = 0;
+		coord.first++;
+	}		
+
+	_proxima_posicion_libre = coord;
+
 
 }
 

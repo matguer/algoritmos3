@@ -35,7 +35,7 @@ class Tablero {
 		int getPosicionesRecorridas();
 		int getPosicionesPorRecorrer();
 		
-		void agregarFicha(Ficha& ficha);
+		void agregarFicha(Ficha ficha);
 		void quitarFicha(Coord coord);
 		bool completo();
 		void print();
