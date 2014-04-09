@@ -10,6 +10,7 @@
 using namespace std;
 
 list<Ficha> * parseInput(int cant_fichas);
+list<Tablero*>* punteros = new list<Tablero*>;
 void backtrack(Tablero & tablero, list<Ficha> & fichas, DiccionarioFichas & fichas_ordenadas, Tablero & mejor_tablero);
 
 /* La funcion parseInput debe recibir la cantidad de fichas a generar y 
@@ -40,13 +41,13 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 	
 	// Podas
 	if(tablero.reject(mejor_tablero)){ 
-		delete &tablero;
+		//delete &tablero;
 		return; 
 	}
 	
 	// Si encuentro un tablero completo termino, si es un tablero mejor que el mejor actual lo reemplazo
 	if(tablero.accept(mejor_tablero)){ 
-		delete &tablero;
+		//delete &tablero;
 		return; 
 	}
 	
@@ -57,12 +58,14 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 		pair<Color, Color> restriccion = tablero.restriccionFicha(tablero.getPosicionLibre());
 		fichas_posibles = fichas_ordenadas.dameFichas(restriccion);
 		
+
 		// Recorro las fichas que vale la pena ubicar
 		for(list<Ficha>::iterator f = fichas_posibles->begin(); f != fichas_posibles->end(); f++){
 
 			// Para cada ficha restante, llamo un backtracking con el tablero
 			// y agrego la proxima ficha al nuevo tablero
-			Tablero * tablero_con_una = new Tablero(tablero);
+			Tablero* tablero_con_una = new Tablero(tablero);
+			punteros->push_back(tablero_con_una);
 			tablero_con_una->agregarFicha(*f);
 
 			// Le paso al proximo bt las fichas sin la que puse para no repetir
@@ -70,21 +73,25 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 			fichas_ordenadas_sin_una->sacarFicha(*f);		
 
 			backtrack(*tablero_con_una, *fichas_ordenadas_sin_una, mejor_tablero);
+			delete tablero_con_una;
+			delete fichas_ordenadas_sin_una;
 		}
 		
 		// Limpio las fichas temporales
 		delete fichas_posibles;
 		
 		// Siempre considero el caso de no agregar ficha
-		Tablero * tablero_con_una = new Tablero(tablero);
+		Tablero* tablero_con_vacia = new Tablero(tablero);
 		Ficha fvacia = Ficha();
-		tablero_con_una->agregarFicha(fvacia);
+		tablero_con_vacia->agregarFicha(fvacia);
 			
-		backtrack(*tablero_con_una, fichas_ordenadas, mejor_tablero);
+		backtrack(*tablero_con_vacia, fichas_ordenadas, mejor_tablero);
+
+		delete tablero_con_vacia;
 	
 	}else{
-		delete &tablero;
-		delete &fichas_ordenadas;
+		//delete &tablero;
+		//delete &fichas_ordenadas;
 	}
 	
 }
@@ -125,6 +132,7 @@ int main(int argc, char* argv[]) {
 	
 	delete tablero_inicial;
 	delete fichas_ordenadas;
+	delete fichas_iniciales;
 	
 
 }

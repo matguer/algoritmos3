@@ -46,6 +46,7 @@ list<Ficha> * DiccionarioFichas::dameFichas(pair<Color, Color> & restriccion){
 	
 	// Indexo directo por la restriccion
 	if(restriccion.first != NO_COLOR && restriccion.second != NO_COLOR){
+		delete fichas_posibles;
 		fichas_posibles = new list<Ficha>(_delegate[restriccion]);
 	// No hay restriccion, son todas
 	}else if(restriccion.first == NO_COLOR && restriccion.second == NO_COLOR){
