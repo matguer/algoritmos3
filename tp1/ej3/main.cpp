@@ -32,26 +32,7 @@ list<Ficha> * parseInput(int cant_fichas) {
 	return fichas;
 }
 
-void llenarTableroConDiagonales(Tablero & tablero, list<Ficha> & fichas) {
-	
-	Ficha fvacia = Ficha();
-	
-	for(list<Ficha>::iterator f = fichas.begin(); f != fichas.end(); f++){
-		
-		if(tablero.getPosicionesRecorridas() == tablero.getFilas()*tablero.getColumnas()){
-			break;
-		}
-		
-		tablero.agregarFicha(*f);
 
-		if(tablero.getPosicionesRecorridas() == tablero.getFilas()*tablero.getColumnas()){
-			break;
-		}
-		
-		tablero.agregarFicha(fvacia);
-
-	}
-}
 
 void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero & mejor_tablero) {
 	
@@ -59,14 +40,12 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 	
 	// Podas
 	if(tablero.reject(mejor_tablero)){ 
-		//delete &fichas_ordenadas;
 		delete &tablero;
 		return; 
 	}
 	
 	// Si encuentro un tablero completo termino, si es un tablero mejor que el mejor actual lo reemplazo
 	if(tablero.accept(mejor_tablero)){ 
-		//delete &fichas_ordenadas;
 		delete &tablero;
 		return; 
 	}
@@ -103,6 +82,9 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 			
 		backtrack(*tablero_con_una, fichas_ordenadas, mejor_tablero);
 	
+	}else{
+		delete &tablero;
+		delete &fichas_ordenadas;
 	}
 	
 }
@@ -130,7 +112,7 @@ int main(int argc, char* argv[]) {
 		0 3 0 
 		4 0 5
 	*/
-	llenarTableroConDiagonales(mejor_tablero, *fichas_iniciales); 
+	mejor_tablero.llenarTableroConDiagonales(*fichas_iniciales); 
 	
 	// Datos para la 1er llamada
 	Tablero * tablero_inicial = new Tablero(alto, ancho);
