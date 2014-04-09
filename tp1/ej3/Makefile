@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS=-g -Wall -std=c++98 -Werror -fno-stack-protector
+CXXFLAGS=-g -Wall -std=c++98 -Werror -fno-stack-protector -O3
 OBJS=main.o Ficha.o Tablero.o DiccionarioFichas.o
 MAIN=ej3
 
