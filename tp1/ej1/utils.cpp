@@ -31,16 +31,13 @@ intervalo resolver(LCamiones& c, int periodo){
 		if(ultimoVisto != c.at(i)){
 			// Primer dia fuera del rango
 			finContrato = c.at(i) + periodo - 1;
-			cout << "fin contrato: " << finContrato << endl;
 			
 			// Obtengo el primer camion fuera del rango O(log2(N)+1) donde N es la distancia entre inicio y final
 			// http://www.cplusplus.com/reference/algorithm/upper_bound/
 			ultimoCamion = upper_bound(c.begin(), c.end(), finContrato);
-			cout << "primero fuera de rango: " << *ultimoCamion << endl;
 			
 			index = ultimoCamion - c.begin();
 			inspecTemp = index - i;
-			cout << "camiones: " << inspecTemp << endl;
 
 			// Si encontre un inicio mejor(o igual) reemplazo el anterior
 			if(inspecTemp >= maxInspec){

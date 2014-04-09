@@ -25,11 +25,11 @@ int main()
 		if(periodo==0){
 			break;
 		}
-		cout << "periodo contratacion: " << periodo << endl;
+		//cout << "periodo contratacion: " << periodo << endl;
 
 		// Segundo int es la cantidad total de camiones
 		cin >> totalCamiones;
-		cout << "total camiones: " << totalCamiones << endl;
+		//cout << "total camiones: " << totalCamiones << endl;
 		
 		LCamiones* c = new LCamiones();
 		intervalo res = intervalo();
@@ -37,7 +37,7 @@ int main()
 		// Armo la lista de camiones
 		for(int i=0;i<totalCamiones;i++){
 			cin >> camionI;
-			cout << camionI << endl;
+			//cout << camionI << endl;
 			c->push_back(camionI);
 		}
 
