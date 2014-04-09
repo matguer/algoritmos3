@@ -50,9 +50,9 @@ Para comenzar notemos que, de todo el universo de posibles intervalos, considera
 Demostremos entonces que con los intervalos que estamos considerando alcanza ya que entre ellos hay al menos uno que tiene la sublista m\'as larga.\\
 Dados un offset $off$ y una lista ordenada de manera creciente $l$ y sea $S$ el subconjunto de intervalos que vamos a considerar, expresada como: \\
 \begin{center}
-$ S = \left\lbrace s_i = \left[ e \rightarrow l | l_i \leq e \leq l_i + o - 1 \right] \right\rbrace \forall 1 \leq i \leq long(l) $ 
+$ S = \left\lbrace s_i = \left[ e \rightarrow l | l_i \leq e \leq l_i + off - 1 \right] \right\rbrace \forall 1 \leq i \leq long(l) $ 
 \end{center}
-Es decir, es un conjunto de listas tal que todos los elementos de cada lista $s_i$ pertenecen a $l$ y est\'an dentro del rango $l_i$-$l_i + o - 1$. \\
+Es decir, es un conjunto de listas tal que todos los elementos de cada lista $s_i$ pertenecen a $l$ y est\'an dentro del rango $l_i$-$l_i + off - 1$. \\
 Supongamos ahora que existe una lista ordenada $s'$ que cumple con lo pedido y que es \'optima.\\
 Supongamos adem\'as que esta lista \'optima no est\'a en S; es decir que no est\'a siendo considerada en nuestra resoluci\'on.\\
 Sabemos que, como la lista es finita y los n\'umeros que pueden entrar en los intervalos est\'an ah\'i, entonces \\
@@ -66,19 +66,19 @@ $s'_1$ $\in$ l. \\
 
 Adem\'as, como la lista est\'a ordenada y cumple con la condici\'on de que todos sus elementos est\'an dentro de un rango determinado por $inicio$-$inicio + o - 1$\\
 \begin{center}
-($\forall$ elem $\in$ s') $s'_1 \leq$ elem $\leq inicio + o - 1$.\\
+($\forall$ elem $\in$ s') $s'_1 \leq$ elem $\leq inicio + off - 1$.\\
 \end{center}
 
 Notemos ahora que $inicio$ $\leq$ $s'_1$, es decir que \\ 
 \begin{center}
-$inicio$ $\leq$ $s'_1$ $\Leftrightarrow$ $inicio + o - 1$ $\leq$ $s'_1 + o - 1$
+$inicio$ $\leq$ $s'_1$ $\Leftrightarrow$ $inicio + off - 1$ $\leq$ $s'_1 + off - 1$
 \end{center}
 Porque, recordemos, se trata de enteros positivos, con lo cual vale la desigualdad.\\
 
 Miremos ambos casos:
 \begin{itemize}
-\item inicio + o = $s'_1$ + o. En este caso a pertenecer\'ia a S, ya que inicio = $s'_1$ y $s'_1$ es un elemento de l.
-\item inicio + o - 1 < $s'_1$ + o - 1. En este caso el per\'iodo comienza antes que $s'_1$, pero el primer elemento de l que entra en el rango es $s'_1$, con lo cual ninguna de las listas de S se est\'a perdiendo elementos previos a $s'_1$. Por otro lado, llamemos $s_i$ a la lista de S que comienza con $s'_1$; como $inicio + o - 1$ < $s'_1$ + o - 1, podemos deducir que a $\leq$ $ s_i$. Ac\'a llegamos a una contradicci\'on: no puede haber una lista \'optima que no est\'e en S.
+\item inicio + off = $s'_1$ + off. En este caso a pertenecer\'ia a S, ya que inicio = $s'_1$ y $s'_1$ es un elemento de l.
+\item inicio + off - 1 < $s'_1$ + off - 1. En este caso el per\'iodo comienza antes que $s'_1$, pero el primer elemento de l que entra en el rango es $s'_1$, con lo cual ninguna de las listas de S se est\'a perdiendo elementos previos a $s'_1$. Por otro lado, llamemos $s_i$ a la lista de S que comienza con $s'_1$; como $inicio + off - 1$ < $s'_1$ + off - 1, podemos deducir que a $\leq$ $ s_i$. Ac\'a llegamos a una contradicci\'on: no puede haber una lista \'optima que no est\'e en S.
 \end{itemize}
 
 Una vez probado lo anterior, es trivial saber que comparando uno a uno los tama\~nos de las listas de S vamos a encontrar cu\'al es \'optima.\\
