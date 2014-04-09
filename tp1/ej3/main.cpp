@@ -40,14 +40,12 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 	
 	// Podas
 	if(tablero.reject(mejor_tablero)){ 
-		//delete &fichas_ordenadas;
 		delete &tablero;
 		return; 
 	}
 	
 	// Si encuentro un tablero completo termino, si es un tablero mejor que el mejor actual lo reemplazo
 	if(tablero.accept(mejor_tablero)){ 
-		//delete &fichas_ordenadas;
 		delete &tablero;
 		return; 
 	}
@@ -84,6 +82,9 @@ void backtrack(Tablero & tablero, DiccionarioFichas & fichas_ordenadas, Tablero 
 			
 		backtrack(*tablero_con_una, fichas_ordenadas, mejor_tablero);
 	
+	}else{
+		delete &tablero;
+		delete &fichas_ordenadas;
 	}
 	
 }
