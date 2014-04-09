@@ -1,11 +1,27 @@
 \subsection{Descripci\'on del problema}
 
-En este ejercicio se nos pide escribir un algoritmo que resuelva una especie de rompecabezas dado por un tablero y una cantidad de piezas igual al n\'umero de casillas en el tablero.
+En este ejercicio se nos pide escribir un algoritmo que resuelva una especie de rompecabezas dado por un tablero de $n \times m$ casillas y $n \times m$ fichas.
 Cada pieza (cuadrada) tiene un color en cada uno de sus lados, no necesariamente colores distintos en cada uno. Por ejemplo: 
 
-/*agregar la imagen de la pieza*/
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.4]{./img/ej3_fichas.png}
+\caption{Ejemplo de ficha}
+\end{center}
+\end{figure}
 
-Ahora, para poder poner las piezas en el tablero se debe asegurar que los colores de cada uno de sus lados debe coincidir con el color adyacente de la pieza (en caso de que realmente haya una) lindante. Aparte de esta restricci\'on, cualquier pieza puede colocarse en cualquier casillero.
+Ahora, para poder poner una pieza en el tablero debemos asegurarnos de que los colores de los lados coincidan con los de las fichas adyacentes (en caso de que haya una ficha lindante). Un ejemplo de las posicionamiento correcto e incorrecto ser\'ia:\\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.4]{./img/ej3_fichas_coinciden.png}
+\caption{Ejemplo posicionamiento correcto}
+\includegraphics[scale=0.4]{./img/ej3_fichas_ncoinciden.png}
+\caption{Ejemplo posicionamiento incorrecto}
+\end{center}
+\end{figure}
+
+ M\'as all\'a de esta restricci\'on, cualquier pieza puede colocarse en cualquier casillero.\\
 El modo resolutivo del rompecabezas no necesariamente debe ser total, ya que el conjunto de piezas dado podria no tener un ordenamiento tal que pueda llenar completamente el tablero, por lo tanto, la soluci\'on al problema debe ser lo m\'as \'optima posible, aquella en la que mayor cantidad de piezas permita ingresar en el tablero dadas las restricciones anteriores.
 Por ejemplo el siguiente gr\'afico muestra una soluci\'on \'optima, dado un conjunto de piezas que no permiten llenar por completo el tablero.
 
@@ -29,7 +45,7 @@ Por lo tanto las podas implementadas son las siguientes:
 
 \item La primer poda consiste en: Una vez que se terminaron de probar las fichas disponibles en cada casillero del tablero, se debe poner una ficha en blanco (o vac\'ia), en este momento comparamos la cantidad de fichas puestas (no vac\'ias) en el tablero de referencia contra la cantidad de fichas puestas (no vac\'ias) en el tablero actual, más los casilleros que todav\'ia no se recorrieron. Si el valor dado por el tablero actual es igual o menor al valor dado por el tablero de referencia, esta rama del backtraking es podada porque aunque se pudieran colocar fichas en todos los casilleros restantes, no se llegar\'ia a una soluci\'on más optima que la ya obtenida (tablero de referencia). Aqu\'i se regresa al nodo anterior del arbol, cambiando la ficha puesta en este y continuando con el algoritmo.
 
-/*Pseudo código de la primer poda*/
+/*Pseudo c\'odigo de la primer poda*/
 
 \item La segunda poda viene de la mano de la primera, esta consiste en: Antes de comenzar el algoritmo resolutivo se llena el tablero de referencia en posiciones intercaladas de manera que no importa que fichas coloquemos, al no haber dos fichas adjuntas, cualquier combinaci\'on de fichas ser\'a v\'alido. De esta forma obtenemos un tablero con la mitad de los casilleros llenos. Ahora cuando comience el algoritmo en el caso que las primeras ramas del \'arbol de backtracking resulten menos \'optimas que el tablero de referencia obtenido, no llegaran a completarse, porque se cortaran como resultado de la primer poda.
 
