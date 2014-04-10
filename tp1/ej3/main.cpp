@@ -118,7 +118,6 @@ int main(int argc, char* argv[]) {
 		4 0 5
 	*/
 	mejor_tablero.llenarTableroConDiagonales(*fichas_iniciales); 
-	
 	// Datos para la 1er llamada
 	Tablero * tablero_inicial = new Tablero(alto, ancho);
 	DiccionarioFichas * fichas_ordenadas = new DiccionarioFichas(*fichas_iniciales);

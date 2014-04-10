@@ -238,13 +238,23 @@ void Tablero::llenarTableroConDiagonales(list<Ficha> & fichas) {
 			break;
 		}
 		
-		agregarFicha(*f);
-
-		if(getPosicionesRecorridas() == getFilas()*getColumnas()){
-			break;
-		}
+		if(_proxima_posicion_libre.first % 2 == 0){
 		
-		agregarFicha(fvacia);
+			if(_proxima_posicion_libre.second % 2 == 0){
+				agregarFicha(*f);
+			}else{
+				agregarFicha(fvacia);
+			}
+		
+		}else{
+			
+			if(_proxima_posicion_libre.second % 2 == 1){
+				agregarFicha(*f);
+			}else{
+				agregarFicha(fvacia);
+			}
+			
+		}
 
 	}
 }
