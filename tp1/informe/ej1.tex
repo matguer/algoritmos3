@@ -3,9 +3,14 @@
 En este ejercicio se plantea la necesidad de inspeccionar los camiones de una determinada empresa; para lo cual se puede contratar a un inspector durante un intervalo de d\'ias D. \\ 
 Dados el intervalo y la cantidad de camiones c de dicha empresa, junto con la lista de d\'ias en que va a pasar cada cami\'on por el lugar donde estar\'a el inspector, la idea es elegir el d\'ia inicial de contrataci\'on tal que se maximice la cantidad de camiones inspeccionados. En caso de haber varios d\'ias iniciales que permitan controlar la misma cantidad de camiones (siempre y cuando esta cantidad sea m\'axima), cualquiera de estas opciones ser\'a correcta. \\
 
-Por ejemplo, suponiendo que podemos contratar al inspector por 5 d\'ias consecutivos y dada una lista de d\'ias en que pasan los camiones L=[1,2,6,7,8,10,11] se puede ver en el siguiente diagrama que tanto el d\'ia 6 como el 7 son posibles respuestas.\\
+Por ejemplo, suponiendo que podemos contratar al inspector por 3 d\'ias consecutivos y dada una lista de d\'ias en que pasan los camiones L=[1,3,4,5,7,8,9] se puede ver en el siguiente diagrama que tanto el d\'ia 3 como el 7 son posibles respuestas.\\
 
-TODO: grafico que muestre una linea con los dias y las dos opciones posibles
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.7]{./img/ej1_intervalo.png}
+\caption{Ejemplo de intervalos optimos}
+\end{center}
+\end{figure}
 
 \subsection{Resoluci\'on}
 
@@ -99,7 +104,9 @@ Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando 
 \end{itemize}
 
 Decimos que ordenar la lista toma O(n*log(n)) ya que en nuestra implementaci\'on usamos std::sort.\cite{sort}\\
-Lo mismo pasa cuando decimos que encontrar el primero fuera de rango toma $O(log(n))$, para lo cual usamos std::upper\_bound.\cite{upper} \\ 
+Lo mismo pasa cuando decimos que encontrar el primero fuera de rango toma $O(log(n))$, para lo cual usamos std::upper\_bound.\cite{upper} \\
+
+\newpage 
 
 \subsection{Codigo fuente}
 
