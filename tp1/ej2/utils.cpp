@@ -20,7 +20,6 @@ void resolver(list<Joya>& l){
 	}
 	
 	// Ordeno la lista de resultados segun el % de peso de mayor a menor: : O(n*log(n)) 
-	// http://www.cplusplus.com/reference/list/list/sort/
 	l.sort(pairCompare);
 
 }

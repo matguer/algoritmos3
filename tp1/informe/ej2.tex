@@ -169,7 +169,7 @@ Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando 
 
 Notar que n es la cantidad de trabajos/joyas a confeccionar y que se simplific\'o el algoritmo para que fuera m\'as simple ver la complejidad.
 
-Estamos utilizando el algoritmo de sorting de la STL asociado a las listas, el mismo garantiza una complejidad de O(n*log(n)) como se puede observar en su documentaci\'on: http://www.cplusplus.com/reference/list/list/sort/
+Estamos utilizando el algoritmo de sorting de la STL asociado a las listas, el mismo garantiza una complejidad de O(n*log(n)) como se puede observar en su documentaci\'on \cite{sort}
 
 Como se puede ver en el seguimiento, la complejidad del algoritmo elegido es O(n*log(n)) ya que es la complejidad predominante.\\
 
@@ -208,7 +208,6 @@ void resolver(list<Joya>& l){
 	}
 	
 	// Ordeno la lista de resultados segun el % de peso de mayor a menor: : O(n*log(n)) 
-	// http://www.cplusplus.com/reference/list/list/sort/
 	l.sort(pairCompare);
 
 }
