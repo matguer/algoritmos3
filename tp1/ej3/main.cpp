@@ -6,6 +6,9 @@
 #include <list>
 #include <iostream>
 #include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+#include <math.h>
 
 using namespace std;
 
@@ -104,6 +107,7 @@ int main(int argc, char* argv[]) {
 	
 	cant_fichas = alto * ancho;
 	
+	clock_t t = clock();
 	list<Ficha> * fichas_iniciales = parseInput(cant_fichas);
 	
 	Tablero mejor_tablero = Tablero(alto, ancho);
@@ -120,6 +124,9 @@ int main(int argc, char* argv[]) {
 	DiccionarioFichas * fichas_ordenadas = new DiccionarioFichas(*fichas_iniciales);
 
 	backtrack(tablero_inicial, fichas_ordenadas, mejor_tablero);
+	t = (clock() - t);
+
+	cout << "TIEMPO: " << t << endl;
 	
 	cout << endl << "Mejor tablero" << endl;
 	mejor_tablero.printDetailed();
