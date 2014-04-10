@@ -55,6 +55,7 @@ intervalo resolver(LCamiones& c, int periodo){
 	
 	return resultado;
 }
+
 /**
  * Muestra la lista del resultado
  */
