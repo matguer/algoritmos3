@@ -13,15 +13,15 @@
 
 
 # minima cantidad de casillas por lado
-min_casillas_lado=3
+min_casillas_lado=4
 # maxima cantidad de casillas por lado
 max_casillas_lado=4
 # maxima cantidad de colores
-max_colores=10
+max_colores=8
 # path del programa ejecutable
 ejecutable=./ej3
 # path al fichero de salida
-output_file=ejecucion_${max_casillas_lado}_${max_colores}.csv
+output_file=ejecucion_${min_casillas_lado}_${max_casillas_lado}_${max_colores}.csv
 
 
 
