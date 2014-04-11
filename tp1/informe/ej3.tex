@@ -57,7 +57,7 @@ Por lo tanto las podas implementadas son las siguientes:
 
 \begin{itemize}
 
-\item Diccionario de colores: Antes de llamar a la funci\'on backtrack creamos un diccionario con claves par($colorIzq$, $colorArr$) y valores lista($ficha$) donde las fichas cumplen con la condici\'on indicada en la clave. Luego le pasamos este diccionario a backtrack, sac\'andole en cada llamado la ficha usada anteriormente (para que no vuelva a ser usada en el futuro). As\'i nos evitamos tener que probar todas las fichas que quedan y probamos s\'olo las que tiene sentido poner en cada posici\'on. Dado el caso en que existan fichas repetidas observamos que estar\'iamos repitiendo el mismo caso evaluando cada una de estas, con este analisis logramos optimizar el diccionario haciendo que el mismo devuelva solo una ficha de cada una por mas que existan repetidas y este caso se eval\'ue solo una vez por casillero. 
+\item Diccionario de colores: Antes de llamar a la funci\'on backtrack creamos un diccionario con claves par($colorIzq$, $colorArr$) y valores lista($ficha$) donde las fichas cumplen con la condici\'on indicada en la clave. Luego le pasamos este diccionario a backtrack, sac\'andole en cada llamado la ficha usada anteriormente (para que no vuelva a ser usada en el futuro). As\'i nos evitamos tener que probar todas las fichas que quedan y probamos s\'olo las que tiene sentido poner en cada posici\'on.
 
 \item Mejor caso peor que el de referencia: Cada vez que ponemos una ficha hacemos la cuenta de cu\'antas fichas tendr\'ia el tablero actual suponiendo que podamos llenar todas las casillas que faltan recorrer. La cuenta est\'a dada por: $cantidad de fichas puestas$ + $cantidad de posiciones por recorrer$. Si el resultado es menor a la cantidad de fichas puestas en el tablero de referencia, la rama del backtraking que se ocupa de este tablero es podada porque aunque se pudieran colocar fichas en todos los casilleros restantes, no se llegar\'ia a una soluci\'on mejor que la ya obtenida (tablero de referencia). Aqu\'i se regresa al nodo anterior del arbol, cambiando la ficha puesta en este y continuando con el algoritmo.
 
@@ -73,7 +73,7 @@ Para demostrar por qu\'e nuestro algoritmo resuelve el problema de encontrar la 
 
 Veamos cada una de las podas:\\
 
-Diccionario de colores. Esta poda nos ahorra probar fichas que no ir\'ian en una posici\'on, dej\'andonos s\'olo las v\'alidas. Es trivial ver que no estamos perdiendo tableros v\'alidos en este caso, ya que las opciones que eliminamos no cumplir\'ian con la condici\'on que pide la consigna. A la hora de eliminar las fichas repetidas el la devoluci\'on del diccionario solo nos ahorramos el hecho de probar mas de una vez el mismo caso,  por lo tanto no perdermos opciones v\'alidas, ya que solo estar\'iamos restringiendo la evaluac\'on del mismo caso m\'as de una vez.\\
+Diccionario de colores. Esta poda nos ahorra probar fichas que no ir\'ian en una posici\'on, dej\'andonos s\'olo las v\'alidas. Es trivial ver que no estamos perdiendo tableros v\'alidos en este caso, ya que las opciones que eliminamos no cumplir\'ian con la condici\'on que pide la consigna.\\
 
 Mejor caso peor que el de referencia. Siendo nuestro tablero de referencia con $m$ fichas puestas, cualquier otro tablero en el que se puedan poner menos fichas nunca llegar\'a a ser \'optimo, con lo cual descartarlo no nos hace perder opciones v\'alidas.\\
 
@@ -82,6 +82,20 @@ Valor por defecto del tablero de referencia. Inicializar el tablero de referenci
 Tablero lleno. Es trivial ver que si encontramos un tablero que cumple con las condiciones pedidas y adem\'as est\'a completo (tiene todas las fichas dadas puestas), no es necesario continuar con la ejecuci\'on del algoritmo ya que no hay tablero m\'as \'optimo que ese.\\
 
 \subsection{Complejidad del algoritmo}
+
+Una manera utilizando fuerza bruta de entregar el tablero con mas fichas puestas seria tomar todas las fichas (llamemos a esta cantidad n*m), luego sumarle la misma cantidad de fichas blancas (que representarian las posiciones vacias) para luego tomar todas las posibles dispociciones de estas 2*n*m fichas. Finalmente en un recorrido de n*m validar cada uno de los tableros generados y descartar aquellos que no respeten la coincidencia de colores, al mismo tiempo que se toma el maximo. \\
+
+La complejidad de este algoritmo estaria acotada superiormente por la siguiente funci\'on: \\
+
+${2*n*m \choose n*m} * n*m$ \\
+
+Nuestro algoritmo a cada paso realiza $n*m*\#colores$ operaciones, descartando 1 ficha en cada llamada recursiva, logrando una complejidad  $(n*m*\#colores)*(((n*m)-1)*\#colores)...$, resultando que el mismo esta acotado superiormente por $O(((n*m)!*\#colores))$. \\
+
+En la pr\'actica la situaci\'on es mucho mas performante. Las podas realizadas permiten eliminar varias ramas de la recursi\'on en distintos escenarios:\\
+
+Para empezar, no se prueban todas las combinaciones de fichas posibles, si no solo las fichas que tienen sentido poner en cada casillero, acotando la busqueda de la soluci\'on de manera importante, esto es posible gracias a la indexacion rapida segun los requerimientos de color necesarios para la posicion actual. Tampoco se abren nuevas ramas para fichas con los mismos colores en las mismas posiciones (este caso ocurre al tener fichas repetidas en color), ya que las mismas no van a generar mas informaci\'on al proceso. \\
+
+Finalmente se evalua constantemente el "rendimiento" del tablero en curso, comparandolo con el mejor tablero encontrado, y en caso de que con las fichas ya puestas mas el resto de los posibles casilleros (considerando un caso \'optimo) no logra superarlo, tambi\'en esta rama es podada.
 
 \newpage
 
@@ -158,6 +172,15 @@ void backtrack(Tablero * tablero, DiccionarioFichas * fichas_ordenadas, Tablero 
 \newpage
 
 \subsection{Casos de prueba}
+
+Creamos un script en bash ubicado en TP:/ej3/tiempos.sh que genera distintos tama\~nos de tablero con distintas cantidades de colores de fichas. Los mismos fueron ejecutados y medidos con la funci\'on clock(). \\
+
+Ademas de variar los tama\~nos de tablero (tanto en cantidad de fichas como en diferencia de alto y ancho) y en cantidad de colores, probamos las siguientes situaciones:\\
+
+\begin{itemize}
+\item Fichas todas iguales: Este caso es el mas trivial y el algoritmo lo resuelve cuando la primer rama se completa, ya que esta va a lograr completar todo el tablero, y usando la poda de tablero completo, se devuelve el mismo terminando la ejecuci\'on.
+\item Fichas con todos colores distintos: Al haber tanta variedad de colores resulta imposible juntar fichas, este caso podria ser considerado un caso peor, ya que va a terminar probando todas las opciones y quedandose con el tablero completo en sus diagonales.
+\end{itemize}
 
 \subsection{Performance}
 
