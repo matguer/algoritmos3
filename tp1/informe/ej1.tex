@@ -20,10 +20,10 @@ As\'i, llegamos a un algoritmo que hace lo siguiente:
 \begin{itemize}
 \item poner m\'aximo = 0
 \item poner i = 0
-\item mientras i<long(listaDias)
+\item mientras i<long(listaD\'ias)
 \begin{itemize}
-	\item poner ultimoDia = listaDias[i] + rangoContratacion - 1
-	\item poner primeroFueraRango = indice del primer elemento mayor a ultimoDia
+	\item poner ultimoD\'ia = listaD\'ias[i] + rangoContrataci\'on - 1
+	\item poner primeroFueraRango = indice del primer elemento mayor a ultimoD\'ia
 	\item poner inspeccionados = primeroFueraRango - i
 	\item si inspeccionados > m\'aximo entonces poner m\'aximo = inspeccionados
 	\item poner i = i + 1
@@ -93,11 +93,11 @@ Una vez probado lo anterior, es trivial saber que comparando uno a uno los tama\
 Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando un pseudoc\'odigo simplificado como gu\'ia.
 
 \begin{itemize}
-\item ordenar listaDias, $O(n*log(n))$
-\item para cada d\'ia en listaDias, $O(n)$
+\item ordenar listaD\'ias, $O(n*log(n))$
+\item para cada d\'ia en listaD\'ias, $O(n)$
 \begin{itemize}
-	\item poner ultimoDia = d\'ia + rangoContratacion - 1
-	\item poner primeroFueraRango = buscar(ultimoDia, listaDias), $O(log(n))$
+	\item poner ultimoD\'ia = d\'ia + rangoContrataci\'on - 1
+	\item poner primeroFueraRango = buscar(ultimoD\'ia, listaD\'ias), $O(log(n))$
 	\item poner inspeccionados = primeroFueraRango - i
 	\item si inspeccionados es mayor que m\'aximo poner m\'aximo = inspeccionados
 \end{itemize}
