@@ -24,7 +24,14 @@ Ahora, para poder poner una pieza en el tablero debemos asegurarnos de que los c
 Adem\'as no se pueden girar las piezas por más que esto permita llegar a una mejor soluci\'on.\\
 M\'as all\'a de estas restricciones, cualquier pieza puede colocarse en cualquier casillero.\\
 La soluci\'on entregada por el algoritmo no necesariamente debe tener el tablero lleno, ya que con el conjunto de piezas dado podr\'ia no existir una forma de ubicarlas todas cumpliendo con lo pedido. Por lo tanto, la soluci\'on al problema debe ser lo m\'as \'optima posible: aquella en la que mayor cantidad de piezas permita ingresar en el tablero dadas las restricciones anteriores.
-Por ejemplo el siguiente gr\'afico muestra una soluci\'on \'optima, dado un conjunto de piezas que no permiten llenar por completo el tablero.
+Por ejemplo el siguiente gr\'afico muestra una soluci\'on \'optima, dado un conjunto de piezas que no permiten llenar por completo el tablero.\\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.4]{./img/tableroIncompleto.png}
+\caption{Ejemplo soluci\'on \'optima con tablero incompleto}
+\end{center}
+\end{figure}
 
 \subsection{Resoluci\'on}
 
@@ -36,6 +43,14 @@ Vale aclarar que, en caso de tratarse de la primera ficha que ponemos, devolvemo
 Contar con ese diccionario nos ahorra tener que probar todas las fichas restantes, reduciendo las posibilidades a s\'olo las que cumplen con esa condici\'on de colores.\\
 
 La segunda optimizaci\'on del algoritmo consiste en crear un tablero de referencia, en el cual iremos guardando el tablero con m\'as fichas (no vac\'ias) puestas obtenido hasta el momento. Inicialmente este tablero tiene cargada una configuraci\'on por defecto, que consiste en poner fichas que no se toquen entre s\'i, que ser\'ia la mejor opci\'on si entre el conjunto dado no hay ning\'un par que coincida.\\
+En el siguiente grafico se puede ver la forma de un tablero referencia por default, donde las casillas negras representan fichas.\\
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.4]{./img/fichasIntercaladas.png}
+\caption{Ejemplo tablero referencia por default}
+\end{center}
+\end{figure}
 
 La idea de el tablero de referencia surge a la hora de pensar posibles podas para el \'arbol formado por la recursi\'on del algoritmo de backtranking; ser\'ia innecesario probar todas las combinaciones posibles de fichas (sacadas del diccionario mencionado m\'as arriba) en cada casillero del tablero ya que es  visible que una gran parte de estas no llegar\'ian a ser una soluci\'on \'optima, como puede ser el tablero completamente vac\'io, o el tablero con menos de la mitad de las casillas llenas.
 
