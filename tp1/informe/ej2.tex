@@ -8,9 +8,9 @@ $\sum\limits_{i=0}^n d_{i}*dia\_finalizacion\_joya_{i}$
 
 Donde $n$ es la cantidad de joyas menos uno, y $dia\_finalizacion\_joya_{i}$ es el dia global en el que se termina de fabricar la joya.\\
 
-El caso trivial ser\'ia una lista de joyas con todos los valores de devaluaci\'on diaria y tiempo de fabricaci\'on iguales, cualquier permutaci\'on de estas joyas sirve como soluci\'on optima. \\ 
+El caso trivial ser\'ia una lista de joyas con todos los valores de devaluaci\'on diaria y tiempo de fabricaci\'on iguales, cualquier permutaci\'on de estas joyas sirve como soluci\'on \'optima. \\ 
 
-Observemos algunos ejemplos mas interesantes: \\
+Observemos algunos ejemplos m\'as interesantes: \\
 
 Ejemplo 1) Dadas las joyas $j_{0}$, $j_{1}$ y $j_{2}$ con tiempos de fabricaci\'on 3, 5 y 8, y valor de devaluaci\'on 10, 30 y 15 respectivamente, la soluci\'on \'optima ser\'ia el siguiente orden de fabricaci\'on:
 
@@ -34,7 +34,7 @@ $d_{0}*16 + d_{1}*13 + d_{2}*8 = 670$ \\
 $d_{0}*3 + d_{1}*16 + d_{2}*11 = 675$ \\
 $d_{0}*11 + d_{1}*16 + d_{2}*8 = 710$ \\
 
-Ejemplo 2) Tambien puede suceder que haya mas de una soluci\'on \'optima, osea, varias permutaciones dan el valor de perdida menor. Supongamos un listado de joyas con tiempos de fabricaci\'on 5, 2 y 10 y devaluaci\'on diaria 10 40 y 20. \\
+Ejemplo 2) Tambi\'en puede suceder que haya m\'as de una soluci\'on \'optima, osea, varias permutaciones dan el valor de perdida menor. Supongamos un listado de joyas con tiempos de fabricaci\'on 5, 2 y 10 y devaluaci\'on diaria 10 40 y 20. \\
 
 Realicemos el mismo calculo que para el ejemplo anterior y comprobemos que tiene 2 soluciones \'optimas:
 
@@ -51,13 +51,13 @@ Para resolver el problema se decidio elegir algun tipo de medida de $peso$ para 
 
 $peso\_j_{i} = \frac{d_{i}}{t_{i}}$
 
-Esta f\'ormula entrega una relacion entre ambas variables, luego el algoritmo procede a ordenar la fabricaci\'on de las joyas por estas relaciones de mayor a menor. \\
+Esta f\'ormula entrega una relaci\'on entre ambas variables, luego el algoritmo procede a ordenar la fabricaci\'on de las joyas por estas relaciones de mayor a menor. \\
 
-Una descripci\'on del algoritmo en pseudo codigo:
+Una descripci\'on del algoritmo en pseudo c\'odigo:
 
 \begin{itemize}
-\item Para cada joya, calcular la relacion devaluacion sobre tiempo de la joya
-\item Ordenar las joyas segun su costo por dia
+\item Para cada joya, calcular la relaci\'on devaluaci\'on sobre tiempo de la joya
+\item Ordenar las joyas segun su costo por d\'ia
 \end{itemize}
 
 \subsection{Demostraci\'on de la resoluci\'on}
@@ -84,7 +84,7 @@ Veamos si podemos decidir el orden \'optimo para este caso:
 
 $d_1*t_1 + d_2*(t_1 + t_2) \leq d_2*t_2 + d_1*(t_1 + t_2) \Longleftrightarrow $ (Distributiva)
 
-$d_1*t_1 + d_2*t_1 + d_2*t_2 \leq  d_2*t_2 + d_1*t_1 + d_1*t_2 \Longleftrightarrow$ (Simplifico terminos)
+$d_1*t_1 + d_2*t_1 + d_2*t_2 \leq  d_2*t_2 + d_1*t_1 + d_1*t_2 \Longleftrightarrow$ (Simplifico t\'erminos)
 
 $d_2*t_1 \leq d_1*t_2$
 
@@ -126,7 +126,7 @@ Sean: \\
 $P = d_1*t_1 + ... + d_i*(\sum\limits_{k=1}^i t_k) + d_{i+1}*(\sum\limits_{k=1}^{i+1} t_k) + ... + d_n*(\sum\limits_{k=1}^n t_k)$ \\
 $P' = d_1*t_1 + ... + d_{i+1}*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1}) + d_i*((\sum\limits_{k=1}^{i-1} t_k) + t_{i+1} + t_i) + ... + d_n*(\sum\limits_{k=1}^n t_k)$
 
-Queremos ver que $P'$ (una permutaci\'on identica a P, salvo que se invierte el orden entre las joyas $j_i$ y $j_{i+1}$) cumple que $P > P'$, osea, lograr una versi\'on con una perdida menor restaurando nuestra hip\'otesis. \\
+Queremos ver que $P'$ (una permutaci\'on id\'entica a P, salvo que se invierte el orden entre las joyas $j_i$ y $j_{i+1}$) cumple que $P > P'$, osea, lograr una versi\'on con una p\'erdida menor restaurando nuestra hip\'otesis. \\
 
 Para ver esto, podemos simplificar todos los t\'erminos que implican joyas $j_k$ con $1 \leq k < d_i$ y $d_{i+1} < k \leq n $ \\
 
@@ -161,7 +161,7 @@ Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando 
 \begin{itemize}
 \item para cada  joya en input, $O(n)$
 \begin{itemize}
-\item poner joya.porcentaje\_peso = joya.devaluacion / joya.tiempo\_fabricacion, $O(1)$
+\item poner joya.porcentaje\_peso = joya.devaluaci\'on / joya.tiempo\_fabricaci\'on, $O(1)$
 \end{itemize}
 
 \item ordenar joyas de mayor a menor por joya.porcentaje\_peso , $O(n*log(n))$
@@ -226,7 +226,7 @@ Se incluye entre los adjuntos el archivo TP:/ej2/casos\_borde.txt donde se detal
 
 \begin{itemize}
 \item Un encargo de trabajo donde todas las joyas tienen el mismo valor de devaluaci\'on diario y el mismo tiempo de fabricaci\'on. Siguiendo la l\'ogica de nuestro algoritmo, se va a devolver un orden arbitrario pero cualquier orden es \'optimo en este caso.
-\item Un encargo donde las diferencias son minimas, llegando casi al limite de presici\'on de la arquitectura.
+\item Un encargo donde las diferencias son m\'inimas, llegando casi al limite de presici\'on de la arquitectura.
 \item Un caso con una \'unica soluci\'on posible
 \end{itemize}
 
@@ -236,7 +236,7 @@ Se puede observar ejecutando el programa TP:/ej2/ej2 enviando como input el arch
 
 Fueron generados casos de test aleateorios con el ejecutable TP:/ej2/test, que toma como parametro una semilla para el generador de n\'umeros pseudo aleatorios y luego el programa genera una determinada cantidad de listados de trabajos con un numero de joyas y valores al azar.\\
 
-Para los casos "Datos aleatorios" fueron generadas 50 ejecuciones en cada una, ingresando como par\'ametro los n\'umeros de semilla 2 y 3. Estas ejecuciones tienen un numero de joyas al azar entre 1 y 1.000.000
+Para los casos "Datos aleatorios" fueron generadas 50 ejecuciones en cada una, ingresando como par\'ametro los n\'umeros de semilla 2 y 3. Estas ejecuciones tienen un n\'umero de joyas al azar entre 1 y 1.000.000
 
 Consideramos que no era apropiado evaluar casos bordes ya que, seg\'un se vi\'o en la secci\'on de Complejidad del algoritmo, recorremos la lista, realizamos operaciones y luego la ordenamos. Este algoritmo de sorting esta acotado por O(n*log(n)) a\'un considerando peores casos.
 
