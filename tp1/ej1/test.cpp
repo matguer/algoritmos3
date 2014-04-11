@@ -34,10 +34,11 @@ int main(int argc, char *argv[])
 			clock_t t = clock();
 			resolver(*camionesLista, periodo);
 			t = clock() - t;
-			float t_float = (float)t/log2f((float)nroCamiones);
+			//float t_float = (float)t/log2f((float)nroCamiones);
 		
+			cout << nroCamiones << "\t" << t << endl;
 			
-			cout << nroCamiones << "\t" << t_float << endl;
+			//cout << nroCamiones << "\t" << t_float << endl;
 			delete camionesLista;	
 		}
 	}
