@@ -160,3 +160,18 @@ void backtrack(Tablero * tablero, DiccionarioFichas * fichas_ordenadas, Tablero 
 \subsection{Casos de prueba}
 
 \subsection{Performance}
+
+Para poder medir los tiempos de ejecuci\'on de este problema, se eligi\'o evaluar las dos variables del mismo: la cantidad de fichas del tablero (y por ende su tama\~no) y la cantidad de colores distintos de las mismas. \\
+
+Se tomaron tableros de 12, 16, 24 y 25 fichas, promediando en cada caso las distintas variantes. Por ejemplo, un tablero de 3x4 o de 2x6 nos da la misma cantidad de fichas, por lo tanto promediamos sus tiempos de ejecuci\'on mientras mantengan la misma cantidad de colores. \\
+
+El resultado fue un gr\'afico de barras agrupado por cantidad de fichas y variando la cantidad de colores.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.7]{./img/ej3_performance.png}
+\caption{Comparacion de tiempos de ejecucion segun cantidad de fichas y cantidad de colores}
+\end{center}
+\end{figure}
+
+Como se puede observar fu\'e elegida una escala logar\'itmica para el eje de los clocks debido a la gran amplitud de valores que comprende. Tambi\'en se puede observar que a medida que se aumenta la cantidad de fichas, la variante de colores impacta de manera mas fuerte en la performance del algoritmo.
