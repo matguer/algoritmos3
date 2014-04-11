@@ -2,5 +2,6 @@ set out "../informe/img/ej2_chart2.png"
 set xlabel "Joyas encargadas"
 set ylabel "Tiempo (clocks)"
 set key left top
+set logscale y
 set terminal png size 1300,800 enhanced font "Helvetica,20"
 plot "datachart2.out" title "Datos aleatorios seed 2", "datachart2bis.out" title "Datos aleatorios seed 3", x*log(x)/log(2) title "O(n*log(n))"
