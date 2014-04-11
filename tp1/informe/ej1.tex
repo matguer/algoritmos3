@@ -181,6 +181,17 @@ intervalo resolver(LCamiones& c, int periodo){
 
 \subsection{Casos de prueba}
 
+Como casos de prueba para el algoritmo elegimos inputs de los siguientes tipos:
+
+\begin{itemize}
+\item caso en el que el per\'iodo de contrataci\'on es mayor al del rango en que pasan los camiones. El d\'ia inicial debe ser el d\'ia en que pasa el primer cami\'on y la cantidad de camiones inspeccionados es igual a la cantidad de camiones.
+\item caso en el todos los camiones pasan el mismo d\'ia. El d\'ia inicial debe ser el d\'ia en que pasan los camiones y la cantidad es igual a la cantidad de camiones.
+\item caso en el que pasa un solo cami\'on por per\'iodo posible. El d\'ia inicial debe ser el d\'ia en que pasa el \'ultimo cami\'on y ese debe ser el \'unico inspeccionado.
+\item otros casos sin ninguna particularidadd a mencionar.
+\end{itemize}	
+
+Se pueden correr los mismos casos y verificar que funcionan en el directorio /ej1 dentro del trabajo entregado, ejecutando ./ej1 < prueba.txt.
+
 \subsection{Performance}
 
 Para realizar el testeo de performance creamos test.cpp, el cual genera casos de test pseudo-aleatorios, determinados por una semilla, la cual se pasa como parametro al ejecutable 'test'. 
