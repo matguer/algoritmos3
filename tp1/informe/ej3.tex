@@ -173,13 +173,13 @@ void backtrack(Tablero * tablero, DiccionarioFichas * fichas_ordenadas, Tablero 
 
 \subsection{Casos de prueba}
 
-Creamos un script en bash ubicado en TP:/ej3/tiempos.sh que genera distintos tama\~nos de tablero con distintas cantidades de colores de fichas. Los mismos fueron ejecutados y medidos con la funci\'on clock(). \\
+Creamos un script en bash ubicado en TP:/ej3/tiempos.sh que genera distintos tama\~nos de tablero (por ejemplo 3$\times$9, 4$\times$6) con distintas cantidades de colores de fichas. Los mismos fueron ejecutados y medidos con la funci\'on clock(). \\
 
-Ademas de variar los tama\~nos de tablero (tanto en cantidad de fichas como en diferencia de alto y ancho) y en cantidad de colores, probamos las siguientes situaciones:\\
+Adem\'as de variar los tama\~nos de tablero (tanto en cantidad de fichas como en diferencia de alto y ancho) y en cantidad de colores, probamos las siguientes situaciones:\\
 
 \begin{itemize}
-\item Fichas todas iguales: Este caso es el mas trivial y el algoritmo lo resuelve cuando la primer rama se completa, ya que esta va a lograr completar todo el tablero, y usando la poda de tablero completo, se devuelve el mismo terminando la ejecuci\'on.
-\item Fichas con todos colores distintos: Al haber tanta variedad de colores resulta imposible juntar fichas, este caso podria ser considerado un caso peor, ya que va a terminar probando todas las opciones y quedandose con el tablero completo en sus diagonales.
+\item Fichas todas iguales: Este caso es el m\'as trivial y el algoritmo lo resuelve cuando la primera rama se completa, ya que esta va a lograr completar todo el tablero, y usando la poda de tablero completo, se devuelve el mismo terminando la ejecuci\'on.
+\item Fichas con todos colores distintos: Al haber tanta variedad de colores resulta imposible juntar fichas, este caso podr\'aa ser considerado un $peor caso$, ya que va a terminar probando todas las opciones y se va a quedar con el tablero por default, completo en sus diagonales.
 \end{itemize}
 
 \subsection{Performance}
@@ -197,4 +197,4 @@ El resultado fue un gr\'afico de barras agrupado por cantidad de fichas y varian
 \end{center}
 \end{figure}
 
-Como se puede observar fu\'e elegida una escala logar\'itmica para el eje de los clocks debido a la gran amplitud de valores que comprende. Tambi\'en se puede observar que a medida que se aumenta la cantidad de fichas, la variante de colores impacta de manera mas fuerte en la performance del algoritmo.
+Como se puede observar fue elegida una escala logar\'itmica para el eje de los clocks debido a la gran amplitud de valores que comprende. Tambi\'en se puede observar que a medida que se aumenta la cantidad de fichas, la variante de colores impacta de manera mas fuerte en la performance del algoritmo.
