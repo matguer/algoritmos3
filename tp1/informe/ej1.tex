@@ -182,3 +182,19 @@ intervalo resolver(LCamiones& c, int periodo){
 \subsection{Casos de prueba}
 
 \subsection{Performance}
+
+Para realizar el testeo de performance creamos test.cpp, el cual genera casos de test pseudo-aleatorios, determinados por una semilla, la cual se pasa como parametro al ejecutable 'test'. 
+
+Este crea 100 casos de prueba con, como dijimos, una cantidad de d\'ias en la que pasar\'a el inspector entre 1 y 100.000, un n\'umero de camiones entre 1 y 10.000.000, y el d\'ia en el que pasar\'a cada cami\'on entre 1 y 10.000.000, todos pseudo-aleatorios.
+
+En este caso no se evalualon casos bordes porque el algoritmo tiene como complejidad del peor caso limitado por el algoritmo de ordenamiento que se utiliza sobre los d\'ias que pasan los camiones que es de O(n*log(n)) donde n es la cantidad total de camiones.
+Luego se busca n veces el primer cami\'on fuera del rango de d\'ias de contrataci\'on del inspector y esto tiene una complejidad acotada por O(log(n)+1) donde n es la cantidad de dias de contrataci\'on.
+
+\begin{center}
+\begin{figure}[h!]
+\includegraphics[scale=0.4]{./img/ej1_chart.png}
+\caption{Tiempo transcurrido por eleccion de periodo de contratacion del inspector}
+\end{figure}
+\end{center}
+
+Como muestra el gr\'afico, el algoritmo presenta tiempos de ejecuci\'on mucho mas \'optimos que la cota propuesta de $O(n*log(n))$.
