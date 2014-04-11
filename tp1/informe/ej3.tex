@@ -1,7 +1,7 @@
 \subsection{Descripci\'on del problema}
 
 En este ejercicio se nos pide escribir un algoritmo que resuelva una especie de rompecabezas dado por un tablero de $n \times m$ casillas y $n \times m$ fichas.
-Cada pieza (cuadrada) tiene un color en cada uno de sus lados, no necesariamente colores distintos en cada uno. Por ejemplo: 
+Cada pieza (cuadrada) tiene un color en cada uno de sus lados, no necesariamente colores distintos en cada uno. En este rompecabezas no es posible girar las piezas. Por ejemplo: 
 
 \begin{figure}[h]
 \begin{center}
@@ -21,9 +21,8 @@ Ahora, para poder poner una pieza en el tablero debemos asegurarnos de que los c
 \end{center}
 \end{figure}
 
-Adem\'as no se pueden girar las piezas por más que esto permita llegar a una mejor soluci\'on.\\
-M\'as all\'a de estas restricciones, cualquier pieza puede colocarse en cualquier casillero.\\
-La soluci\'on entregada por el algoritmo no necesariamente debe tener el tablero lleno, ya que con el conjunto de piezas dado podr\'ia no existir una forma de ubicarlas todas cumpliendo con lo pedido. Por lo tanto, la soluci\'on al problema debe ser lo m\'as \'optima posible: aquella en la que mayor cantidad de piezas permita ingresar en el tablero dadas las restricciones anteriores.
+M\'as all\'a de estas restricciones, cualquier pieza puede colocarse en cualquier casillero. La soluci\'on entregada por el algoritmo no necesariamente debe tener el tablero lleno, ya que con el conjunto de piezas dado podr\'ia no existir una forma de ubicarlas todas cumpliendo con lo pedido. Por lo tanto, la soluci\'on al problema debe ser la mejor posible.\\
+
 Por ejemplo el siguiente gr\'afico muestra una soluci\'on \'optima, dado un conjunto de piezas que no permiten llenar por completo el tablero.\\
 
 \begin{figure}[h]
