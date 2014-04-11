@@ -57,7 +57,7 @@ Por lo tanto las podas implementadas son las siguientes:
 
 \begin{itemize}
 
-\item Diccionario de colores: Antes de llamar a la funci\'on backtrack creamos un diccionario con claves par($colorIzq$, $colorArr$) y valores lista($ficha$) donde las fichas cumplen con la condici\'on indicada en la clave. Luego le pasamos este diccionario a backtrack, sac\'andole en cada llamado la ficha usada anteriormente (para que no vuelva a ser usada en el futuro). As\'i nos evitamos tener que probar todas las fichas que quedan y probamos s\'olo las que tiene sentido poner en cada posici\'on.
+\item Diccionario de colores: Antes de llamar a la funci\'on backtrack creamos un diccionario con claves par($colorIzq$, $colorArr$) y valores lista($ficha$) donde las fichas cumplen con la condici\'on indicada en la clave. Luego le pasamos este diccionario a backtrack, sac\'andole en cada llamado la ficha usada anteriormente (para que no vuelva a ser usada en el futuro). As\'i nos evitamos tener que probar todas las fichas que quedan y probamos s\'olo las que tiene sentido poner en cada posici\'on. Dado el caso en que existan fichas repetidas observamos que estar\'iamos repitiendo el mismo caso evaluando cada una de estas, con este analisis logramos optimizar el diccionario haciendo que el mismo devuelva solo una ficha de cada una por mas que existan repetidas y este caso se eval\'ue solo una vez por casillero.
 
 \item Mejor caso peor que el de referencia: Cada vez que ponemos una ficha hacemos la cuenta de cu\'antas fichas tendr\'ia el tablero actual suponiendo que podamos llenar todas las casillas que faltan recorrer. La cuenta est\'a dada por: $cantidad de fichas puestas$ + $cantidad de posiciones por recorrer$. Si el resultado es menor a la cantidad de fichas puestas en el tablero de referencia, la rama del backtraking que se ocupa de este tablero es podada porque aunque se pudieran colocar fichas en todos los casilleros restantes, no se llegar\'ia a una soluci\'on mejor que la ya obtenida (tablero de referencia). Aqu\'i se regresa al nodo anterior del arbol, cambiando la ficha puesta en este y continuando con el algoritmo.
 
@@ -73,7 +73,7 @@ Para demostrar por qu\'e nuestro algoritmo resuelve el problema de encontrar la 
 
 Veamos cada una de las podas:\\
 
-Diccionario de colores. Esta poda nos ahorra probar fichas que no ir\'ian en una posici\'on, dej\'andonos s\'olo las v\'alidas. Es trivial ver que no estamos perdiendo tableros v\'alidos en este caso, ya que las opciones que eliminamos no cumplir\'ian con la condici\'on que pide la consigna.\\
+Diccionario de colores. Esta poda nos ahorra probar fichas que no ir\'ian en una posici\'on, dej\'andonos s\'olo las v\'alidas. Es trivial ver que no estamos perdiendo tableros v\'alidos en este caso, ya que las opciones que eliminamos no cumplir\'ian con la condici\'on que pide la consigna. A la hora de eliminar las fichas repetidas en la devoluci\'on del diccionario, solo nos ahorramos el hecho de probar m\'as de una vez el mismo caso,  por lo tanto no perdermos opciones v\'alidas, ya que solo estar\'iamos restringiendo la evaluac\'on del mismo caso m\'as de una vez.\\
 
 Mejor caso peor que el de referencia. Siendo nuestro tablero de referencia con $m$ fichas puestas, cualquier otro tablero en el que se puedan poner menos fichas nunca llegar\'a a ser \'optimo, con lo cual descartarlo no nos hace perder opciones v\'alidas.\\
 
@@ -83,9 +83,9 @@ Tablero lleno. Es trivial ver que si encontramos un tablero que cumple con las c
 
 \subsection{Complejidad del algoritmo}
 
-Una manera utilizando fuerza bruta de entregar el tablero con mas fichas puestas seria tomar todas las fichas (llamemos a esta cantidad n*m), luego sumarle la misma cantidad de fichas blancas (que representarian las posiciones vacias) para luego tomar todas las posibles dispociciones de estas 2*n*m fichas. Finalmente en un recorrido de n*m validar cada uno de los tableros generados y descartar aquellos que no respeten la coincidencia de colores, al mismo tiempo que se toma el maximo. \\
+Una manera utilizando fuerza bruta de entregar el tablero con m\'as fichas puestas ser\'ia tomar todas las fichas (llamemos a esta cantidad n*m), luego sumarle la misma cantidad de fichas blancas (que representar\'ian las posiciones vac\'ias) para luego tomar todas las posibles dispociciones de estas 2*n*m fichas. Finalmente en un recorrido de n*m validar cada uno de los tableros generados y descartar aquellos que no respeten la coincidencia de colores, al mismo tiempo que se toma el m\'aximo. \\
 
-La complejidad de este algoritmo estaria acotada superiormente por la siguiente funci\'on: \\
+La complejidad de este algoritmo estar\'ia acotada superiormente por la siguiente funci\'on: \\
 
 ${2*n*m \choose n*m} * n*m$ \\
 
@@ -93,13 +93,13 @@ Nuestro algoritmo a cada paso realiza $n*m*\#colores$ operaciones, descartando 1
 
 En la pr\'actica la situaci\'on es mucho mas performante. Las podas realizadas permiten eliminar varias ramas de la recursi\'on en distintos escenarios:\\
 
-Para empezar, no se prueban todas las combinaciones de fichas posibles, si no solo las fichas que tienen sentido poner en cada casillero, acotando la busqueda de la soluci\'on de manera importante, esto es posible gracias a la indexacion rapida segun los requerimientos de color necesarios para la posicion actual. Tampoco se abren nuevas ramas para fichas con los mismos colores en las mismas posiciones (este caso ocurre al tener fichas repetidas en color), ya que las mismas no van a generar mas informaci\'on al proceso. \\
+Para empezar, no se prueban todas las combinaciones de fichas posibles, si no solo las fichas que tienen sentido poner en cada casillero, acotando la busqueda de la soluci\'on de manera importante, esto es posible gracias a la indexaci\'on r\'apida seg\'un los requerimientos de color necesarios para la posici\'on actual. Tampoco se abren nuevas ramas para fichas con los mismos colores en las mismas posiciones (este caso ocurre al tener fichas repetidas en color), ya que las mismas no van a generar mas informaci\'on al proceso. \\
 
-Finalmente se evalua constantemente el "rendimiento" del tablero en curso, comparandolo con el mejor tablero encontrado, y en caso de que con las fichas ya puestas mas el resto de los posibles casilleros (considerando un caso \'optimo) no logra superarlo, tambi\'en esta rama es podada.
+Finalmente se eval\'ua constantemente el "rendimiento" del tablero en curso, comparandolo con el mejor tablero encontrado, y en caso de que con las fichas ya puestas m\'as el resto de los posibles casilleros (considerando un caso \'optimo) no logra superarlo, tambi\'en esta rama es podada.
 
 \newpage
 
-\subsection{Codigo fuente}
+\subsection{C\'odigo fuente}
 
 \lstset{language=C++,
                 basicstyle=\ttfamily\footnotesize,
@@ -179,7 +179,7 @@ Adem\'as de variar los tama\~nos de tablero (tanto en cantidad de fichas como en
 
 \begin{itemize}
 \item Fichas todas iguales: Este caso es el m\'as trivial y el algoritmo lo resuelve cuando la primera rama se completa, ya que esta va a lograr completar todo el tablero, y usando la poda de tablero completo, se devuelve el mismo terminando la ejecuci\'on.
-\item Fichas con todos colores distintos: Al haber tanta variedad de colores resulta imposible juntar fichas, este caso podr\'aa ser considerado un $peor caso$, ya que va a terminar probando todas las opciones y se va a quedar con el tablero por default, completo en sus diagonales.
+\item Fichas con todos colores distintos: Al haber tanta variedad de colores resulta imposible juntar fichas, este caso podr\'ia ser considerado un $peor caso$, ya que va a terminar probando todas las opciones y se va a quedar con el tablero por default, completo en sus diagonales.
 \end{itemize}
 
 \subsection{Performance}
@@ -197,4 +197,4 @@ El resultado fue un gr\'afico de barras agrupado por cantidad de fichas y varian
 \end{center}
 \end{figure}
 
-Como se puede observar fue elegida una escala logar\'itmica para el eje de los clocks debido a la gran amplitud de valores que comprende. Tambi\'en se puede observar que a medida que se aumenta la cantidad de fichas, la variante de colores impacta de manera mas fuerte en la performance del algoritmo.
+Como se puede observar fue elegida una escala logar\'itmica para el eje de los clocks debido a la gran amplitud de valores que comprende. Tambi\'en se puede observar que a medida que se aumenta la cantidad de fichas, la variante de colores impacta de manera m\'as fuerte en la performance del algoritmo.
