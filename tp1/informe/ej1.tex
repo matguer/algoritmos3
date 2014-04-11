@@ -15,20 +15,20 @@ Por ejemplo, suponiendo que podemos contratar al inspector por 3 d\'ias consecut
 \subsection{Resoluci\'on}
 
 Para resolver el problema partimos de la idea de recorrer cada elemento de la lista de d\'ias en que pasan camiones, es decir cada posible d\'ia inicial, y a partir de ah\'i sumar uno por cada d\'ia con camiones que entrara en el rango de contrataci\'on.\\
-Sin embargo, como ese algoritmo no cumple la complejidad requerida (estrictamente menor que O($n^2$)) decidimos mejorarlo reemplazando la segunda iteraci\'on sobre la lista obteniendo el \'indice del primer d\'ia con camiones fuera del rango de contrataci\'on (en $O(log(n))$) y rest\'andoselo al \'indice del primer d\'ia de contrataci\'on. De esa forma sabemos cu\'antos camiones ser\'ian inseccionados en ese per\'iodo.\\\
+Sin embargo, como ese algoritmo no cumple la complejidad requerida (estrictamente menor que O($n^2$)) decidimos mejorarlo reemplazando la segunda iteraci\'on sobre la lista obteniendo el \'indice del primer d\'ia con camiones fuera del rango de contrataci\'on (en $O(log(n))$) y rest\'andoselo al \'indice del primer d\'ia de contrataci\'on. De esa forma sabemos cu\'antos camiones ser\'ian inspeccionados en ese per\'iodo.\\\
 As\'i, llegamos a un algoritmo que hace lo siguiente:
 \begin{itemize}
-\item poner maximo = 0
+\item poner m\'aximo = 0
 \item poner i = 0
 \item mientras i<long(listaDias)
 \begin{itemize}
 	\item poner ultimoDia = listaDias[i] + rangoContratacion - 1
 	\item poner primeroFueraRango = indice del primer elemento mayor a ultimoDia
 	\item poner inspeccionados = primeroFueraRango - i
-	\item si inspeccionados > maximo entonces poner maximo = inspeccionados
+	\item si inspeccionados > m\'aximo entonces poner m\'aximo = inspeccionados
 	\item poner i = i + 1
 \end{itemize}
-\item devolver maximo
+\item devolver m\'aximo
 \end{itemize}
 
 En nuestra implementaci\'on la forma de obtener el $indice del primer elemento mayor a ultimoDia$ es utilizando el m\'etodo upperBound, que devuelve un iterador al primer elemento mayor al indicado. Con eso calculamos el \'indice de dicho iterador y lo usamos luego para restarlo con el \'indice actual y saber cu\'antos elementos hay entre ambos l\'imites.\\
@@ -82,7 +82,7 @@ Porque, recordemos, se trata de enteros positivos, con lo cual vale la desiguald
 
 Miremos ambos casos:
 \begin{itemize}
-\item inicio + off = $s'_1$ + off. En este caso a pertenecer\'ia a S, ya que inicio = $s'_1$ y $s'_1$ es un elemento de l.
+\item inicio + off = $s'_1$ + off. En este caso pertenecer\'ia a S, ya que inicio = $s'_1$ y $s'_1$ es un elemento de l.
 \item inicio + off - 1 < $s'_1$ + off - 1. En este caso el per\'iodo comienza antes que $s'_1$, pero el primer elemento de l que entra en el rango es $s'_1$, con lo cual ninguna de las listas de S se est\'a perdiendo elementos previos a $s'_1$. Por otro lado, llamemos $s_i$ a la lista de S que comienza con $s'_1$; como $inicio + off - 1$ < $s'_1$ + off - 1, podemos deducir que a $\leq$ $ s_i$. Ac\'a llegamos a una contradicci\'on: no puede haber una lista \'optima que no est\'e en S.
 \end{itemize}
 
@@ -94,12 +94,12 @@ Analizaremos a continuaci\'on la complejidad del algoritmo propuesto utilizando 
 
 \begin{itemize}
 \item ordenar listaDias, $O(n*log(n))$
-\item para cada dia en listaDias, $O(n)$
+\item para cada d\'ia en listaDias, $O(n)$
 \begin{itemize}
-	\item poner ultimoDia = dia + rangoContratacion - 1
+	\item poner ultimoDia = d\'ia + rangoContratacion - 1
 	\item poner primeroFueraRango = buscar(ultimoDia, listaDias), $O(log(n))$
 	\item poner inspeccionados = primeroFueraRango - i
-	\item si inspeccionados es mayor que maximo poner maximo = inspeccionados
+	\item si inspeccionados es mayor que m\'aximo poner m\'aximo = inspeccionados
 \end{itemize}
 \end{itemize}
 
@@ -184,22 +184,22 @@ intervalo resolver(LCamiones& c, int periodo){
 Como casos de prueba para el algoritmo elegimos inputs de los siguientes tipos:
 
 \begin{itemize}
-\item caso en el que el per\'iodo de contrataci\'on es mayor al del rango en que pasan los camiones. El d\'ia inicial debe ser el d\'ia en que pasa el primer cami\'on y la cantidad de camiones inspeccionados es igual a la cantidad de camiones.
-\item caso en el todos los camiones pasan el mismo d\'ia. El d\'ia inicial debe ser el d\'ia en que pasan los camiones y la cantidad es igual a la cantidad de camiones.
-\item caso en el que pasa un solo cami\'on por per\'iodo posible. El d\'ia inicial debe ser el d\'ia en que pasa el \'ultimo cami\'on y ese debe ser el \'unico inspeccionado.
-\item otros casos sin ninguna particularidadd a mencionar.
+\item Caso en el que el per\'iodo de contrataci\'on es mayor al del rango en que pasan los camiones. El d\'ia inicial debe ser el d\'ia en que pasa el primer cami\'on y la cantidad de camiones inspeccionados es igual a la cantidad de camiones.
+\item Caso en el todos los camiones pasan el mismo d\'ia. El d\'ia inicial debe ser el d\'ia en que pasan los camiones y la cantidad es igual a la cantidad de camiones.
+\item Caso en el que pasa un solo cami\'on por per\'iodo posible. El d\'ia inicial debe ser el d\'ia en que pasa el \'ultimo cami\'on y ese debe ser el \'unico inspeccionado.
+\item Otros casos sin ninguna particularidadd a mencionar.
 \end{itemize}	
 
 Se pueden correr los mismos casos y verificar que funcionan en el directorio /ej1 dentro del trabajo entregado, ejecutando ./ej1 < prueba.txt.
 
 \subsection{Performance}
 
-Para realizar el testeo de performance creamos test.cpp, el cual genera casos de test pseudo-aleatorios, determinados por una semilla, la cual se pasa como parametro al ejecutable 'test'. 
+Para realizar el testeo de performance creamos test.cpp, el cual genera casos de test pseudo-aleatorios, determinados por una semilla, la cual se pasa como parametro al ejecutable 'test', por ejemplo: ./test 5.
 
 Este crea 100 casos de prueba con, como dijimos, una cantidad de d\'ias en la que pasar\'a el inspector entre 1 y 100.000, un n\'umero de camiones entre 1 y 10.000.000, y el d\'ia en el que pasar\'a cada cami\'on entre 1 y 10.000.000, todos pseudo-aleatorios.
 
 En este caso no se evalualon casos bordes porque el algoritmo tiene como complejidad del peor caso limitado por el algoritmo de ordenamiento que se utiliza sobre los d\'ias que pasan los camiones que es de O(n*log(n)) donde n es la cantidad total de camiones.
-Luego se busca n veces el primer cami\'on fuera del rango de d\'ias de contrataci\'on del inspector y esto tiene una complejidad acotada por O(log(n)+1) donde n es la cantidad de dias de contrataci\'on.
+Luego se busca n veces el primer cami\'on fuera del rango de d\'ias de contrataci\'on del inspector y esto tiene una complejidad acotada por O(log(n)+1) donde n es la cantidad de d\'ias de contrataci\'on.
 
 \begin{center}
 \begin{figure}[h!]
