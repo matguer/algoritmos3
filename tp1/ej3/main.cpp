@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
 	mejor_tablero.llenarTableroConDiagonales(*fichas_iniciales); 
 	// Datos para la 1er llamada
 	Tablero * tablero_inicial = new Tablero(alto, ancho);
-	DiccionarioFichas * fichas_ordenadas = new DiccionarioFichas(*fichas_iniciales);
+	DiccionarioFichas * fichas_ordenadas = new DiccionarioFichas(*fichas_iniciales, cant_colores);
 
 	backtrack(tablero_inicial, fichas_ordenadas, mejor_tablero);
 	t = (clock() - t);

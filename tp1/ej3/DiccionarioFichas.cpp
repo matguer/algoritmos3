@@ -3,16 +3,18 @@
 
 using namespace std;
 
-DiccionarioFichas::DiccionarioFichas() {
+DiccionarioFichas::DiccionarioFichas(int cant_colores) {
 	_delegate = map<pair<Color,Color>, list<Ficha> >();
+	_cant_colores = cant_colores;
 }
 
 DiccionarioFichas::DiccionarioFichas(const DiccionarioFichas& otro) {
 	_delegate = otro._delegate;
+	_cant_colores = otro._cant_colores;
 }
 
 // Esta funcion clasifica las fichas por sus colores sup e izq
-DiccionarioFichas::DiccionarioFichas(list<Ficha> fichas) {
+DiccionarioFichas::DiccionarioFichas(list<Ficha> fichas, int cant_colores) {
 	
 	for(list<Ficha>::iterator f = fichas.begin(); f != fichas.end(); f++){
 		
@@ -23,11 +25,13 @@ DiccionarioFichas::DiccionarioFichas(list<Ficha> fichas) {
 		}		
 		_delegate[clave].push_back(*f);
 	}
+
+	_cant_colores = cant_colores;
 }
 
 DiccionarioFichas DiccionarioFichas::operator=(const DiccionarioFichas& otra) {
 	
-	DiccionarioFichas nueva = DiccionarioFichas();
+	DiccionarioFichas nueva = DiccionarioFichas(otra._cant_colores);
 	nueva._delegate = otra._delegate;
 	
 	return nueva; 
@@ -83,8 +87,44 @@ list<Ficha> * DiccionarioFichas::dameFichas(pair<Color, Color> & restriccion){
 	
 	}
 	
+	eliminarRepeticiones(*fichas_posibles);
 	return fichas_posibles;
 	
+}
+
+void DiccionarioFichas::eliminarRepeticiones(list<Ficha>& fichas) {
+	
+	bool superior[_cant_colores];
+	bool izquierda[_cant_colores];
+	bool derecha[_cant_colores];
+	bool inferior[_cant_colores];
+
+	for(int i=0; i<_cant_colores; i++) {	
+		superior[i] = false;
+		izquierda[i] = false;
+		derecha[i] = false;
+		inferior[i] = false;
+	}
+
+	list<Ficha> lista_sin_repeticiones = list<Ficha>();
+
+	list<Ficha>::iterator it;
+	for(it = fichas.begin(); it != fichas.end(); ++it) {
+		Ficha ficha = *it;
+		bool existe = superior[ficha.getLado(SUPERIOR)] && izquierda[ficha.getLado(IZQUIERDA)]\
+			&& derecha[ficha.getLado(DERECHA)] && inferior[ficha.getLado(INFERIOR)];
+
+		if(!existe) {
+			lista_sin_repeticiones.push_back(ficha);
+		}
+
+		superior[ficha.getLado(SUPERIOR)] = izquierda[ficha.getLado(IZQUIERDA)] = \
+			derecha[ficha.getLado(DERECHA)] = inferior[ficha.getLado(INFERIOR)] = true;
+		
+	}
+
+	fichas = lista_sin_repeticiones;
+
 }
 
 DiccionarioFichas::~DiccionarioFichas() {
