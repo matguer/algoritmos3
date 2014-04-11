@@ -57,7 +57,7 @@ Por lo tanto las podas implementadas son las siguientes:
 
 \begin{itemize}
 
-\item Diccionario de colores: Antes de llamar a la funci\'on backtrack creamos un diccionario con claves par($colorIzq$, $colorArr$) y valores lista($ficha$) donde las fichas cumplen con la condici\'on indicada en la clave. Luego le pasamos este diccionario a backtrack, sac\'andole en cada llamado la ficha usada anteriormente (para que no vuelva a ser usada en el futuro). As\'i nos evitamos tener que probar todas las fichas que quedan y probamos s\'olo las que tiene sentido poner en cada posici\'on.
+\item Diccionario de colores: Antes de llamar a la funci\'on backtrack creamos un diccionario con claves par($colorIzq$, $colorArr$) y valores lista($ficha$) donde las fichas cumplen con la condici\'on indicada en la clave. Luego le pasamos este diccionario a backtrack, sac\'andole en cada llamado la ficha usada anteriormente (para que no vuelva a ser usada en el futuro). As\'i nos evitamos tener que probar todas las fichas que quedan y probamos s\'olo las que tiene sentido poner en cada posici\'on. Dado el caso en que existan fichas repetidas observamos que estar\'iamos repitiendo el mismo caso evaluando cada una de estas, con este analisis logramos optimizar el diccionario haciendo que el mismo devuelva solo una ficha de cada una por mas que existan repetidas y este caso se eval\'ue solo una vez por casillero.
 
 \item Mejor caso peor que el de referencia: Cada vez que ponemos una ficha hacemos la cuenta de cu\'antas fichas tendr\'ia el tablero actual suponiendo que podamos llenar todas las casillas que faltan recorrer. La cuenta est\'a dada por: $cantidad de fichas puestas$ + $cantidad de posiciones por recorrer$. Si el resultado es menor a la cantidad de fichas puestas en el tablero de referencia, la rama del backtraking que se ocupa de este tablero es podada porque aunque se pudieran colocar fichas en todos los casilleros restantes, no se llegar\'ia a una soluci\'on mejor que la ya obtenida (tablero de referencia). Aqu\'i se regresa al nodo anterior del arbol, cambiando la ficha puesta en este y continuando con el algoritmo.
 
@@ -73,7 +73,7 @@ Para demostrar por qu\'e nuestro algoritmo resuelve el problema de encontrar la 
 
 Veamos cada una de las podas:\\
 
-Diccionario de colores. Esta poda nos ahorra probar fichas que no ir\'ian en una posici\'on, dej\'andonos s\'olo las v\'alidas. Es trivial ver que no estamos perdiendo tableros v\'alidos en este caso, ya que las opciones que eliminamos no cumplir\'ian con la condici\'on que pide la consigna.\\
+Diccionario de colores. Esta poda nos ahorra probar fichas que no ir\'ian en una posici\'on, dej\'andonos s\'olo las v\'alidas. Es trivial ver que no estamos perdiendo tableros v\'alidos en este caso, ya que las opciones que eliminamos no cumplir\'ian con la condici\'on que pide la consigna. A la hora de eliminar las fichas repetidas el la devoluci\'on del diccionario solo nos ahorramos el hecho de probar mas de una vez el mismo caso,  por lo tanto no perdermos opciones v\'alidas, ya que solo estar\'iamos restringiendo la evaluac\'on del mismo caso m\'as de una vez.\\
 
 Mejor caso peor que el de referencia. Siendo nuestro tablero de referencia con $m$ fichas puestas, cualquier otro tablero en el que se puedan poner menos fichas nunca llegar\'a a ser \'optimo, con lo cual descartarlo no nos hace perder opciones v\'alidas.\\
 
