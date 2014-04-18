@@ -13,18 +13,21 @@ int main(int argc, char* argv[]) {
 	cin >> cant_pueblos;
 	cin >> cant_centrales;
 	
-	list<Pueblo> lista_pueblos = list<Pueblo>();
+	list<Pueblo*> * lista_pueblos = new list<Pueblo*>();
 	
 	for(int i = 1; i<= cant_pueblos; i++){
 		cin >> x;
 		cin >> y;
-		Pueblo p = Pueblo(i, x, y);
-		lista_pueblos.push_back(p);
+		Pueblo * p = new Pueblo(i, x, y);
+		lista_pueblos->push_back(p);
 	} 
 	
-	Region r = Region(lista_pueblos, cant_centrales);
+	Region * r = new Region(lista_pueblos, cant_centrales);
 	
-	r.print();
+	r->print();
+	
+	delete r;
+	delete lista_pueblos;
 
 }
 

@@ -14,6 +14,7 @@ class Pueblo {
 	private:
 		int _id;
 		Coord _coordenadas;
+		bool _tiene_central;
 
 	public:
 		Pueblo();
@@ -22,6 +23,8 @@ class Pueblo {
 		int getX();
 		int getY();
 		double distancia(Pueblo & p);
+		void instalarCentral();
+		bool operator==(const Pueblo& otra);
 		friend ostream& operator<<(ostream& os, Pueblo& p);
 };
 
