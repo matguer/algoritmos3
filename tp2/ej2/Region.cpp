@@ -2,6 +2,7 @@
 #include "Pueblo.h"
 #include <iostream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -11,9 +12,9 @@ Region::Region(){
 	_centrales_instaladas = 0;
 	_tuberias_instaladas = 0;
 	_pueblos = new list<Pueblo*>();
-	_distancia_entre_pueblos = new list<pair<pair<Pueblo*,Pueblo*>, double> >();
+	_pueblos_por_distancia = new list<pair<pair<Pueblo*,Pueblo*>, double> >();
 	_pueblos_conectados_ady = new vector< vector<bool> >(0, vector<bool>(0, false) );
-	_pueblos_agrupados = 0;
+	_cant_grupos_pueblos = 0;
 	
 }
 
@@ -23,7 +24,7 @@ Region::~Region(){
 		delete *p;
 	}
 	
-	delete _distancia_entre_pueblos;
+	delete _pueblos_por_distancia;
 	delete _pueblos_conectados_ady;
 	
 }
@@ -38,9 +39,9 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 	_centrales_instaladas = 0;
 	_tuberias_instaladas = 0;
 	_pueblos = lista_pueblos;
-	_pueblos_conectados_ady = new vector< vector<bool> >(_pueblos->size(), vector<bool>(_pueblos->size(), false) );
-	_pueblos_agrupados = _pueblos->size();
-	_distancia_entre_pueblos = new list< pair<pair<Pueblo*,Pueblo*>, double> >();
+	_pueblos_conectados_ady = new vector< vector<bool> >(_pueblos->size()+1, vector<bool>(_pueblos->size()+1, false) );
+	_cant_grupos_pueblos = _pueblos->size();
+	_pueblos_por_distancia = new list< pair<pair<Pueblo*,Pueblo*>, double> >();
 	
 	int i = 1;
 	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
@@ -52,7 +53,7 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 			if(i > j){
 				pair<Pueblo*, Pueblo*> pueblos = pair<Pueblo*, Pueblo*>(*p,*p2);
 				pair< pair<Pueblo*, Pueblo*>, double> data = pair<pair<Pueblo*, Pueblo*>, double>(pueblos,(**(p)).distancia(**p2));
-				_distancia_entre_pueblos->push_back(data);
+				_pueblos_por_distancia->push_back(data);
 			}
 			
 			j++;
@@ -62,7 +63,7 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 	}
 	
 	// Dejo ordenada la lista de distancias
-	_distancia_entre_pueblos->sort(pairCompare);
+	_pueblos_por_distancia->sort(pairCompare);
 	
 }
 
@@ -72,7 +73,7 @@ void Region::print(){
 	cout << "Centralitas: " << _centralitas << endl;
 	cout << "Distancias entre pueblos: " << endl;
 	
-	for(list<pair< pair<Pueblo*, Pueblo*>, double> >::iterator i = _distancia_entre_pueblos->begin(); i != _distancia_entre_pueblos->end(); i++){
+	for(list<pair< pair<Pueblo*, Pueblo*>, double> >::iterator i = _pueblos_por_distancia->begin(); i != _pueblos_por_distancia->end(); i++){
 		cout << *(i->first.first) << " y " << *(i->first.second) << ": " << i->second << endl;
 	}
 	
@@ -88,34 +89,73 @@ void Region::print(){
 }
 
 void Region::resolver(){
-	/*
-	if(_centralitas >= _pueblos->size()){
+	
+	list<pair<pair<Pueblo*,Pueblo*>, double> >::iterator pueblos_distancia_it = _pueblos_por_distancia->begin();
+	
+
+	// Mientras no logre k componentes conexas para alimentar a todos los pueblos sigo conectando
+	while(_centralitas < _cant_grupos_pueblos){
 		
-		_centrales_instaladas = _pueblos->size();
+		// Conecto los pueblos mas cercanos disponibles
+		pair< pair<Pueblo*, Pueblo*>, double> data = *pueblos_distancia_it;
 		
-		for(list<Pueblo>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
-			p->instalarCentral();
+		Pueblo * p1 = data.first.first;
+		Pueblo * p2 = data.first.second;
+		
+		// Si estan en componentenes conexas distintas las uno
+		if(p1->getIdGrupoPueblo() != p2->getIdGrupoPueblo()){
+		
+			(*_pueblos_conectados_ady)[p1->getId()][p2->getId()] = true;
+			(*_pueblos_conectados_ady)[p2->getId()][p1->getId()] = true;
+			// Lo pongo en la misma componente conexa
+			p2->setIdGrupoPueblo(p1->getIdGrupoPueblo());
+			_cant_grupos_pueblos--; // La cantidad de componentes conexas siempre disminuye ya que conecto pueblos sueltos a cada paso
+			_tuberias_instaladas++;
+		
 		}
 		
-	}else{
+		pueblos_distancia_it++;
 		
-		// Mientras no logre k componentes conexas para alimentar a todos los pueblos sigo conectando
-		while(_centrales_instaladas < _pueblos_agrupados){
-			
-			// Conecto los pueblos mas cercanos disponibles
-			pair< pair<Pueblo, Pueblo>, double> data = _distancia_entre_pueblos.front();
-			Pueblo p1 = data.first.first;
-			Pueblo p2 = data.first.second;
-			
-			_pueblos_conectados_ady[p1.getId()][p2.getId()] = true;
-			_pueblos_agrupados--; // La cantidad de componentes conexas siempre disminuye ya que conecto pueblos sueltos a cada paso
-			_tuberias_instaladas++;
-			
-			
+	}
+
+	// Dicc para saber en que componentes conexas ya instale una central
+	map<int, bool> * grupos_instalados = new map<int, bool>();
+	
+	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+		
+		if(grupos_instalados->find((*p)->getIdGrupoPueblo()) == grupos_instalados->end()){
+			(*p)->instalarCentral();
+			(*grupos_instalados)[(*p)->getIdGrupoPueblo()] = true;
 		}
 		
 	}
-	*/
+	
+	delete grupos_instalados;
+		
+	
+}
+
+void Region::printPueblosConectados(){
+	
+	for(unsigned int j = 1; j <= _pueblos->size(); j++){
+		cout << j << " ";
+	}
+
+	cout << endl;
+	
+	for(unsigned int j = 1; j <= _pueblos->size(); j++){
+		cout << "--";
+	}
+	
+	cout << endl;
+	
+	for(unsigned int i = 1; i <= _pueblos->size(); i++){
+
+		for(unsigned int j = 1; j <= _pueblos->size(); j++){
+			cout << (*_pueblos_conectados_ady)[i][j] << " ";
+		}
+		cout << "|" << i << endl;
+	}
 	
 }
 

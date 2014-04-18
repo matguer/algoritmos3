@@ -15,6 +15,7 @@ class Pueblo {
 		int _id;
 		Coord _coordenadas;
 		bool _tiene_central;
+		int _id_grupo_pueblo; // Sirve para identificar en que componente conexa se encuentra
 
 	public:
 		Pueblo();
@@ -22,6 +23,8 @@ class Pueblo {
 		int getId();
 		int getX();
 		int getY();
+		int getIdGrupoPueblo();
+		void setIdGrupoPueblo(int id);
 		double distancia(Pueblo & p);
 		void instalarCentral();
 		bool operator==(const Pueblo& otra);

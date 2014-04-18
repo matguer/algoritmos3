@@ -24,7 +24,11 @@ int main(int argc, char* argv[]) {
 	
 	Region * r = new Region(lista_pueblos, cant_centrales);
 	
+	r->resolver();
+	
 	r->print();
+	
+	r->printPueblosConectados();
 	
 	delete r;
 	delete lista_pueblos;

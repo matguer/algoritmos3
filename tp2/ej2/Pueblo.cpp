@@ -8,6 +8,7 @@ using namespace std;
 Pueblo::Pueblo(){
 	
 	_id = 0;
+	_id_grupo_pueblo = 0;
 	_tiene_central = false;
 	_coordenadas = pair<int,int>(0,0);
 	
@@ -16,6 +17,7 @@ Pueblo::Pueblo(){
 Pueblo::Pueblo(int id, int x, int y){
 	
 	_id = id;
+	_id_grupo_pueblo = id;
 	_tiene_central = false;
 	_coordenadas = pair<int,int>(x,y);
 	
@@ -23,6 +25,14 @@ Pueblo::Pueblo(int id, int x, int y){
 
 int Pueblo::getId(){
 	return _id;
+}
+
+int Pueblo::getIdGrupoPueblo(){
+	return _id_grupo_pueblo;
+}
+
+void Pueblo::setIdGrupoPueblo(int id){
+	_id_grupo_pueblo = id;
 }
 
 int Pueblo::getX(){
