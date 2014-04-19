@@ -55,7 +55,11 @@ bool Pueblo::operator==(const Pueblo& otra) {
 	return (otra._id == _id);
 }
 
+bool Pueblo::tieneCentral(){
+	return _tiene_central;
+}
+
 ostream& operator<<(ostream& os, Pueblo& p){
-	os << "Pueblo(" << p.getId() << ", <" << p.getX() << "," << p.getY() << ">), ";
+	os << "Pueblo(Id: " << p.getId() << ", Coord: <" << p.getX() << "," << p.getY() << ">, Central:" << p._tiene_central << ", IdGrupo: " << p._id_grupo_pueblo << "), ";
 	return os;
 }

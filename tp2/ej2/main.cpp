@@ -26,9 +26,37 @@ int main(int argc, char* argv[]) {
 	
 	r->resolver();
 	
-	r->print();
+	//r->printPueblosConectados();
+	//r->print();
 	
-	r->printPueblosConectados();
+	//Imprimo q y m
+	cout << r->getCentralesInstaladas() << " " << r->getTuberiasInstaladas() << endl;
+	
+	// Imprimo donde se instalaron centrales
+	for(list<Pueblo*>::iterator p = lista_pueblos->begin(); p != lista_pueblos->end(); p++){
+		if((**p).tieneCentral()){
+			cout << (**p).getId() << " ";
+		}
+	}
+	cout << endl;
+	
+	// Imprimo donde se pusieron las tuberias
+	int i = 1;
+	for(list<Pueblo*>::iterator p = lista_pueblos->begin(); p != lista_pueblos->end(); p++){
+		
+		int j = 1;
+		for(list<Pueblo*>::iterator p2 = lista_pueblos->begin(); p2 != lista_pueblos->end(); p2++){
+			
+			// Para evitar guardar la distancia simetrica
+			if(i > j && r->hayTuberia(**p,**p2)){
+				cout << (**p).getId() << " " << (**p2).getId() << endl;
+			}
+			
+			j++;
+			
+		}
+		i++;
+	}
 	
 	delete r;
 	delete lista_pueblos;

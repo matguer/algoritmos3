@@ -107,8 +107,16 @@ void Region::resolver(){
 		
 			(*_pueblos_conectados_ady)[p1->getId()][p2->getId()] = true;
 			(*_pueblos_conectados_ady)[p2->getId()][p1->getId()] = true;
-			// Lo pongo en la misma componente conexa
-			p2->setIdGrupoPueblo(p1->getIdGrupoPueblo());
+			
+			// Junto las clases de equivalencia
+			int id_grupo_viejo = p2->getIdGrupoPueblo();
+			
+			for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+				if((**p).getIdGrupoPueblo() == id_grupo_viejo){
+					(**p).setIdGrupoPueblo(p1->getIdGrupoPueblo());
+				}
+			}
+			
 			_cant_grupos_pueblos--; // La cantidad de componentes conexas siempre disminuye ya que conecto pueblos sueltos a cada paso
 			_tuberias_instaladas++;
 		
@@ -126,6 +134,7 @@ void Region::resolver(){
 		if(grupos_instalados->find((*p)->getIdGrupoPueblo()) == grupos_instalados->end()){
 			(*p)->instalarCentral();
 			(*grupos_instalados)[(*p)->getIdGrupoPueblo()] = true;
+			_centrales_instaladas++;
 		}
 		
 	}
@@ -133,6 +142,18 @@ void Region::resolver(){
 	delete grupos_instalados;
 		
 	
+}
+
+int Region::getCentralesInstaladas(){
+	return _centrales_instaladas;
+}
+
+int Region::getTuberiasInstaladas(){
+	return _tuberias_instaladas;
+}
+
+bool Region::hayTuberia(Pueblo & p1, Pueblo & p2){
+	return (*_pueblos_conectados_ady)[p1.getId()][p2.getId()];
 }
 
 void Region::printPueblosConectados(){

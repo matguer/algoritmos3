@@ -24,6 +24,7 @@ class Pueblo {
 		int getX();
 		int getY();
 		int getIdGrupoPueblo();
+		bool tieneCentral();
 		void setIdGrupoPueblo(int id);
 		double distancia(Pueblo & p);
 		void instalarCentral();
