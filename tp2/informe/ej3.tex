@@ -1,5 +1,22 @@
 \subsection{Descripci\'on del problema}
 
+En este ejercicio se nos presenta el juego Saltos en la Matrix, el mismo se basa en el siguiente reglamento:
+
+\begin{itemize}
+\item Se posee un campo de juego cuadrado de N x N celdas.
+\item Cada participante comienza en una posici\'on arbitraria $origen$ y debe llegar a la posici\'on $destino$.
+\item Para moverse los participantes deber\'an ir saltando por las celdas de manera horizantal o vertical, no as\'i en diagonal.
+\item Cada celda posee una potencia $p_{max}$ m\'axima de salto, los participantes podr\'an elegir una potencia $p$ entre 1 y $p_{max}$ para saltar hacia otra celda.
+\item A modo de 'bonus' cada jugador posee $k$ unidades extra que podr\'a ir distribuyendo de la manera que desee y las mismas tienen como objetivo otorgarle a los participantes la posiblidad de realizar un salto m\'as potente de lo que la celda le proporciona en caso de creerlo conveniente. Por ejemplo, si un jugador est\'a ubicado en una celda que le posibilita saltar como mucho 2 celdas, pero el mismo considera beneficioso saltar 5, entonces el participante podr\'a utilizar 3 de sus unidades extra para realizar el salto deseado.
+\end{itemize}
+
+Como objetivo del ejercicio se nos pide presentar un algoritmo que tome los datos necesarios y devuelva como resultado una secuencia de saltos v\'alida que resuelva el problema en la menor cantidad de saltos posible.
+
+Por otro lado el algoritmo no podr\'a tener una complejidad temporal de peor caso mayor a O($n^3 \cdot k$).
+
+En caso de existir m\'as de una soluci\'on \'optima se podr\'a retornar cualquiera de ellas.
+
+
 \subsection{Resoluci\'on}
 
 \subsection{Demostraci\'on de la resoluci\'on}
