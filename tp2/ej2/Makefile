@@ -15,7 +15,7 @@ Region.o: Region.cpp Region.h Pueblo.h
 
 .PHONY: new
 clean:
-	rm -f ./*.o ej3
+	rm -f ./*.o ej2
 
 .PHONY: new
 new: clean all
