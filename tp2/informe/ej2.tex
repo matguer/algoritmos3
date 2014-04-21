@@ -1,12 +1,142 @@
 \subsection{Descripci\'on del problema}
 
+En este punto se nos pide resolver el problema de ubicar centrales de gas de manera estrat\'egica entre los pueblos de una cierta regi\'on.\\
+
+Dados $n$ pueblos con sus respectivas coordenadas en el plano y $k$ centrales de gas, la idea es ubicar las centrales en algunos de los pueblos. Luego es posible construir tuber\'ias entre pueblos; una tuber\'ia que va de un pueblo con central a uno sin no s\'olo transporta el gas a este \'ultimo sino que adem\'as lo convierte en potencial proveedor. Es decir que se da una especie de transitividad entre pueblos: si un pueblo $a$ con central de gas se conecta a otro pueblo $b$ y a su vez $b$ se conecta con $c$ entonces $c$ tambi\'en recibe gas.\\
+
+El \'unico problema que presentan las tuber\'ias es que, a mayor longitud aumenta la posibilidad de rotura de las mismas. Evidentemente \'este es un factor que se quiere evitar, por lo cual se nos pide que, al elegir los pueblos donde instalar las centrales y y las conecciones entre pueblos minimicemos el tama\~o de la tuber\'ia m\'as larga.\\
+
 \subsection{Resoluci\'on}
 
 \subsection{Demostraci\'on de la resoluci\'on}
 
 \subsection{Complejidad del algoritmo}
 
+Veamos la complejidad del algoritmo propuesto utilizando un pseudoc\'odigo que facilite el an\'alisis.\\
+
+Analicemos primero el constructor de regi\'on. S\'olo vamos a ver la parte en que se crea la lista de pares de ciudades ordenada de menor a mayor seg\'un la distancia entre ellas ya que el resto del constructor solamente hace asignaciones a variables (ver en la secci\'on siguiente).
+\begin{itemize}
+\item poner i $\leftarrow$ 1
+\item para cada pueblo en pueblos  \/// O(n) 
+\begin{itemize}
+	\item poner j $\leftarrow$ 1
+	\item para cada pueblo2 en pueblos \/// O(n)
+	\begin{itemize}
+		\item si i > j entonces poner pueblos $\leftarrow$ (pueblo, pueblo2) y poner porDistancia $\leftarrow$ (pueblos, distancia(pueblo, pueblo2))
+		\item poner j $\leftarrow$ j + 1
+	\end{itemize}
+	\item poner i $\leftarrow$ i + 1
+\end{itemize}
+\item ordenar porDistancia \/// O(n*log(n)) 
+\end{itemize}
+
+Por el for anidado que tenemos, que nos lleva a recorrer dos veces la lista de pueblos, obtenemos una complejidad de O(n^2)
+
 \subsection{C\'odigo fuente}
+
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+
+
+/* Constructor de region
+ * notar: crea la lista de pares de ciudades ordenada por distancia de menor a mayor
+**/
+Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
+	
+	_centralitas = centralitas;
+	_centrales_instaladas = 0;
+	_tuberias_instaladas = 0;
+	_pueblos = lista_pueblos;
+	_pueblos_conectados_ady = new vector< vector<bool> >(_pueblos->size()+1, vector<bool>(_pueblos->size()+1, false) );
+	_cant_grupos_pueblos = _pueblos->size();
+	_pueblos_por_distancia = new list< pair<pair<Pueblo*,Pueblo*>, double> >();
+	
+	int i = 1;
+	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+		
+		int j = 1;
+		for(list<Pueblo*>::iterator p2 = _pueblos->begin(); p2 != _pueblos->end(); p2++){
+			
+			// Para evitar guardar la distancia simetrica
+			if(i > j){
+				pair<Pueblo*, Pueblo*> pueblos = pair<Pueblo*, Pueblo*>(*p,*p2);
+				pair< pair<Pueblo*, Pueblo*>, double> data = pair<pair<Pueblo*, Pueblo*>, double>(pueblos,(**(p)).distancia(**p2));
+				_pueblos_por_distancia->push_back(data);
+			}
+			
+			j++;
+			
+		}
+		i++;
+	}
+	
+	// Dejo ordenada la lista de distancias
+	_pueblos_por_distancia->sort(pairCompare);
+	
+}
+
+void Region::resolver(){
+	
+	list<pair<pair<Pueblo*,Pueblo*>, double> >::iterator pueblos_distancia_it = _pueblos_por_distancia->begin();
+	
+
+	// Mientras no logre k componentes conexas para alimentar a todos los pueblos sigo conectando
+	while(_centralitas < _cant_grupos_pueblos){
+		
+		// Conecto los pueblos mas cercanos disponibles
+		pair< pair<Pueblo*, Pueblo*>, double> data = *pueblos_distancia_it;
+		
+		Pueblo * p1 = data.first.first;
+		Pueblo * p2 = data.first.second;
+		
+		// Si estan en componentenes conexas distintas las uno
+		if(p1->getIdGrupoPueblo() != p2->getIdGrupoPueblo()){
+		
+			(*_pueblos_conectados_ady)[p1->getId()][p2->getId()] = true;
+			(*_pueblos_conectados_ady)[p2->getId()][p1->getId()] = true;
+			
+			// Junto las clases de equivalencia
+			int id_grupo_viejo = p2->getIdGrupoPueblo();
+			
+			for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+				if((**p).getIdGrupoPueblo() == id_grupo_viejo){
+					(**p).setIdGrupoPueblo(p1->getIdGrupoPueblo());
+				}
+			}
+			
+			_cant_grupos_pueblos--; // La cantidad de componentes conexas siempre disminuye ya que conecto pueblos sueltos a cada paso
+			_tuberias_instaladas++;
+		
+		}
+		
+		pueblos_distancia_it++;
+		
+	}
+
+	// Dicc para saber en que componentes conexas ya instale una central
+	map<int, bool> * grupos_instalados = new map<int, bool>();
+	
+	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+		
+		if(grupos_instalados->find((*p)->getIdGrupoPueblo()) == grupos_instalados->end()){
+			(*p)->instalarCentral();
+			(*grupos_instalados)[(*p)->getIdGrupoPueblo()] = true;
+			_centrales_instaladas++;
+		}
+		
+	}
+	
+	delete grupos_instalados;	
+}
+
+\end{lstlisting}
 
 \subsection{Casos de prueba}
 
