@@ -6,7 +6,7 @@
 using namespace std;
 
 int resolver(int * cartas, int cant_cartas, int & cant_agarro, int & mejor_diferencia);
-int sumatoria(int * cartas, int init, int limit);
+int sumatoria(int * cartas, int cant);
 void printCartas(int * cartas, int cant);
 
 /**
@@ -48,84 +48,68 @@ int resolver(int * cartas, int cant_cartas, int & cant_agarro, int & mejor_difer
 	}else{
 		
 		int q = (int) -INFINITY;
-		int puntos = 0;
-		int diferencia = 0;
+		int puntos_izq = 0;
+		int puntos_der = 0;
+		int diferencia_izq = 0;
+		int diferencia_der = 0;
 		
 		// Caso tomando desde la izquierda
 		for(int i = 1; i<=cant_cartas; i++){
 			
 			if(i==cant_cartas){
 				
-				puntos = sumatoria(cartas, 0, cant_cartas-1);
+				puntos_izq = sumatoria(cartas, cant_cartas);
 				// Voy modificando la cantidad de cartas que me conviene tomar
-				if(puntos>mejor_diferencia){
-					cant_agarro = cant_cartas;
-					mejor_diferencia = puntos;
-				}
-				q = max(puntos,q);
-				
-			}else{
-
-				// Puntos acumulados en este posible paso
-				puntos = sumatoria(cartas, 0, i-1);
-				
-				// Subarreglo (subproblema) de cartas optima que tomaria el rival
-				int * sub_cartas = cartas + i;
-				diferencia = puntos - resolver(sub_cartas, cant_cartas-i, cant_agarro, mejor_diferencia);
-				
-				// Voy modificando la cantidad de cartas que me conviene tomar
-				if(diferencia>mejor_diferencia){
-					cant_agarro = i;
-					mejor_diferencia = diferencia;
-				}
-				q = max(diferencia,q);
-				
-			}
-
-		}
-		
-		
-		// Caso tomando desde la derecha
-		for(int i = cant_cartas; i>0; i--){
-			
-			if(i==cant_cartas){
-				
-				puntos = sumatoria(cartas, 0, cant_cartas-1);
-				// Voy modificando la cantidad de cartas que me conviene tomar
-				if(puntos>mejor_diferencia){
-					cant_agarro = i;
-					mejor_diferencia = puntos;
-				}
-				q = max(puntos,q);
-				
-				cout << puntos << endl;
+				q = max(puntos_izq,q);
 				
 			}else{
 				
-				printCartas(cartas, cant_cartas-1);
+				// Tomo las cartas 0..i
+				int * sub_cartas_izq = cartas;
+				int sub_cantidad_izq = i;
+				int * sub_cartas_der = cartas + i;
+				int sub_cantidad_der = cant_cartas-i;
+				
+				/*
+				cout << "Todas las cartas ";
+				printCartas(cartas, cant_cartas);
 				cout << endl;
-
+				
+				cout << "Cartas desde la izq ";
+				printCartas(sub_cartas_izq, sub_cantidad_izq);
+				cout << endl;
+				
+				cout << "Cartas desde la der ";
+				printCartas(sub_cartas_der, sub_cantidad_der);
+				cout << endl;
+				*/
+				
 				// Puntos acumulados en este posible paso
-				puntos = sumatoria(cartas, i, cant_cartas-1);
+				puntos_izq = sumatoria(sub_cartas_izq, sub_cantidad_izq);
+				puntos_der = sumatoria(sub_cartas_der, sub_cantidad_der);
 				
-				cout << "agarro de " << i << " a " << cant_cartas-1 << " " << puntos << endl;
-								
+				/*
+				cout << "Puntos izq " << puntos_izq << endl;
+				cout << "Puntos der " << puntos_der << endl;
+				*/
+				
 				// Subarreglo (subproblema) de cartas optima que tomaria el rival
-				cout << "subarreglo " << 0 << " a " << i << endl;
-				int * sub_cartas = cartas;
-				diferencia = puntos - resolver(sub_cartas, i, cant_agarro, mejor_diferencia);
+				diferencia_izq = puntos_izq - resolver(sub_cartas_der, sub_cantidad_der, cant_agarro, mejor_diferencia);
+				diferencia_der = puntos_der - resolver(sub_cartas_izq, sub_cantidad_izq, cant_agarro, mejor_diferencia);
 				
+				/*
+				cout << "Dif izq " << diferencia_izq << endl;
+				cout << "Dif der " << diferencia_der << endl << endl;
+				*/
 				
-				// Voy modificando la cantidad de cartas que me conviene tomar
-				if(diferencia>mejor_diferencia){
-					cant_agarro = cant_cartas-i;
-					mejor_diferencia = diferencia;
-				}
-				q = max(diferencia,q);
+				q = max(diferencia_izq,q);	
+				q = max(diferencia_der,q);
+				
 			}
-			
+
 		}
 		
+	
 		
 		// Max(cartas[0] - resolver(cartas[1..n]) , ... , cartas[i..j-1] - resolver(cartas[j..n-1]))
 		return q;
@@ -135,16 +119,16 @@ int resolver(int * cartas, int cant_cartas, int & cant_agarro, int & mejor_difer
 
 void printCartas(int * cartas, int cant){
 	cout << "[";
-	for(int i = 0; i<=cant; i++){
+	for(int i = 0; i<cant; i++){
 		cout << cartas[i] << ",";
 	}
 	cout << "]";
 }
 
 // Calcula la sumatoria de un arreglo hasta la posicion limit
-int sumatoria(int * cartas, int init, int limit){
+int sumatoria(int * cartas, int cant){
 	int sum = 0;
-	for(int i = init; i<=limit; i++){
+	for(int i = 0; i<cant; i++){
 		sum = sum + cartas[i];
 	}
 	return sum;
