@@ -24,16 +24,16 @@ int main(int argc, char *argv[])
 
 
 		// Tests aleatorios	
-		for(int i=0;i<3;i++){			
-			int nroPueblos = rand() % 10000;
-			int nroCentrales = rand() % 10000;
+		for(int i=0;i<100;i++){			
+			int nroPueblos = (rand() % 5000) + 3000;
+			int nroCentrales = (rand() % 5000) + 3000;
 			list<Pueblo*> * pueblosLista = new list<Pueblo*>();
 			int x, y;
 			
 			for(int j=0; j<nroPueblos; j++){
 
-				x = rand() % 100;
-				y = rand() % 100;
+				x = rand() % 1000;
+				y = rand() % 1000;
 				Pueblo * p = new Pueblo(j, x, y);
 				pueblosLista->push_back(p);
 
@@ -47,11 +47,10 @@ int main(int argc, char *argv[])
 			r->resolver();
 			t = clock() - t;
 
-			
-			cout << nroPueblos << "\t"  << t << endl;
+			if ((double)t != 0.0)
+				cout << nroPueblos << "\t"  <<  t << endl;
 			
 			delete r;
-			//delete p;
 			delete pueblosLista;
 		}
 	}
