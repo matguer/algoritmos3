@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 		int j = 1;
 		for(list<Pueblo*>::iterator p2 = lista_pueblos->begin(); p2 != lista_pueblos->end(); p2++){
 			
-			// Para evitar guardar la distancia simetrica
+			// Para evitar mostrar la tuberia simetrica
 			if(i > j && r->hayTuberia(**p,**p2)){
 				cout << (**p).getId() << " " << (**p2).getId() << endl;
 			}
