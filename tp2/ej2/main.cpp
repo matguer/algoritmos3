@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	
 	//r->printPueblosConectados();
 	//r->print();
-	
+
 	//Imprimo q y m
 	cout << r->getCentralesInstaladas() << " " << r->getTuberiasInstaladas() << endl;
 	
