@@ -6,7 +6,41 @@ Dados $n$ pueblos con sus respectivas coordenadas en el plano y $k$ centrales de
 
 El \'unico problema que presentan las tuber\'ias es que, a mayor longitud aumenta la posibilidad de rotura de las mismas. Evidentemente \'este es un factor que se quiere evitar, por lo cual se nos pide que, al elegir los pueblos donde instalar las centrales y y las conecciones entre pueblos minimicemos el tama\~o de la tuber\'ia m\'as larga.\\
 
+Veamos algunos ejemplos, la siguiente es una situacion trivial en la que tenemos la misma cantidad de pueblos que de centrales:
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.7]{./img/ej2_explicacion1.png}
+\caption{Caso trivial}
+\end{center}
+\end{figure}
+
+Los circulos colorados indican donde fueron instaladas las centrales, en este caso no hay ninguna tuber\'ia.\\
+
+Veamos el siguiente caso mas complejo: 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.7]{./img/ej2_explicacion2.png}
+\caption{Caso con K = 3 y N = 6}
+\end{center}
+\end{figure}
+
+Como dato, sabemos que $e_2 < e_3 < e_1$ con lo cual nuestro largo m\'aximo de tuber\'ia es $e_1$
+
 \subsection{Resoluci\'on}
+
+Para resolver el problema dado decidimos modelarlo con grafos de tal forma que los nodos representen los pueblos, y las aristas (con pesos) las posibles conexiones entre pueblos. Estos pesos estan basados en las distancias entre cada par de pueblos. \\
+
+Como se nos pide minimizar el riesgo de rotura de las tuber\'ias a instalar, lo ideal ser\'ia lograr un esquema de conexi\'ones tal que el largo de la tuber\'ia mas larga sea m\'inimo. Como veremos mas adelante, la ubicaci\'on de las centrales de gas no es de gran importancia ya que la transimisi\'on del servicio de gas se da por transitividad entre pueblos conectados (mientras alguno tenga una central). Lo importante es tener grupos de pueblos conectados a una misma central de tal manera que estas tuberias sean de tama\~no m\'inimo, sin importar la cantidad de tuberias usadas. \\
+
+Como primer paso decidimos guardar en una estructura de datos de cola de prioridad (implementada en un Heap) todos los pares de distancias entre pueblos, de menor a mayor. Esto nos permite saber que el primer elemento del Heap posee al par de pueblos mas cercanos de todo el mapa, y cada vez que pidamos el proximo tendremos pares de pueblos de distancia minima, pero mayor o igual que el anterior. Cabe recordar que la distancia entre el puebo A posicionado en la coordenada $(x_0,y_0)$ y el pueblo B posicionado en la coordenada $(x_1,y_1)$ es igual a $\sqrt{(x_1-x_0)^2+(y_1-y_0)^2}$ \\
+
+Una vez obtenida esta informaci\'on, nuestro mapa empieza con 0 conexiones entre pueblos y N pueblos, resultando un grafo de N componentes conexas. La clave esta en conseguir K (cantidad de centrales de gas) componentes conexas con largo de tuber\'ias m\'inima. Notar que puede ocurrir que K sea mayor o igual a N, con lo que el problema se vuelve trivial. \\
+
+Realizamos un ciclo que, a cada paso, verifica si no logramos tener las K componentes conexas. Caso contrario agregamos una nueva conexion entre el pr\'oximo par de pueblos mas cercano que no compartan la misma componente conexa, logrando asi decrementar la cantidad de componentes conexas cada vez que se satisface esta condici\'on. Finalmente el ciclo terminar\'a al lograr las K componentes conexas y el \'ultimo paso es ubicar las K centrales en alg\'un pueblo de cada una de estas componentes.\\
+
+Con esto logramos repartir gas a todos los pueblos sin generar conexiones innecesarias.
 
 \subsection{Demostraci\'on de la resoluci\'on}
 
@@ -30,7 +64,7 @@ Analicemos primero el constructor de regi\'on. S\'olo vamos a ver la parte en qu
 \item ordenar porDistancia \/// O(n*log(n)) 
 \end{itemize}
 
-Por el for anidado que tenemos, que nos lleva a recorrer dos veces la lista de pueblos, obtenemos una complejidad de O(n^2)
+Por el for anidado que tenemos, que nos lleva a recorrer dos veces la lista de pueblos, obtenemos una complejidad de $O(n^2)$
 
 \subsection{C\'odigo fuente}
 

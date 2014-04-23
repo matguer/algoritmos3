@@ -2,6 +2,8 @@
 *.aux
 *.toc
 tp1/informe/informe.pdf
+tp2/informe/informe.pdf
+tp3/informe/informe.pdf
 *.gz
 *.out
 *.o
