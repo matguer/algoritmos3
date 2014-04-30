@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <cmath>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
 int sumatoria(int * cartas, int inicio, int fin);
 void printCartas(int * cartas, int cant);
+void printTabla(vector< vector<int> > * tabla, int cant);
 
 int main(){
 		
@@ -48,7 +50,7 @@ int main(){
 						maxval = max(q,sumatoria(cartas, cartas_inicio, j));
 						// Actualizo la mejor jugada encontrada hasta el momento
 						if(maxval>q){
-							(*tabla_elecciones)[i][j] = pair<int,int>(0,j+1);
+							(*tabla_elecciones)[i][j] = pair<int,int>(0,j-cartas_inicio+1);
 						}
 						q = maxval;
 						
@@ -70,6 +72,7 @@ int main(){
 								(*tabla_elecciones)[i][j] = pair<int,int>(1,k-cartas_inicio+1);
 							}
 							q = maxval;
+							
 						}
 
 					}
@@ -87,25 +90,32 @@ int main(){
 		int nro_turno = 0;
 		int primera_carta = 0;
 		int cartas_tomadas = 0;
-		int cant_cartas_originales = cant_cartas;
+		//int cant_cartas_originales = cant_cartas;
+		int * puntajes = new int[2];
+		int puntos = 0;
+		ostringstream output_jugadas;
+		//Puntajes jugadores
+		puntajes[0] = 0;
+		puntajes[1] = 0;
 		
 		while(cant_cartas>0){
 			
-			cout << "Primera carta " << primera_carta << " cantidad " << cant_cartas << endl;
-						
-			cout << "Jugada: ";
-			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 0){
-				cout << "izq ";
-			}else{
-				cout << "der ";
-			}
-			cout << (*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].second << endl; 
-			
-			
-			cartas_tomadas = (*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].second;
+			//cout << "Primera carta " << primera_carta << " cantidad " << cant_cartas << endl;
 
 			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 0){
-				primera_carta = cartas_tomadas;
+				output_jugadas << "izq ";
+			}else{
+				output_jugadas << "der ";
+			}
+			cartas_tomadas = (*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].second;
+			puntos = sumatoria(cartas, primera_carta, cartas_tomadas+primera_carta-1);
+			
+			output_jugadas << (*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].second << endl; 
+			
+			puntajes[nro_turno%2] = puntajes[nro_turno%2] + puntos;
+
+			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 0){
+				primera_carta = primera_carta+cartas_tomadas;
 			}
 			
 			cant_cartas = cant_cartas-cartas_tomadas;
@@ -113,11 +123,13 @@ int main(){
 
 		}
 		
-		cout << endl << "Diferencia: " << (*tabla_resultados)[0][cant_cartas_originales-1] << endl;
-
+		cout << nro_turno << " " << puntajes[0] << " " << puntajes[1] << endl;
+		cout << output_jugadas.str();
+	
 		
 		delete cartas;
 		delete tabla_resultados;
+		delete puntajes;
 
 		return 0;
 }
@@ -128,6 +140,16 @@ void printCartas(int * cartas, int cant){
 		cout << cartas[i] << ",";
 	}
 	cout << "]";
+}
+
+void printTabla(vector< vector<int> > * tabla, int cant){
+	for(int i = 0; i<cant; i++){
+		for(int j = 0; j<cant; j++){
+			cout << (*tabla)[i][j] << "\t";
+		}
+		cout << endl;
+	}
+	cout << endl;
 }
 
 // Calcula la sumatoria de un arreglo hasta la posicion limit
