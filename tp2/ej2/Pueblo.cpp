@@ -1,5 +1,6 @@
 #include "Pueblo.h"
 #include <vector>
+#include <limits>
 #include <iostream>
 #include <math.h>
 
@@ -9,6 +10,7 @@ Pueblo::Pueblo(){
 	
 	_id = 0;
 	_id_grupo_pueblo = 0;
+	_distancia_arbol = std::numeric_limits<double>::infinity();
 	_tiene_central = false;
 	_coordenadas = pair<int,int>(0,0);
 	
@@ -18,6 +20,7 @@ Pueblo::Pueblo(int id, int x, int y){
 	
 	_id = id;
 	_id_grupo_pueblo = id;
+	_distancia_arbol = std::numeric_limits<double>::infinity();
 	_tiene_central = false;
 	_coordenadas = pair<int,int>(x,y);
 	
@@ -35,6 +38,14 @@ void Pueblo::setIdGrupoPueblo(int id){
 	_id_grupo_pueblo = id;
 }
 
+void Pueblo::setDistanciaArbol(double distancia){
+	_distancia_arbol = distancia;
+}
+
+void Pueblo::setPuebloCercano(Pueblo* pCercano){
+	_pueblo_cercano_arbol = pCercano;
+}
+
 int Pueblo::getX(){
 	return _coordenadas.first;
 }
@@ -45,6 +56,14 @@ int Pueblo::getY(){
 
 double Pueblo::distancia(Pueblo & p){
 	return sqrt( pow(_coordenadas.first - p.getX(),2) + pow(_coordenadas.second - p.getY(),2) );
+}
+
+double Pueblo::getDistanciaArbol(){
+	return _distancia_arbol;
+}
+
+Pueblo * Pueblo::getPuebloCercano(){
+	return _pueblo_cercano_arbol;
 }
 
 void Pueblo::instalarCentral(){

@@ -1,6 +1,7 @@
 #include "Pueblo.h"
 #include "Region.h"
 #include <list>
+#include <limits>
 #include <iostream>
 #include <stdlib.h>
 
@@ -30,7 +31,7 @@ int main(int argc, char* argv[]) {
 	//r->print();
 
 	//Imprimo q y m
-	cout << r->getCentralesInstaladas() << " " << r->getTuberiasInstaladas() << endl;
+	/*cout << r->getCentralesInstaladas() << " " << r->getTuberiasInstaladas() << endl;
 	
 	// Imprimo donde se instalaron centrales
 	for(list<Pueblo*>::iterator p = lista_pueblos->begin(); p != lista_pueblos->end(); p++){
@@ -56,7 +57,7 @@ int main(int argc, char* argv[]) {
 			
 		}
 		i++;
-	}
+	}*/
 	
 	delete r;
 	delete lista_pueblos;

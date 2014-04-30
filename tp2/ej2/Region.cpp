@@ -40,7 +40,8 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 	_centrales_instaladas = 0;
 	_tuberias_instaladas = 0;
 	_pueblos = lista_pueblos;
-	_pueblos_conectados_ady = new vector< vector<bool> >(_pueblos->size()+1, vector<bool>(_pueblos->size()+1, false) );
+
+	/*_pueblos_conectados_ady = new vector< vector<bool> >(_pueblos->size()+1, vector<bool>(_pueblos->size()+1, false) );
 	_cant_grupos_pueblos = _pueblos->size();
 	_pueblos_por_distancia = new vector< pair<pair<Pueblo*,Pueblo*>, double> >();
 	
@@ -61,10 +62,7 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 			
 		}
 		i++;
-	}
-	
-	// Armo el heap con prioridad de distancia
-	make_heap(_pueblos_por_distancia->begin(),_pueblos_por_distancia->end(), pairCompare);
+	}*/
 	
 }
 
@@ -75,7 +73,7 @@ void Region::print(){
 	cout << "Distancias entre pueblos: " << endl;
 	
 	
-	for(unsigned int j = 0; j < _pueblos_por_distancia->size(); j++){
+	/*for(unsigned int j = 0; j < _pueblos_por_distancia->size(); j++){
 		cout << *((*_pueblos_por_distancia)[j].first.first) << " y " << *((*_pueblos_por_distancia)[j].first.second) << ": " << (*_pueblos_por_distancia)[j].second << endl;
 	}
 	
@@ -87,14 +85,45 @@ void Region::print(){
 		cout << **p;
 	}
 	
-	cout << "]" << endl;
+	cout << "]" << endl;*/
 	
 }
 
 void Region::resolver(){
+
+	int cantPueblos = _pueblos->size();
+
+	// Arbol de pueblos
+	list<pair<Pueblo*, Pueblo*> > * arbolPueblos = new list<pair<Pueblo*, Pueblo*> >();
+	
+	// Uso Prim para agregar pueblos al arbol
+
+	// Elijo la primera ciudad de la lista como root
+	Pueblo* puebloNuevo = *_pueblos->begin();
+	pair<Pueblo*, Pueblo*> parPueblos = pair<Pueblo*, Pueblo*>(puebloNuevo, puebloNuevo);
+	arbolPueblos->push_back(parPueblos);
+
+	// Pueblo mas cercano actual
+	Pueblo * masCercano = puebloNuevo;
+
+	// Agrego ciudades al arbol de a una - O(n)
+	for(int i=0; i<cantPueblos; i++){
+		
+		// Actualizo las distancias al arbol y me quedo con la menor
+		cout << "nuevo_id: " << puebloNuevo->getId() << endl;
+		masCercano = actualizarDistancias(puebloNuevo);
+
+		// Agrego masCercano al arbol
+		// En la proxima iteracion la distancia va a quedar en 0
+		parPueblos = pair<Pueblo*, Pueblo*>(masCercano, masCercano->getPuebloCercano());
+		arbolPueblos->push_back(parPueblos);
+		puebloNuevo = masCercano;
+
+		cout << "id: " << masCercano->getId() << " dist: " << masCercano->getDistanciaArbol() << endl;
+	}
 	
 	// Mientras no logre k componentes conexas para alimentar a todos los pueblos sigo conectando
-	while(_centralitas < _cant_grupos_pueblos){
+	/*while(_centralitas < _cant_grupos_pueblos){
 
 		// Conecto los pueblos mas cercanos disponibles
 		pair< pair<Pueblo*, Pueblo*>, double> data = _pueblos_por_distancia->front();
@@ -141,7 +170,7 @@ void Region::resolver(){
 		
 	}
 	
-	delete grupos_instalados;
+	delete grupos_instalados;*/
 		
 	
 }
@@ -155,12 +184,13 @@ int Region::getTuberiasInstaladas(){
 }
 
 bool Region::hayTuberia(Pueblo & p1, Pueblo & p2){
+	return false;
 	return (*_pueblos_conectados_ady)[p1.getId()][p2.getId()];
 }
 
 void Region::printPueblosConectados(){
 	
-	for(unsigned int j = 1; j <= _pueblos->size(); j++){
+	/*for(unsigned int j = 1; j <= _pueblos->size(); j++){
 		cout << j << " ";
 	}
 
@@ -178,7 +208,46 @@ void Region::printPueblosConectados(){
 			cout << (*_pueblos_conectados_ady)[i][j] << " ";
 		}
 		cout << "|" << i << endl;
-	}
+	}*/
 	
 }
 
+Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
+
+	double distActual;
+	double distNueva;
+	double min = std::numeric_limits<double>::infinity();
+	Pueblo* masCercano = puebloNuevo;
+
+	// Antes de empezar actualizo la distancia del nuevo pueblo
+	puebloNuevo->setDistanciaArbol(0.0);
+
+	// Recorro todos los pueblos y actualizo sus distancias al arbol comparando con el ultimo p agregado
+	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+
+		distActual = (**p).getDistanciaArbol();
+
+		// Si no pertenece al arbol actualizo
+		if(distActual > 0.0){
+
+			cout << "id: " << (**p).getId() << "no esta en arbol" << endl;
+
+			distNueva = (**p).distancia(*puebloNuevo);
+			
+			if(distNueva < distActual){
+				(**p).setPuebloCercano(puebloNuevo);
+				(**p).setDistanciaArbol(distNueva);
+			}
+
+			distActual = (**p).getDistanciaArbol();
+
+			// Si es el menor hasta el momento guardo la ciudad
+			if(distActual < min){
+				masCercano = *p;
+			}
+		}
+	
+	}
+
+	return masCercano;
+}

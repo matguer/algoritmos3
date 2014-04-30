@@ -3,6 +3,7 @@
 
 #include "Pueblo.h"
 #include <list>
+#include <limits>
 
 using namespace std;
 
@@ -27,6 +28,7 @@ class Region {
 		int getCentralesInstaladas();
 		int getTuberiasInstaladas();
 		bool hayTuberia(Pueblo & p1, Pueblo & p2);
+		Pueblo* actualizarDistancias(Pueblo* puebloNuevo);
 };
 
 #endif
