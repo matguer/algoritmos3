@@ -88,7 +88,10 @@ int main(){
 		}
 		
 		int nro_turno = 0;
+		// Indices para sumar los puntos
 		int primera_carta = 0;
+		int media_carta = 0;
+		int ultima_carta = cant_cartas-1;
 		int cartas_tomadas = 0;
 		//int cant_cartas_originales = cant_cartas;
 		int * puntajes = new int[2];
@@ -99,25 +102,32 @@ int main(){
 		puntajes[1] = 0;
 		
 		while(cant_cartas>0){
-			
-			//cout << "Primera carta " << primera_carta << " cantidad " << cant_cartas << endl;
 
-			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 0){
+			if((*tabla_elecciones)[primera_carta][ultima_carta].first == 0){
 				output_jugadas << "izq ";
 			}else{
 				output_jugadas << "der ";
 			}
-			cartas_tomadas = (*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].second;
-			puntos = sumatoria(cartas, primera_carta, cartas_tomadas+primera_carta-1);
+			cartas_tomadas = (*tabla_elecciones)[primera_carta][ultima_carta].second;
+			output_jugadas << cartas_tomadas << endl;
 			
-			output_jugadas << (*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].second << endl; 
-			
+			// Si tome desde la derecha
+			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 1){
+				media_carta = cant_cartas-cartas_tomadas;
+				puntos = sumatoria(cartas, media_carta, ultima_carta);
+			}else{
+				media_carta = primera_carta+cartas_tomadas-1;
+				puntos = sumatoria(cartas, primera_carta, media_carta);
+			}
+
 			puntajes[nro_turno%2] = puntajes[nro_turno%2] + puntos;
 
-			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 0){
+			// Ajusto indices
+			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 1){
+				ultima_carta = cant_cartas-cartas_tomadas-1;
+			}else{
 				primera_carta = primera_carta+cartas_tomadas;
 			}
-			
 			cant_cartas = cant_cartas-cartas_tomadas;
 			nro_turno++;
 
@@ -125,6 +135,8 @@ int main(){
 		
 		cout << nro_turno << " " << puntajes[0] << " " << puntajes[1] << endl;
 		cout << output_jugadas.str();
+		
+		//printTabla(tabla_resultados, cant_cartas_originales);
 	
 		
 		delete cartas;
