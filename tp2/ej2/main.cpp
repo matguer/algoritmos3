@@ -4,6 +4,8 @@
 #include <limits>
 #include <iostream>
 #include <stdlib.h>
+#include <cstdlib>
+
 
 using namespace std;
 
@@ -24,9 +26,17 @@ int main(int argc, char* argv[]) {
 	} 
 	
 	Region * r = new Region(lista_pueblos, cant_centrales);
+
+	clock_t timer = clock();	
 	
 	r->resolver();
 	
+	// Si recibe un 1 como parametro se habilita el modo de medicion.
+	if(argc > 1 && atoi(argv[1]) == 1) {
+		timer = clock() - timer;
+		cout << "time: " << timer << endl;
+	}
+
 	//r->printPueblosConectados();
 	//r->print();
 
