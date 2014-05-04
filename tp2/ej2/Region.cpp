@@ -13,20 +13,21 @@ Region::Region(){
 	_centrales_instaladas = 0;
 	_tuberias_instaladas = 0;
 	_pueblos = new list<Pueblo*>();
-	_pueblos_por_distancia = new vector< pair<pair<Pueblo*,Pueblo*>, double> >(_pueblos->size());
-	_pueblos_conectados_ady = new vector< vector<bool> >(0, vector<bool>(0, false) );
-	_cant_grupos_pueblos = 0;
+	_arbol_pueblos = new list<pair<Pueblo*, Pueblo*> >();
 	
 }
 
 Region::~Region(){
+
+	delete _arbol_pueblos;
 	
 	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
 		delete *p;
 	}
-	
-	delete _pueblos_por_distancia;
-	delete _pueblos_conectados_ady;
+
+	/*for(list<pair<Pueblo*, Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end(); p++){
+		delete p;
+	}*/
 	
 }
 
@@ -47,11 +48,11 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 	_centrales_instaladas = 0;
 	_tuberias_instaladas = 0;
 	_pueblos = lista_pueblos;
+	_arbol_pueblos = new list<pair<Pueblo*, Pueblo*> >();
 
-	/*_pueblos_conectados_ady = new vector< vector<bool> >(_pueblos->size()+1, vector<bool>(_pueblos->size()+1, false) );
-	_cant_grupos_pueblos = _pueblos->size();
 	_pueblos_por_distancia = new vector< pair<pair<Pueblo*,Pueblo*>, double> >();
 	
+	// Distancias entre los pueblos para test
 	int i = 1;
 	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
 		
@@ -69,7 +70,9 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 			
 		}
 		i++;
-	}*/
+	}
+
+	print();
 	
 }
 
@@ -79,36 +82,27 @@ void Region::print(){
 	cout << "Centralitas: " << _centralitas << endl;
 	cout << "Distancias entre pueblos: " << endl;
 	
-	
-	/*for(unsigned int j = 0; j < _pueblos_por_distancia->size(); j++){
+	// Imprimo las distancias entre todos los pueblos
+	// Para test
+	for(unsigned int j = 0; j < _pueblos_por_distancia->size(); j++){
 		cout << *((*_pueblos_por_distancia)[j].first.first) << " y " << *((*_pueblos_por_distancia)[j].first.second) << ": " << (*_pueblos_por_distancia)[j].second << endl;
 	}
 	
 	
-	cout << endl;	
-	cout << "[";
-	
-	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
-		cout << **p;
-	}
-	
-	cout << "]" << endl;*/
+	cout << endl;
 	
 }
 
 void Region::resolver(){
 
 	int cantPueblos = _pueblos->size();
-
-	// Arbol de pueblos
-	list<pair<Pueblo*, Pueblo*> > * arbolPueblos = new list<pair<Pueblo*, Pueblo*> >();
 	
 	// Uso Prim para agregar pueblos al arbol
 
 	// Elijo la primera ciudad de la lista como root
 	Pueblo* puebloNuevo = *_pueblos->begin();
 	pair<Pueblo*, Pueblo*> parPueblos = pair<Pueblo*, Pueblo*>(puebloNuevo, puebloNuevo);
-	arbolPueblos->push_back(parPueblos);
+	_arbol_pueblos->push_back(parPueblos);
 	// Inicialmente solo el pueblo root tiene una central instalada
 	puebloNuevo->instalarCentral();
 	_centrales_instaladas = 1;
@@ -126,10 +120,8 @@ void Region::resolver(){
 		// Agrego masCercano al arbol
 		// En la proxima iteracion la distancia va a quedar en 0
 		parPueblos = pair<Pueblo*, Pueblo*>(masCercano->getPuebloCercano(), masCercano);
-		arbolPueblos->push_back(parPueblos);
+		_arbol_pueblos->push_back(parPueblos);
 		puebloNuevo = masCercano;
-
-		//cout << "id: " << masCercano->getId() << " dist: " << masCercano->getDistanciaArbol() << endl;
 	}
 
 
@@ -140,7 +132,7 @@ void Region::resolver(){
 	cout << "luego del sort" << endl;*/
 
 	// Ordeno los pares de ciudades segun distancia (de mayor a menor)
-	arbolPueblos->sort(compararDistancia);
+	_arbol_pueblos->sort(compararDistancia);
 
 	/*for(list<pair<Pueblo*,Pueblo*> >::iterator p = arbolPueblos->begin(); p != arbolPueblos->end(); p++){
 			cout << "pueblo " << ((*p).first)->getId() << " unido con pueblo " << ((*p).second)->getId() << ", distancia: " << (*((*p).first)).distancia(*((*p).second)) << endl;
@@ -149,31 +141,17 @@ void Region::resolver(){
 	// Mientras que pueda instalar centrales achico el tam maximo de las tuberias
 	// Es decir, genero k componentes conexas, cada una con una central
 
-	for(list<pair<Pueblo*,Pueblo*> >::iterator p = arbolPueblos->begin(); p != arbolPueblos->end(); p++){
+	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end(); p++){
 		if(_centrales_instaladas<_centralitas){
 			// p representa la tuberia mas larga, la elimino e instalo una nueva central
 			((*p).second)->instalarCentral();
 			_centrales_instaladas++;
-			arbolPueblos->erase(p++);
+			_arbol_pueblos->erase(p++);
 		}	
 	}
 
-	// TODO: mover esto a una funcion
+	printPueblosConectados();	
 
-	// q = centrales instaladas, p = pueblos
-	cout << _centrales_instaladas << " " << arbolPueblos->size() - 1 << endl;
-	// pueblos con central
-	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
-		if((*p)->tieneCentral()){
-			cout << (*p)->getId() << endl;
-		}
-	}
-
-	for(list<pair<Pueblo*,Pueblo*> >::iterator p = arbolPueblos->begin(); p != arbolPueblos->end()--; p++){
-			cout << ((*p).first)->getId() << " " << ((*p).second)->getId() << endl;
-	}
-	
-	delete arbolPueblos;
 	/*delete puebloNuevo;
 	delete masCercano;*/
 }
@@ -188,31 +166,22 @@ int Region::getTuberiasInstaladas(){
 
 bool Region::hayTuberia(Pueblo & p1, Pueblo & p2){
 	return false;
-	return (*_pueblos_conectados_ady)[p1.getId()][p2.getId()];
 }
 
 void Region::printPueblosConectados(){
-	
-	// TODO: ver de pasarle arbolPueblos e imprimir eso
-	/*for(unsigned int j = 1; j <= _pueblos->size(); j++){
-		cout << j << " ";
-	}
 
-	cout << endl;
-	
-	for(unsigned int j = 1; j <= _pueblos->size(); j++){
-		cout << "--";
-	}
-	
-	cout << endl;
-	
-	for(unsigned int i = 1; i <= _pueblos->size(); i++){
-
-		for(unsigned int j = 1; j <= _pueblos->size(); j++){
-			cout << (*_pueblos_conectados_ady)[i][j] << " ";
+	// q = centrales instaladas, p = pueblos
+	cout << _centrales_instaladas << " " << _arbol_pueblos->size() - 1 << endl;
+	// pueblos con central
+	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+		if((*p)->tieneCentral()){
+			cout << (*p)->getId() << endl;
 		}
-		cout << "|" << i << endl;
-	}*/
+	}
+
+	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end()--; p++){
+			cout << ((*p).first)->getId() << " " << ((*p).second)->getId() << endl;
+	}
 	
 }
 
