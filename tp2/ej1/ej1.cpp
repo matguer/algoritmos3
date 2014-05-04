@@ -139,9 +139,10 @@ int main(){
 		//printTabla(tabla_resultados, cant_cartas_originales);
 	
 		
-		delete cartas;
+		delete[] cartas;
 		delete tabla_resultados;
-		delete puntajes;
+		delete tabla_elecciones;
+		delete[] puntajes;
 
 		return 0;
 }
