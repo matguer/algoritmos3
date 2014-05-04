@@ -53,7 +53,7 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 	_pueblos_por_distancia = new vector< pair<pair<Pueblo*,Pueblo*>, double> >();
 	
 	// Distancias entre los pueblos para test
-	int i = 1;
+	/*int i = 1;
 	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
 		
 		int j = 1;
@@ -70,9 +70,9 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 			
 		}
 		i++;
-	}
+	}*/
 
-	print();
+	//print();
 	
 }
 
@@ -202,8 +202,6 @@ Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
 
 		// Si no pertenece al arbol actualizo
 		if(distActual > 0.0){
-
-			cout << "id: " << (**p).getId() << "no esta en arbol" << endl;
 
 			distNueva = (**p).distancia(*puebloNuevo);
 			
