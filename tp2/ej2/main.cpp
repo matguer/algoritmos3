@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 	// Si recibe un 1 como parametro se habilita el modo de medicion.
 	if(argc > 1 && atoi(argv[1]) == 1) {
 		timer = clock() - timer;
-		cout << "time: " << timer << endl;
+		cout << "TIEMPO: " << timer << endl;
 	}
 
 	//r->printPueblosConectados();
