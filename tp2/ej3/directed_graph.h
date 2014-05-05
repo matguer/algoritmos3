@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <list>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -19,6 +20,7 @@ class directed_graph
 		~directed_graph();
 		void add_edge(int u, int v);
 		void print();
+		list<int> bfs(int source, int target);
 
 };
 

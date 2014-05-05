@@ -5,7 +5,6 @@
 #include <vector>
 #include <assert.h>
 #include "directed_graph.h"
-#include "BFS.h"
 
 using namespace std;
 
@@ -32,8 +31,40 @@ int main(int argc, char* argv[]){
 		
 		// Si se recibe un 1 por parametro se ejecuta el test de BFS (SACAR A LA HORA DE LA ENTREGA)	
 		if(argc > 1 && atoi(argv[1]) == 1) {
-			BFS bfs;
-			bfs.test();
+
+			directed_graph * grafo = new directed_graph(7);
+			grafo->add_edge(0,1);
+			grafo->add_edge(0,2);
+			grafo->add_edge(0,3);
+			
+			grafo->add_edge(1,0);
+			
+			grafo->add_edge(2,0);
+			grafo->add_edge(2,3);
+			grafo->add_edge(2,4);
+			
+			grafo->add_edge(3,0);
+			grafo->add_edge(3,2);
+			grafo->add_edge(3,5);
+			grafo->add_edge(3,6);
+			
+			grafo->add_edge(4,2);
+			
+			grafo->add_edge(5,3);
+			
+			grafo->add_edge(6,3);
+
+			list<int> camino = grafo->bfs(4, 3);
+			// Muestro el camino
+			for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
+				
+				cout << *i << " - ";
+			}
+			
+			cout << endl << endl;
+			
+			delete grafo;
+
 			return 0;
 		}
 
@@ -72,7 +103,7 @@ int main(int argc, char* argv[]){
 		unsigned int nro_nodo_vecino;
 		unsigned int k_restantes;
 		
-		// Asigno las posibles aristas, i = nodo que representa la casilla en el estado_nodo_actual que no se gasto ningun k
+		// Asigno las posibles aristas, i = todos los posibles nodos que representan tanto casillas sin gastos de k como con algun gasto
 		// O((n^2)*k) * O(2*n)
 		for(unsigned int i = 0; i<cant_nodos; i++){
 			
@@ -115,6 +146,7 @@ int main(int argc, char* argv[]){
 								cuanto_k_necesito = columna_nodo_actual - potencia_nodo_actual - j;
 							}
 							
+							// Lo voy a juntar con el nodo que puedo llegar pero a un estado correspondiente
 							nro_nodo_vecino = getNumeroNodo(n, k, fila_nodo_actual, j, estado_nodo_actual+cuanto_k_necesito);
 							// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
 							// alcanzable a su estado_nodo_actual correspondiente segun el gasto de k
@@ -159,6 +191,7 @@ int main(int argc, char* argv[]){
 								cuanto_k_necesito = fila_nodo_actual - potencia_nodo_actual - j;
 							}
 							
+							// Lo voy a juntar con el nodo que puedo llegar pero a un estado correspondiente
 							nro_nodo_vecino = getNumeroNodo(n, k, j, columna_nodo_actual, estado_nodo_actual+cuanto_k_necesito);
 							// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
 							// alcanzable a su estado_nodo_actual correspondiente segun el gasto de k
@@ -173,7 +206,24 @@ int main(int argc, char* argv[]){
 
 		}
 		
-		grafo->print();
+		//grafo->print();
+		
+		for(unsigned int j=0; j<=k; j++){
+			int nro_nodo_inicio = getNumeroNodo(n, k, fo-1, co-1, 0);
+			int nro_nodo_fin = getNumeroNodo(n, k, fd-1, cd-1, j);
+			list<int> camino = grafo->bfs(nro_nodo_inicio, nro_nodo_fin);
+		
+			// Muestro el camino
+			for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
+				int fila_nodo_actual = ((*i) / (k+1)) / n;
+				int columna_nodo_actual = (((*i) / (k+1)) % n);
+				int estado_nodo_actual = (*i) % (k+1);
+				
+				cout << *i << " (f:" << fila_nodo_actual << ",c:" << columna_nodo_actual << ",e:" << estado_nodo_actual << ") - ";
+			}
+			
+			cout << endl << endl;
+		}
 		
 		delete grafo;
 		delete potencias;
