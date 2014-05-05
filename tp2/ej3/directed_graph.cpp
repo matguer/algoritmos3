@@ -7,12 +7,12 @@
 using namespace std;
 
 directed_graph::directed_graph() { 
-	graph_container = map<int, list<int>* >();
+	graph_container = vector<list<int>* >();
 	cant_nodos = 0;
 }
 
 directed_graph::directed_graph(int n) { 
-	graph_container = map<int, list<int>* >();
+	graph_container = vector<list<int>* >(n);
 	cant_nodos = n;
 	
 	for(int i=0; i < cant_nodos; i++){

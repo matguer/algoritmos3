@@ -4,14 +4,14 @@
 #include <iostream>
 #include <stdlib.h>
 #include <list>
-#include <map>
+#include <vector>
 
 using namespace std;
 
 class directed_graph
 {
 	private:
-		map<int, list<int>* > graph_container;
+		vector<list<int>*> graph_container;
 		int cant_nodos;
 	public:
 		directed_graph(int cant_nodos);
