@@ -25,10 +25,7 @@ Region::~Region(){
 		delete *p;
 	}
 
-	/*for(list<pair<Pueblo*, Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end(); p++){
-		delete p;
-	}*/
-	
+	delete _pueblos_por_distancia;
 }
 
 bool pairCompare(pair< pair<Pueblo*, Pueblo*>, double> & firstElem, pair< pair<Pueblo*, Pueblo*>, double> & secondElem) {
@@ -150,7 +147,7 @@ void Region::resolver(){
 		}	
 	}
 
-	printPueblosConectados();	
+	//printPueblosConectados();	
 
 	/*delete puebloNuevo;
 	delete masCercano;*/

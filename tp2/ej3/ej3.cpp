@@ -1,9 +1,11 @@
 #include <iostream>
 #include <stdlib.h>
+#include <cstdlib>
 #include <sstream>
 #include <vector>
 #include <assert.h>
 #include "directed_graph.h"
+#include "BFS.h"
 
 using namespace std;
 
@@ -26,8 +28,15 @@ unsigned int getNumeroNodo(unsigned int n, unsigned int k, unsigned int fila, un
 	return nro_nodo_vecino;
 }
 
-int main(){
+int main(int argc, char* argv[]){
 		
+		// Si se recibe un 1 por parametro se ejecuta el test de BFS (SACAR A LA HORA DE LA ENTREGA)	
+		if(argc > 1 && atoi(argv[1]) == 1) {
+			BFS bfs;
+			bfs.test();
+			return 0;
+		}
+
 		// Leo la entrada
 		unsigned int n;
 		unsigned int fo;
