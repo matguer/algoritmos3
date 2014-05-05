@@ -87,6 +87,8 @@ int main(){
 			
 		}
 		
+		//printTabla(tabla_resultados, cant_cartas);
+
 		int nro_turno = 0;
 		// Indices para sumar los puntos
 		int primera_carta = 0;
@@ -124,10 +126,11 @@ int main(){
 
 			// Ajusto indices
 			if((*tabla_elecciones)[primera_carta][cant_cartas+primera_carta-1].first == 1){
-				ultima_carta = cant_cartas-cartas_tomadas-1;
+				ultima_carta = cant_cartas-cartas_tomadas-1+primera_carta;
 			}else{
 				primera_carta = primera_carta+cartas_tomadas;
 			}
+			
 			cant_cartas = cant_cartas-cartas_tomadas;
 			nro_turno++;
 
@@ -135,9 +138,7 @@ int main(){
 		
 		cout << nro_turno << " " << puntajes[0] << " " << puntajes[1] << endl;
 		cout << output_jugadas.str();
-		
-		//printTabla(tabla_resultados, cant_cartas_originales);
-	
+
 		
 		delete[] cartas;
 		delete tabla_resultados;
