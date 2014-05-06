@@ -52,7 +52,7 @@ void directed_graph::print(){
 * @param: source: nodo del que se quiere arrancar a buscar
 * @param: target: nodo destino de la busqueda
 */
-list<int> directed_graph::bfs(int source, int target) {
+list<int> directed_graph::bfs(int source, int target_init, int target_end) {
 
 	queue<int> cola;
 	int cant_nodos = graph_container.size();
@@ -89,10 +89,10 @@ list<int> directed_graph::bfs(int source, int target) {
 	// Camino encontrado
 	list<int> camino;
 
-	// Se imprime el camino para llegar del source al target
-	if(visitados[target] != 0) {
+	// Se imprime el camino para llegar del source al target_init
+	if(visitados[target_init] != 0) {
 
-		int nodo = target;
+		int nodo = target_init;
 		
 		camino.push_back(nodo);
 		while(nodo != source) {

@@ -20,7 +20,7 @@ class directed_graph
 		~directed_graph();
 		void add_edge(int u, int v);
 		void print();
-		list<int> bfs(int source, int target);
+		list<int> bfs(int source, int target_init, int target_end);
 
 };
 
