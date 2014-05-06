@@ -1,10 +1,13 @@
 #!/bin/bash
 
-MAX_CANT_PUEBLOS=1000
-MAX_CANT_CENTRALES=1000
 
-MIN_CANT_PUEBLOS=500
-MIN_CANT_CENTRALES=500
+MIN_CANT_PUEBLOS=5000
+MAX_CANT_PUEBLOS=10000
+INTERVALO_PUEBLOS=100
+
+MIN_CANT_CENTRALES=100
+MAX_CANT_CENTRALES=1000
+INTERVALO_CENTRALES=30
 
 ejecutable=./ej2
 generador_inputs=./generador_inputs.sh
@@ -14,9 +17,9 @@ output_file=ejecuciones/ejecucion_${MIN_CANT_PUEBLOS}_a_${MAX_CANT_PUEBLOS}_pueb
 echo "pueblos, centrales, tiempo" > $output_file
 
 
-for pueblos in `seq $MIN_CANT_PUEBLOS $MAX_CANT_PUEBLOS`; do
+for pueblos in `seq $MIN_CANT_PUEBLOS $INTERVALO_PUEBLOS $MAX_CANT_PUEBLOS`; do
 
-	for centrales in `seq $MIN_CANT_CENTRALES $MAX_CANT_CENTRALES`;  do
+	for centrales in `seq $MIN_CANT_CENTRALES $INTERVALO_CENTRALES $MAX_CANT_CENTRALES`;  do
 
 		# Se genera el input para esta iteracion de centrales y pueblos
 		input=$($generador_inputs $pueblos $centrales)
