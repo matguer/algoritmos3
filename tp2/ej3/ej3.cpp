@@ -54,7 +54,7 @@ int main(int argc, char* argv[]){
 			
 			grafo->add_edge(6,3);
 
-			list<int> camino = grafo->bfs(4, 3);
+			list<int> camino = grafo->bfs(4, 3, 3);
 			// Muestro el camino
 			for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
 				
@@ -207,23 +207,22 @@ int main(int argc, char* argv[]){
 		}
 		
 		//grafo->print();
-		
-		for(unsigned int j=0; j<=k; j++){
-			int nro_nodo_inicio = getNumeroNodo(n, k, fo-1, co-1, 0);
-			int nro_nodo_fin = getNumeroNodo(n, k, fd-1, cd-1, j);
-			list<int> camino = grafo->bfs(nro_nodo_inicio, nro_nodo_fin);
-		
-			// Muestro el camino
-			for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
-				int fila_nodo_actual = ((*i) / (k+1)) / n;
-				int columna_nodo_actual = (((*i) / (k+1)) % n);
-				int estado_nodo_actual = (*i) % (k+1);
-				
-				cout << *i << " (f:" << fila_nodo_actual << ",c:" << columna_nodo_actual << ",e:" << estado_nodo_actual << ") - ";
-			}
+
+		int nro_nodo_inicio = getNumeroNodo(n, k, fo-1, co-1, 0);
+		int nro_nodo_fin = getNumeroNodo(n, k, fd-1, cd-1, 0);
+		list<int> camino = grafo->bfs(nro_nodo_inicio, nro_nodo_fin, nro_nodo_fin+k);
+	
+		// Muestro el camino
+		for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
+			int fila_nodo_actual = ((*i) / (k+1)) / n;
+			int columna_nodo_actual = (((*i) / (k+1)) % n);
+			int estado_nodo_actual = (*i) % (k+1);
 			
-			cout << endl << endl;
+			cout << *i << " (f:" << fila_nodo_actual << ",c:" << columna_nodo_actual << ",e:" << estado_nodo_actual << ") - ";
 		}
+		
+		cout << endl << endl;
+		
 		
 		delete grafo;
 		delete potencias;
