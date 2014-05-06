@@ -2,9 +2,9 @@
 
 En este punto se nos pide resolver el problema de ubicar centrales de gas de manera estrat\'egica entre los pueblos de una cierta regi\'on.\\
 
-Dados $n$ pueblos con sus respectivas coordenadas en el plano y $k$ centrales de gas, la idea es ubicar las centrales en algunos de los pueblos. Luego es posible construir tuber\'ias entre pueblos; una tuber\'ia que va de un pueblo con central a uno sin no s\'olo transporta el gas a este \'ultimo sino que adem\'as lo convierte en potencial proveedor. Es decir que se da una especie de transitividad entre pueblos: si un pueblo $a$ con central de gas se conecta a otro pueblo $b$ y a su vez $b$ se conecta con $c$ entonces $c$ tambi\'en recibe gas.\\
+Dados $n$ pueblos con sus respectivas coordenadas en el plano y $k$ centrales de gas, la idea es decidir en qu\'e pueblos ubicar las centrales. Adem\'as es posible construir tuber\'ias entre pueblos: una tuber\'ia que va de un pueblo con central a uno sin no s\'olo transporta el gas a este \'ultimo sino que adem\'as lo convierte en potencial proveedor. Es decir que se da una especie de transitividad entre los pueblos: si un pueblo $a$ con central de gas se conecta a otro pueblo $b$ y a su vez $b$ se conecta con $c$ entonces $c$ tambi\'en recibe gas (y puede distribuirlo).\\
 
-El \'unico problema que presentan las tuber\'ias es que, a mayor longitud aumenta la posibilidad de rotura de las mismas. Evidentemente \'este es un factor que se quiere evitar, por lo cual se nos pide que, al elegir los pueblos donde instalar las centrales y y las conecciones entre pueblos minimicemos el tama\~o de la tuber\'ia m\'as larga.\\
+El \'unico problema que presentan las tuber\'ias es que, a mayor longitud aumenta la posibilidad de rotura de las mismas. Evidentemente \'este es un factor que se quiere evitar, por lo cual se nos pide que, al elegir los pueblos donde instalar las centrales y y las conecciones entre los mismos minimicemos el tama\~o de la tuber\'ia m\'as larga.\\
 
 Veamos algunos ejemplos, la siguiente es una situacion trivial en la que tenemos la misma cantidad de pueblos que de centrales:
 
@@ -30,17 +30,23 @@ Como dato, sabemos que $e_2 < e_3 < e_1$ con lo cual nuestro largo m\'aximo de t
 
 \subsection{Resoluci\'on}
 
-Para resolver el problema dado decidimos modelarlo con grafos de tal forma que los nodos representen los pueblos, y las aristas (con pesos) las posibles conexiones entre pueblos. Estos pesos estan basados en las distancias entre cada par de pueblos. \\
+Para la resoluci\'on del problema decidimos primero modelarlo con grafos, de forma que los nodos representen los pueblos, y las aristas (con pesos) las posibles conexiones entre pueblos. Los pesos est\'an dados por las distancias entre cada par de pueblos. \\
 
-Como se nos pide minimizar el riesgo de rotura de las tuber\'ias a instalar, lo ideal ser\'ia lograr un esquema de conexi\'ones tal que el largo de la tuber\'ia mas larga sea m\'inimo. Como veremos mas adelante, la ubicaci\'on de las centrales de gas no es de gran importancia ya que la transimisi\'on del servicio de gas se da por transitividad entre pueblos conectados (mientras alguno tenga una central). Lo importante es tener grupos de pueblos conectados a una misma central de tal manera que estas tuberias sean de tama\~no m\'inimo, sin importar la cantidad de tuberias usadas. \\
+Como se nos pide minimizar el riesgo de rotura de las tuber\'ias a instalar, lo ideal ser\'ia lograr un esquema de conexiones tal que el largo de la tuber\'ia mas larga sea m\'inimo. Como veremos m\'as adelante, la ubicaci\'on de las centrales de gas no es de gran importancia ya que la transimisi\'on del servicio de gas se da por transitividad entre pueblos conectados (mientras alguno de ellos tenga una central). Por lo tanto lo importante es tener grupos de pueblos conectados a una misma central de manera que las tuber\'as necesarias sean de tama\~no m\'inimo. \\
 
-Como primer paso decidimos guardar en una estructura de datos de cola de prioridad (implementada en un Heap) todos los pares de distancias entre pueblos, de menor a mayor. Esto nos permite saber que el primer elemento del Heap posee al par de pueblos mas cercanos de todo el mapa, y cada vez que pidamos el proximo tendremos pares de pueblos de distancia minima, pero mayor o igual que el anterior. Cabe recordar que la distancia entre el puebo A posicionado en la coordenada $(x_0,y_0)$ y el pueblo B posicionado en la coordenada $(x_1,y_1)$ es igual a $\sqrt{(x_1-x_0)^2+(y_1-y_0)^2}$ \\
+Para obtener el esquema de conexiones antes mencionado partimos de pensar la regi\'on como un grafo completo; es decir que suponemos que todas las ciudades est\'an conectadas entre s\'i. Luego, a partir del grafo completo la idea es obtener un \'arbol generador m\'inimo del mismo utilizando el algoritmo de Prim.\\
+Finalmente cortamos las $k - 1$ aristas m\'as largas del \'arbol, obteniendo un grafo de $k$ componentes conexas tal que la arista m\'as larga del grafo es de peso m\'inimo.\\ 
+Como se dijo antes, es indistinto cu\'al de los pueblos de cada componente conexa tiene instalada la central. Sin embargo, como el ejercicio pide especificar el pueblo elegido, instalamos inicialmente una central en la ra\'iz del \'arbol. Luego, por cada arista ($v_1$, $v_2$) que eliminamos instalamos una central en el pueblo representado por $v_2$. %TODO: aclarar por que anda
 
-Una vez obtenida esta informaci\'on, nuestro mapa empieza con 0 conexiones entre pueblos y N pueblos, resultando un grafo de N componentes conexas. La clave esta en conseguir K (cantidad de centrales de gas) componentes conexas con largo de tuber\'ias m\'inima. Notar que puede ocurrir que K sea mayor o igual a N, con lo que el problema se vuelve trivial. \\
+\subsubsection{Implementaci\'on de Prim}
+Describimos a continuaci\'on nuestra implementaci\'on del algoritmo de Prim.\\
 
-Realizamos un ciclo que, a cada paso, verifica si no logramos tener las K componentes conexas. Caso contrario agregamos una nueva conexion entre el pr\'oximo par de pueblos mas cercano que no compartan la misma componente conexa, logrando asi decrementar la cantidad de componentes conexas cada vez que se satisface esta condici\'on. Finalmente el ciclo terminar\'a al lograr las K componentes conexas y el \'ultimo paso es ubicar las K centrales en alg\'un pueblo de cada una de estas componentes.\\
-
-Con esto logramos repartir gas a todos los pueblos sin generar conexiones innecesarias.
+Elegimos como ra\'iz del \'arbol generador m\'inimo al primer pueblo de la lista de pueblos de la regi\'on. Como al menos va a haber una central, instalamos una en el pueblo ra\'iz.\\
+Luego realizamos un ciclo que se repite $n - 1$ veces (siendo $n$ la cantidad de nodos, es decir, ciudades), en el cual en cada iteraci\'on obtenemos el nodo m\'as cercano al \'arbol y lo agregamos al mismo.\\
+Para saber cu\'al es el nodo m\'as cercano al \'arbol debemos, en cada iteraci\'on calcular la distancia m\'inima entre cada nodo que no pertenece al \'arbol y los que s\'i pertenecen.\\
+Como partimos de un \'arbol que s\'olo tiene al primer nodo de la lista ($n_0$) inicialmente calculamos la distancia de cada uno de los nodos restantes a $n_0$. Luego se elegimos el nodo de menor distancia y lo agregamos al \'arbol y repetimos el proceso de calcular distancias y elegir el nodo m\'as cercano.\\
+As\'i ,cada vez que agregamos un nodo al \'arbol volvemos a computar la m\'inima distancia de los nodos restantes comparando la distancia que cada uno tiene guardada como m\'inima con la distancia al nuevo nodo.\\
+Una vez agregados todos los nodos al \'arbol tenemos un \'arbol generador m\'inimo.\\
 
 \subsection{Demostraci\'on de la resoluci\'on}
 
@@ -48,23 +54,33 @@ Con esto logramos repartir gas a todos los pueblos sin generar conexiones innece
 
 Veamos la complejidad del algoritmo propuesto utilizando un pseudoc\'odigo que facilite el an\'alisis.\\
 
-Analicemos primero el constructor de regi\'on. S\'olo vamos a ver la parte en que se crea la lista de pares de ciudades ordenada de menor a mayor seg\'un la distancia entre ellas ya que el resto del constructor solamente hace asignaciones a variables (ver en la secci\'on siguiente).
+Analicemos primero el algoritmo\\
+
 \begin{itemize}
-\item poner i $\leftarrow$ 1
-\item para cada pueblo en pueblos  \/// O(n) 
+\item poner puebloNuevo $\leftarrow$ primer pueblo de la lista
+\item agregar a arbolPueblos $\leftarrow$ (puebloNuevo, puebloNuevo)
+\item instalar central en puebloNuevo y poner centralesInstaladas $\leftarrow$ 1
+\item poner i $\leftarrow$ 0
+\item mientras i < cantidadCentrales - 1
 \begin{itemize}
-	\item poner j $\leftarrow$ 1
-	\item para cada pueblo2 en pueblos \/// O(n)
-	\begin{itemize}
-		\item si i > j entonces poner pueblos $\leftarrow$ (pueblo, pueblo2) y poner porDistancia $\leftarrow$ (pueblos, distancia(pueblo, pueblo2))
-		\item poner j $\leftarrow$ j + 1
-	\end{itemize}
-	\item poner i $\leftarrow$ i + 1
+	\item actualizarDistancias respecto a puebloNuevo
+	\item poner masCercano $\leftarrow$ pueblo mas cercano fuera del arbol
+	\item poner cercanoEnArbol $\leftarrow$ pueblo del arbol con el que masCercano tiene distancia minima
+	\item agregar arbolPueblos $\leftarrow$ (cercanoEnArbol, masCercano)
 \end{itemize}
-\item ordenar porDistancia \/// O(n*log(n)) 
+\item ordenar arbolPueblos de mayor a menor por distancia entre pares
+\item mientras centralesInstaladas < cantidadCentralitas
+\begin{itemize}
+	\item poner aristaMayor $\leftarrow$ primer elem de arbolPueblos
+	\item instalarCentral(aristaMayor.segundo)
+	\item eliminar aristaMayor de arbolPueblos
 \end{itemize}
 
-Por el for anidado que tenemos, que nos lleva a recorrer dos veces la lista de pueblos, obtenemos una complejidad de $O(n^2)$
+\end{itemize}
+
+%Por el for anidado que tenemos, que nos lleva a recorrer dos veces la lista de pueblos, obtenemos una complejidad de $O(n^2)$
+
+\newpage
 
 \subsection{C\'odigo fuente}
 
@@ -78,96 +94,103 @@ Por el for anidado que tenemos, que nos lleva a recorrer dos veces la lista de p
 }
 \begin{lstlisting}
 
-
-/* Constructor de region
- * notar: crea la lista de pares de ciudades ordenada por distancia de menor a mayor
-**/
+/* Constructor de region */
 Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 	
 	_centralitas = centralitas;
 	_centrales_instaladas = 0;
 	_tuberias_instaladas = 0;
 	_pueblos = lista_pueblos;
-	_pueblos_conectados_ady = new vector< vector<bool> >(_pueblos->size()+1, vector<bool>(_pueblos->size()+1, false) );
-	_cant_grupos_pueblos = _pueblos->size();
-	_pueblos_por_distancia = new list< pair<pair<Pueblo*,Pueblo*>, double> >();
-	
-	int i = 1;
-	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
-		
-		int j = 1;
-		for(list<Pueblo*>::iterator p2 = _pueblos->begin(); p2 != _pueblos->end(); p2++){
-			
-			// Para evitar guardar la distancia simetrica
-			if(i > j){
-				pair<Pueblo*, Pueblo*> pueblos = pair<Pueblo*, Pueblo*>(*p,*p2);
-				pair< pair<Pueblo*, Pueblo*>, double> data = pair<pair<Pueblo*, Pueblo*>, double>(pueblos,(**(p)).distancia(**p2));
-				_pueblos_por_distancia->push_back(data);
-			}
-			
-			j++;
-			
-		}
-		i++;
-	}
-	
-	// Dejo ordenada la lista de distancias
-	_pueblos_por_distancia->sort(pairCompare);
-	
+	_arbol_pueblos = new list<pair<Pueblo*, Pueblo*> >();
+
 }
 
 void Region::resolver(){
-	
-	list<pair<pair<Pueblo*,Pueblo*>, double> >::iterator pueblos_distancia_it = _pueblos_por_distancia->begin();
-	
 
-	// Mientras no logre k componentes conexas para alimentar a todos los pueblos sigo conectando
-	while(_centralitas < _cant_grupos_pueblos){
+	int cantPueblos = _pueblos->size();
+	
+	// Uso Prim para agregar pueblos al arbol
+
+	// Elijo la primera ciudad de la lista como root
+	Pueblo* puebloNuevo = *_pueblos->begin();
+	pair<Pueblo*, Pueblo*> parPueblos = pair<Pueblo*, Pueblo*>(puebloNuevo, puebloNuevo);
+	_arbol_pueblos->push_back(parPueblos);
+	// Inicialmente solo el pueblo root tiene una central instalada
+	puebloNuevo->instalarCentral();
+	_centrales_instaladas = 1;
+
+	// Pueblo mas cercano actual
+	Pueblo * masCercano = puebloNuevo;
+
+	// Agrego ciudades al arbol de a una - O(n)
+	for(int i=0; i<cantPueblos-1 ; i++){
 		
-		// Conecto los pueblos mas cercanos disponibles
-		pair< pair<Pueblo*, Pueblo*>, double> data = *pueblos_distancia_it;
-		
-		Pueblo * p1 = data.first.first;
-		Pueblo * p2 = data.first.second;
-		
-		// Si estan en componentenes conexas distintas las uno
-		if(p1->getIdGrupoPueblo() != p2->getIdGrupoPueblo()){
-		
-			(*_pueblos_conectados_ady)[p1->getId()][p2->getId()] = true;
-			(*_pueblos_conectados_ady)[p2->getId()][p1->getId()] = true;
-			
-			// Junto las clases de equivalencia
-			int id_grupo_viejo = p2->getIdGrupoPueblo();
-			
-			for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
-				if((**p).getIdGrupoPueblo() == id_grupo_viejo){
-					(**p).setIdGrupoPueblo(p1->getIdGrupoPueblo());
-				}
-			}
-			
-			_cant_grupos_pueblos--; // La cantidad de componentes conexas siempre disminuye ya que conecto pueblos sueltos a cada paso
-			_tuberias_instaladas++;
-		
-		}
-		
-		pueblos_distancia_it++;
-		
+		// Actualizo las distancias al arbol y me quedo con la menor
+		//cout << "nuevo_id: " << puebloNuevo->getId() << endl;
+		masCercano = actualizarDistancias(puebloNuevo);
+
+		// Agrego masCercano al arbol
+		// En la proxima iteracion la distancia va a quedar en 0
+		parPueblos = pair<Pueblo*, Pueblo*>(masCercano->getPuebloCercano(), masCercano);
+		_arbol_pueblos->push_back(parPueblos);
+		puebloNuevo = masCercano;
 	}
 
-	// Dicc para saber en que componentes conexas ya instale una central
-	map<int, bool> * grupos_instalados = new map<int, bool>();
-	
-	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
-		
-		if(grupos_instalados->find((*p)->getIdGrupoPueblo()) == grupos_instalados->end()){
-			(*p)->instalarCentral();
-			(*grupos_instalados)[(*p)->getIdGrupoPueblo()] = true;
+	// Ordeno los pares de ciudades segun distancia (de mayor a menor)
+	_arbol_pueblos->sort(compararDistancia);
+
+	// Mientras que pueda instalar centrales achico el tam maximo de las tuberias
+	// Es decir, genero k componentes conexas, cada una con una central
+
+	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end(); p++){
+		if(_centrales_instaladas<_centralitas){
+			// p representa la tuberia mas larga, la elimino e instalo una nueva central
+			((*p).second)->instalarCentral();
 			_centrales_instaladas++;
-		}
-		
+			_arbol_pueblos->erase(p++);
+		}	
 	}
+
+	printPueblosConectados();	
+}
+
+// Actualiza distancia minima al arbol de cada pueblo y devuelve el mas cercano
+Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
+
+	double distActual;
+	double distNueva;
+	double min = std::numeric_limits<double>::infinity();
+	Pueblo* masCercano = puebloNuevo;
+
+	// Antes de empezar actualizo la distancia del nuevo pueblo
+	puebloNuevo->setDistanciaArbol(0.0);
+
+	// Recorro todos los pueblos y actualizo sus distancias al arbol comparando con el ultimo p agregado
+	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
+
+		distActual = (**p).getDistanciaArbol();
+
+		// Si no pertenece al arbol actualizo
+		if(distActual > 0.0){
+
+			distNueva = (**p).distancia(*puebloNuevo);
+			
+			if(distNueva < distActual){
+				(**p).setPuebloCercano(puebloNuevo);
+				(**p).setDistanciaArbol(distNueva);
+			}
+
+			distActual = (**p).getDistanciaArbol();
+
+			// Si es el menor hasta el momento guardo la ciudad
+			if(distActual < min){
+				masCercano = *p;
+			}
+		}
 	
-	delete grupos_instalados;	
+	}
+
+	return masCercano;
 }
 
 \end{lstlisting}
