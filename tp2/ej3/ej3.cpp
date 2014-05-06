@@ -210,7 +210,14 @@ int main(int argc, char* argv[]){
 
 		int nro_nodo_inicio = getNumeroNodo(n, k, fo-1, co-1, 0);
 		int nro_nodo_fin = getNumeroNodo(n, k, fd-1, cd-1, 0);
-		list<int> camino = grafo->bfs(nro_nodo_inicio, nro_nodo_fin, nro_nodo_fin+k);
+		int k_ultimo_estado = 0;
+		int k_usado = 0;
+		
+		list<int> camino = grafo->bfs(nro_nodo_inicio, nro_nodo_fin+k, nro_nodo_fin+k);
+		camino.reverse();
+		camino.pop_front();		
+		
+		cout << camino.size() << endl;
 	
 		// Muestro el camino
 		for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
@@ -218,10 +225,15 @@ int main(int argc, char* argv[]){
 			int columna_nodo_actual = (((*i) / (k+1)) % n);
 			int estado_nodo_actual = (*i) % (k+1);
 			
-			cout << *i << " (f:" << fila_nodo_actual << ",c:" << columna_nodo_actual << ",e:" << estado_nodo_actual << ") - ";
+			if(k_ultimo_estado!=estado_nodo_actual){
+				k_usado = estado_nodo_actual - k_ultimo_estado;
+				k_ultimo_estado = estado_nodo_actual;
+			}else{
+				k_usado = 0;
+			}
+			
+			cout << fila_nodo_actual << " " << columna_nodo_actual << " " << k_usado << endl;
 		}
-		
-		cout << endl << endl;
 		
 		
 		delete grafo;

@@ -21,9 +21,17 @@ int main(){
 		vector< vector<int> > * tabla_resultados = new vector<vector<int> >(cant_cartas, vector<int>(cant_cartas, 0));
 		// El par representa en first: 0 si agarre del lado izquierdo, 1 si agarre del lado derecho, y el second: cantidad de cartas agarradas
 		vector< vector<pair<int,int> > > * tabla_elecciones = new vector<vector<pair<int,int> > >(cant_cartas, vector<pair<int,int> >(cant_cartas, pair<int,int>(0,0)));
+		vector< vector<int> > * tabla_sumatorias = new vector<vector<int> >(cant_cartas, vector<int>(cant_cartas, 0));
 
 		for(int i = 0; i<cant_cartas; i++){
 			cin >> cartas[i];
+		}
+		
+		// Lleno todas las posibles subcadenas de sumas en una tabla
+		for(int i = 0; i<cant_cartas; i++){
+			for(int j = 0; j<cant_cartas; j++){
+				(*tabla_sumatorias)[i][j] = sumatoria(cartas, i, j); 
+			}
 		}
 		
 		
@@ -47,7 +55,7 @@ int main(){
 					}else{
 						
 						// Agarrar todas las cartas
-						maxval = max(q,sumatoria(cartas, cartas_inicio, j));
+						maxval = max(q, (*tabla_sumatorias)[cartas_inicio][j]);
 						// Actualizo la mejor jugada encontrada hasta el momento
 						if(maxval>q){
 							(*tabla_elecciones)[i][j] = pair<int,int>(0,j-cartas_inicio+1);
@@ -56,7 +64,7 @@ int main(){
 						
 						// Agarrar desde la izquierda y restarle la jugada optima del rival
 						for(int k=cartas_inicio; k < j; k++){
-							maxval = max(q, sumatoria(cartas, cartas_inicio, k) - (*tabla_resultados)[k+1][j]);
+							maxval = max(q, (*tabla_sumatorias)[cartas_inicio][k] - (*tabla_resultados)[k+1][j]);
 							// Actualizo la mejor jugada encontrada hasta el momento
 							if(maxval>q){
 								(*tabla_elecciones)[i][j] = pair<int,int>(0,k-cartas_inicio+1);
@@ -66,7 +74,7 @@ int main(){
 						
 						// Agarrar desde la derecha y restarle la jugada optima del rival
 						for(int k=j; k > cartas_inicio; k--){
-							maxval = max(q, sumatoria(cartas, k, j) - (*tabla_resultados)[cartas_inicio][k-1]);
+							maxval = max(q, (*tabla_sumatorias)[k][j] - (*tabla_resultados)[cartas_inicio][k-1]);
 							// Actualizo la mejor jugada encontrada hasta el momento
 							if(maxval>q){
 								(*tabla_elecciones)[i][j] = pair<int,int>(1,k-cartas_inicio+1);
@@ -143,6 +151,7 @@ int main(){
 		delete[] cartas;
 		delete tabla_resultados;
 		delete tabla_elecciones;
+		delete tabla_sumatorias;
 		delete[] puntajes;
 
 		return 0;
