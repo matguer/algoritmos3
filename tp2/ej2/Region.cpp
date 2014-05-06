@@ -121,19 +121,8 @@ void Region::resolver(){
 		puebloNuevo = masCercano;
 	}
 
-
-	/*for(list<pair<Pueblo*,Pueblo*> >::iterator p = arbolPueblos->begin(); p != arbolPueblos->end(); p++){
-			cout << "pueblo " << ((*p).first)->getId() << " unido con pueblo " << ((*p).second)->getId() << ", distancia: " << (*((*p).first)).distancia(*((*p).second)) << endl;
-	}
-
-	cout << "luego del sort" << endl;*/
-
 	// Ordeno los pares de ciudades segun distancia (de mayor a menor)
 	_arbol_pueblos->sort(compararDistancia);
-
-	/*for(list<pair<Pueblo*,Pueblo*> >::iterator p = arbolPueblos->begin(); p != arbolPueblos->end(); p++){
-			cout << "pueblo " << ((*p).first)->getId() << " unido con pueblo " << ((*p).second)->getId() << ", distancia: " << (*((*p).first)).distancia(*((*p).second)) << endl;
-	}*/
 
 	// Mientras que pueda instalar centrales achico el tam maximo de las tuberias
 	// Es decir, genero k componentes conexas, cada una con una central
@@ -147,10 +136,7 @@ void Region::resolver(){
 		}	
 	}
 
-	//printPueblosConectados();	
-
-	/*delete puebloNuevo;
-	delete masCercano;*/
+	printPueblosConectados();	
 }
 
 int Region::getCentralesInstaladas(){
@@ -176,6 +162,7 @@ void Region::printPueblosConectados(){
 		}
 	}
 
+	// conexiones entre pueblos
 	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end()--; p++){
 			cout << ((*p).first)->getId() << " " << ((*p).second)->getId() << endl;
 	}
