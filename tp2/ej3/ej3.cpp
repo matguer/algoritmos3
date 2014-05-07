@@ -18,56 +18,74 @@ void printTabla(vector< vector<unsigned int> > * tabla, unsigned int n){
 	cout << endl;
 }
 
-unsigned int getNumeroNodo(unsigned int n, unsigned int k, unsigned int fila, unsigned int col, unsigned int estado){
+/*
+ * Funcion que dada una fila, una columna y un estado de consumo de k, devuelve el numero de nodo correspondiente
+ */
+unsigned int getNumeroNodo(unsigned int tablero_casilleros_lado, unsigned int tablero_k, unsigned int fila, unsigned int col, unsigned int estado){
 	
-	unsigned int nro_nodo_vecino = (fila*n*(k+1) + (col*(k+1)) + estado);
-	assert(0 <= nro_nodo_vecino);
-	assert(nro_nodo_vecino < n*n*(k+1));
+	unsigned int nro_nodo = (fila*tablero_casilleros_lado*(tablero_k+1) + (col*(tablero_k+1)) + estado);
+	assert(0 <= nro_nodo);
+	assert(nro_nodo < tablero_casilleros_lado*tablero_casilleros_lado*(tablero_k+1));
 					
-	return nro_nodo_vecino;
+	return nro_nodo;
+}
+
+/*
+ * Esta funcion decide dados dos nodos si hay una arista entre ellos y de que estado a que estado.
+ * Si la hay, agrega la arista al grafo
+*/
+void unirNodos(directed_graph * grafo, int nro_nodo_fuente, int columna_nodo_fuente, int fila_nodo_fuente, int potencia_nodo_fuente, int estado_nodo_fuente, int columna_nodo_destino, int fila_nodo_destino, bool mirarFila, int tablero_casillas_por_lado, int tablero_k_inicial){
+	
+	int k_restantes = tablero_k_inicial-estado_nodo_fuente;
+	int indice_fuente = 0;
+	int indice_destino = 0;
+	int nro_nodo_destino = 0;
+	
+	// Ajustamos los indices que nos interesan segun si estoy recorriendo fila o columna
+	if(mirarFila){
+		indice_fuente = columna_nodo_fuente;
+		indice_destino = columna_nodo_destino;
+	}else{
+		indice_fuente = fila_nodo_fuente;
+		indice_destino = fila_nodo_destino;
+	}
+	
+	// Evito conectar la casilla consigo misma
+	if(columna_nodo_fuente != columna_nodo_destino || fila_nodo_fuente!=fila_nodo_destino){
+		
+		// Verifico si el nodo de destino es alcanzable con la potencia de la casilla actual
+		if( ((int) indice_fuente-potencia_nodo_fuente) <= (int) indice_destino && indice_destino <= (indice_fuente+potencia_nodo_fuente)){
+			nro_nodo_destino = getNumeroNodo(tablero_casillas_por_lado, tablero_k_inicial, fila_nodo_destino, columna_nodo_destino, estado_nodo_fuente);
+			// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
+			// alcanzable en estado_nodo_actual 0 ya que no gaste ningun k para llegar ahi
+			grafo->add_edge(nro_nodo_fuente,nro_nodo_destino);
+		
+		// Veo si puedo llegar usando k
+		}else{
+			int diferencia = indice_fuente-(potencia_nodo_fuente+k_restantes);
+			
+			// Si el poder de la casilla mas los k restantes del estado me lo permiten
+			if( diferencia <= (int) indice_destino && indice_destino <= (indice_fuente+potencia_nodo_fuente+k_restantes)){
+				int cuanto_k_necesito = 0;
+				
+				if(indice_fuente <= (int) indice_destino){
+					cuanto_k_necesito = indice_destino - potencia_nodo_fuente - indice_fuente;
+				}else{
+					cuanto_k_necesito = indice_fuente - potencia_nodo_fuente - indice_destino;
+				}
+				// Lo voy a juntar con el nodo que puedo llegar pero a un estado correspondiente
+				nro_nodo_destino = getNumeroNodo(tablero_casillas_por_lado, tablero_k_inicial, fila_nodo_destino, columna_nodo_destino, estado_nodo_fuente+cuanto_k_necesito);
+				// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
+				// alcanzable a su estado_nodo_actual correspondiente segun el gasto de k
+				grafo->add_edge(nro_nodo_fuente,nro_nodo_destino);
+			}
+			
+		}
+	}
 }
 
 int main(int argc, char* argv[]){
 		
-		// Si se recibe un 1 por parametro se ejecuta el test de BFS (SACAR A LA HORA DE LA ENTREGA)	
-		if(argc > 1 && atoi(argv[1]) == 1) {
-
-			directed_graph * grafo = new directed_graph(7);
-			grafo->add_edge(0,1);
-			grafo->add_edge(0,2);
-			grafo->add_edge(0,3);
-			
-			grafo->add_edge(1,0);
-			
-			grafo->add_edge(2,0);
-			grafo->add_edge(2,3);
-			grafo->add_edge(2,4);
-			
-			grafo->add_edge(3,0);
-			grafo->add_edge(3,2);
-			grafo->add_edge(3,5);
-			grafo->add_edge(3,6);
-			
-			grafo->add_edge(4,2);
-			
-			grafo->add_edge(5,3);
-			
-			grafo->add_edge(6,3);
-
-			list<int> camino = grafo->bfs(4, 3, 3);
-			// Muestro el camino
-			for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
-				
-				cout << *i << " - ";
-			}
-			
-			cout << endl << endl;
-			
-			delete grafo;
-
-			return 0;
-		}
-
 		// Leo la entrada
 		unsigned int n;
 		unsigned int fo;
@@ -96,114 +114,38 @@ int main(int argc, char* argv[]){
 		//printTabla(potencias, n);
 		directed_graph * grafo = new directed_graph(cant_nodos);
 		
-		unsigned int fila_nodo_actual;
-		unsigned int columna_nodo_actual;
-		unsigned int estado_nodo_actual;
-		unsigned int potencia_nodo_actual;
-		unsigned int nro_nodo_vecino;
-		unsigned int k_restantes;
+		unsigned int fila_nodo_fuente;
+		unsigned int columna_nodo_fuente;
+		unsigned int estado_nodo_fuente;
+		unsigned int potencia_nodo_fuente;
 		
 		// Asigno las posibles aristas, i = todos los posibles nodos que representan tanto casillas sin gastos de k como con algun gasto
-		// O((n^2)*k) * O(2*n)
-		for(unsigned int i = 0; i<cant_nodos; i++){
+		for(unsigned int nro_nodo_fuente = 0; nro_nodo_fuente<cant_nodos; nro_nodo_fuente++){
 			
-			// Datos de la casilla
-			fila_nodo_actual = (i / (k+1)) / n;
-			columna_nodo_actual = ((i / (k+1)) % n);
-			estado_nodo_actual = i % (k+1);
-			potencia_nodo_actual = (*potencias)[fila_nodo_actual][columna_nodo_actual];
-			k_restantes = k-estado_nodo_actual;
-			
-			//cout << i << ": f " << fila_nodo_actual << " c " << columna_nodo_actual << " e " << estado_nodo_actual << " p " << potencia_nodo_actual << endl;
-				
+			// Datos de la casilla fuente
+			fila_nodo_fuente = (nro_nodo_fuente / (k+1)) / n;
+			columna_nodo_fuente = ((nro_nodo_fuente / (k+1)) % n);
+			estado_nodo_fuente = nro_nodo_fuente % (k+1);
+			potencia_nodo_fuente = (*potencias)[fila_nodo_fuente][columna_nodo_fuente];
+							
 			// Recorro la fila y conecto la casilla con todas las alcanzables de la misma
-			// O(n)
-			for(unsigned int j=0; j<n; j++){
-
-				// Evito conectar la casilla consigo misma
-				if(j!=columna_nodo_actual){
-					
-					int diferencia = columna_nodo_actual-potencia_nodo_actual;
-
-					if( diferencia <= (int) j && j <= (columna_nodo_actual+potencia_nodo_actual)){
-						nro_nodo_vecino = getNumeroNodo(n, k, fila_nodo_actual, j, estado_nodo_actual);
-						// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
-						// alcanzable en estado_nodo_actual 0 ya que no gaste ningun k para llegar ahi
-						grafo->add_edge(i,nro_nodo_vecino);
-					
-					// Veo si puedo llegar usando k
-					}else{
-						diferencia = columna_nodo_actual-(potencia_nodo_actual+k_restantes);
-						
-						// Si el poder de la casilla mas los k restantes del estado me lo permiten...
-						if( diferencia <= (int) j && j <= (columna_nodo_actual+potencia_nodo_actual+k_restantes)){
-							
-							int cuanto_k_necesito = 0;
-							
-							if(columna_nodo_actual <= (int) j){
-								cuanto_k_necesito = j - potencia_nodo_actual - columna_nodo_actual;
-							}else{
-								cuanto_k_necesito = columna_nodo_actual - potencia_nodo_actual - j;
-							}
-							
-							// Lo voy a juntar con el nodo que puedo llegar pero a un estado correspondiente
-							nro_nodo_vecino = getNumeroNodo(n, k, fila_nodo_actual, j, estado_nodo_actual+cuanto_k_necesito);
-							// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
-							// alcanzable a su estado_nodo_actual correspondiente segun el gasto de k
-							grafo->add_edge(i,nro_nodo_vecino);
-						}
-						
-					}
-				}
-
-			}
-			// fin recorrido de la fila
-			
-			
-			// Recorro la columna y conecto la casilla con todas las alcanzables de la misma
-			// O(n)
-			for(unsigned int j=0; j<n; j++){
+			for(unsigned int columna_nodo_destino=0; columna_nodo_destino<n; columna_nodo_destino++){
 				
-				// Evito conectar la casilla consigo misma
-				if(j!=fila_nodo_actual){
-					
-					int diferencia = fila_nodo_actual-potencia_nodo_actual;
-					
-					if( diferencia <= (int) j && j <= (fila_nodo_actual+potencia_nodo_actual)){
-						nro_nodo_vecino = getNumeroNodo(n, k, j, columna_nodo_actual, estado_nodo_actual);
-						// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
-						// alcanzable en estado_nodo_actual 0 ya que no gaste ningun k para llegar ahi
-						grafo->add_edge(i,nro_nodo_vecino);
-					
-					// Veo si puedo llegar usando k
-					}else{
-
-						diferencia = fila_nodo_actual-(potencia_nodo_actual+k_restantes);
-						
-						// Si el poder de la casilla mas los k restantes del estado me lo permiten...
-						if( diferencia <= (int) j && j <= (fila_nodo_actual+potencia_nodo_actual+k_restantes)){
-							
-							int cuanto_k_necesito = 0;
-							
-							if(fila_nodo_actual <= (int) j){
-								cuanto_k_necesito = j - potencia_nodo_actual - fila_nodo_actual;
-							}else{
-								cuanto_k_necesito = fila_nodo_actual - potencia_nodo_actual - j;
-							}
-							
-							// Lo voy a juntar con el nodo que puedo llegar pero a un estado correspondiente
-							nro_nodo_vecino = getNumeroNodo(n, k, j, columna_nodo_actual, estado_nodo_actual+cuanto_k_necesito);
-							// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
-							// alcanzable a su estado_nodo_actual correspondiente segun el gasto de k
-							grafo->add_edge(i,nro_nodo_vecino);
-						}
-						
-					}
-				}
+				int fila_nodo_destino = fila_nodo_fuente;
+				
+				// Si corresponde, se unen el nodo_fuente con el nodo_destino
+				unirNodos(grafo, nro_nodo_fuente, columna_nodo_fuente, fila_nodo_fuente, potencia_nodo_fuente, estado_nodo_fuente, columna_nodo_destino, fila_nodo_destino, true, n, k);
 
 			}
-			// fin recorrido de la columna_nodo_actual
-
+			// Recorro la columna y conecto la casilla con todas las alcanzables de la misma
+			for(unsigned int fila_nodo_destino=0; fila_nodo_destino<n; fila_nodo_destino++){
+				
+				int columna_nodo_destino = columna_nodo_fuente;
+				
+				// Si corresponde, se unen el nodo_fuente con el nodo_destino
+				unirNodos(grafo, nro_nodo_fuente, columna_nodo_fuente, fila_nodo_fuente, potencia_nodo_fuente, estado_nodo_fuente, columna_nodo_destino, fila_nodo_destino, false, n, k);
+				
+			}
 		}
 		
 		//grafo->print();
@@ -213,7 +155,7 @@ int main(int argc, char* argv[]){
 		int k_ultimo_estado = 0;
 		int k_usado = 0;
 		
-		list<int> camino = grafo->bfs(nro_nodo_inicio, nro_nodo_fin+k, nro_nodo_fin+k);
+		list<int> camino = grafo->bfs(nro_nodo_inicio, nro_nodo_fin, nro_nodo_fin+k);
 		camino.reverse();
 		camino.pop_front();		
 		
@@ -232,7 +174,7 @@ int main(int argc, char* argv[]){
 				k_usado = 0;
 			}
 			
-			cout << fila_nodo_actual << " " << columna_nodo_actual << " " << k_usado << endl;
+			cout << fila_nodo_actual+1 << " " << columna_nodo_actual+1 << " " << k_usado << endl;
 		}
 		
 		
