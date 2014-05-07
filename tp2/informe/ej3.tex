@@ -19,12 +19,190 @@ En caso de existir m\'as de una soluci\'on \'optima se podr\'a retornar cualquie
 
 \subsection{Resoluci\'on}
 
+Para la resoluci\'on del ejercicio decidimos modelar el tablero con un grafo dirigido. Una primera intuici\'on nos llev\'o a asignarle a cada casilla un nodo del grafo y las aristas que parten desde cada nodo representaban los posibles saltos entre casillas. Aunque este enfoque no es del todo incorrecto, no modela correctamente la variable de potencia adicional $k$ que uno posee a lo largo del juego. Si bien uno en una casilla de poder $p$ puede alcanzar las casillas tanto horizontales como verticales a distancia menor o igual a $p$, uno puede aumentar el rango de salto usando la potencia extra $k$. \\
+
+Para poder representar esta informaci\'on en el grafo decidimos que los nodos ademas de representar casillas, representan a las mismas pero en distintos posibles estados. Estos estados pueden ser el no haber gastado ningun $k$ en el momento que se encuentra en esa casilla, o caso contrario cuanto fue gastado para llegar hasta esa casilla a lo largo del camino realizado.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.6]{./img/ej3_res1.png}
+\caption{Ejemplo de modelado del grafo. Cada casilla posee k+1 nodos que representan sus posibles estados. En este ejemplo el k = 2 y el poder de salto de la casilla (1,1) marcada en violeta es p = 2. Las lineas rojas representan saltos sin usar unidades extra de potencia y las lineas azules usandolas.}
+\end{center}
+\end{figure}
+
+Si unimos adecuadamente los nodos respetando las condiciones del juego, podremos modelar correctamente el tablero con todas sus condiciones. Luego solo restar\'a buscar el camino m\'inimo entre el nodo que represente la casilla de inicio y alguno de los nodos posibles de la casilla de salida. Las condiciones a respetar son las siguientes:
+
+\begin{itemize}
+\item Desde cualquier nodo (en cualquier estado $q$ de gasto de potencias extras) uno puede saltar hasta $p$ casilleros para cualquiera de los cuatro sentidos cardinales. Por ejemplo, desde la casilla (3,6) con poder de salto 2 en un tablero de 7x7, puedo llegar hasta las casillas (3,7), (3,5) y (3,4) horizontalmente y (1,6), (2,6), (4,6) y (5,6) verticalmente. Esto hace que nuestro algoritmo cree una arista entre los nodos que representan la casilla (3,6) y todos los nodos de las casillas que mencionamos anteriormente que representen el mismo estado $q$ de la casilla de origen.
+\item Desde cualquier nodo en un estado $q$ de gasto de potencias extras y siendo $k$ el m\'aximo gasto extra posible, puedo saltar $p+(k-q)$ casilleros horizontal y verticalmente. Si el salto que realice supera los $p$ casilleros, el nodo de llegada debe ser el del casillero destino pero en estado igual a $q+k\_gastado$, donde $k\_gastado$ es el poder adicional usado para llegar a esa casilla. Esto garantiza tener una "memoria" de los $k$ utilizados durante uno de los caminos posibles. Notese que en los nodos que representan casillas con $k$ agotados, las unicas aristas posibles son las que solo utilizan la potencia de la casilla y siempre van a nodos que representan casillas sin $k$ restante. No hacer esto haria que el jugador gane unidades de $k$ que no le corresponden.
+\end{itemize}
+
+Una vez armado este grafo dirigido que contiene todos los posibles caminos desde todas las casillas, solo resta ver cual es el camino con menor cantidad de saltos que logra llegar a la casilla de salida. Cabe destacar que nuestro grafo no es un grafo con pesos, ya que eliminamos ese factor creando aristas con todos los posibles caminos dependiendo el $p$ de la casilla. Este camino minimo lo buscamos con el algoritmo de recorrido de grafos BFS, una de sus utilidades es buscar caminos minimos en grafos sin peso o con todos pesos iguales.
+
 \subsection{Demostraci\'on de la resoluci\'on}
 
+\newpage
 \subsection{Complejidad del algoritmo}
 
+Analizaremos la complejidad del algoritmo propuesto utilizando el siguiente pseudo c\'odigo como gu\'ia:
+
+\begin{itemize}
+\item crear una tabla de n*n con las potencias de las casillas, donde $n$ en es el ancho/alto del tablero. (Esto demora exactamente $n^2$ iteraciones)
+\item crear un grafo dirigido $G$ de n*n*(k+1) nodos. (Usamos un arreglo de listas enlazadas para representar el grafo. Crear el arreglo cuesta $n^2*(k+1)$ iteraciones, creando una lista vacia en cada iteraci\'on en tiempo constante.)
+\item para cada nodo $v$ del grafo $G$ (Recorremos los nodos en $n^2*(k+1)$ iteraciones)
+	\begin{itemize}
+	\item para cada casilla $c$ de la fila del tablero donde se encuentra $v$ (Recorremos las n columnas del tablero, $n$ iteraciones)
+		\begin{itemize}
+			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matematicas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante)
+		\end{itemize}
+	\end{itemize}
+	\begin{itemize}
+	\item para cada casilla $c$ de la columna del tablero donde se encuentra $v$ (Recorremos las n filas del tablero, $n$ iteraciones)
+		\begin{itemize}
+			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matematicas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante)
+		\end{itemize}
+	\end{itemize}
+\item busco el camino m\'inimo entre la casilla $inicio$ y la casilla $fin$ del grafo $G$ usando BFS ($O(n^3*k)$ (*))
+\end{itemize}
+
+(*) El algoritmo BFS tiene una complejidad de O(|V|+|E|), suponiendo el tablero mas denso posible donde se puede ir de cualquier casilla a cualquier casilla (de la misma fila o columna) tenemos $n^2*(k+1)$ nodos y $2*n$ aristas desde cada nodo, resultando $n^3*(k+1)$ aristas. |E| supera a |V| quedando una complejidad de $O(n^3*k)$ \\
+
+Como analizamos, el algoritmo que asigna las aristas de cada uno de los $O(n^2*k)$ nodos se genera con un ciclo que anida 2 ciclos en paralelo de $n$ elementos, completandose toda esta operaci\'on en $O(n^2*k*2*n) = O(n^3*k)$. Finalmente se busca el camino m\'inimo en una complejidad del mismo orden de magnitud.
+
+\newpage
 \subsection{C\'odigo fuente}
 
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+/*
+ * Esta funcion decide dados dos nodos si hay una arista entre ellos y de que estado a que estado.
+ * Si la hay, agrega la arista al grafo
+*/
+void unirNodos(directed_graph * grafo, int nro_nodo_fuente, int columna_nodo_fuente, int fila_nodo_fuente, int potencia_nodo_fuente, int estado_nodo_fuente, int columna_nodo_destino, int fila_nodo_destino, bool mirarFila, int tablero_casillas_por_lado, int tablero_k_inicial){
+	
+	int k_restantes = tablero_k_inicial-estado_nodo_fuente;
+	int indice_fuente = 0;
+	int indice_destino = 0;
+	int nro_nodo_destino = 0;
+	
+	// Ajustamos los indices que nos interesan segun si estoy recorriendo fila o columna
+	if(mirarFila){
+		indice_fuente = columna_nodo_fuente;
+		indice_destino = columna_nodo_destino;
+	}else{
+		indice_fuente = fila_nodo_fuente;
+		indice_destino = fila_nodo_destino;
+	}
+	
+	// Evito conectar la casilla consigo misma
+	if(columna_nodo_fuente != columna_nodo_destino || fila_nodo_fuente!=fila_nodo_destino){
+		
+		// Verifico si el nodo de destino es alcanzable con la potencia de la casilla actual
+		if( ((int) indice_fuente-potencia_nodo_fuente) <= (int) indice_destino && indice_destino <= (indice_fuente+potencia_nodo_fuente)){
+			nro_nodo_destino = getNumeroNodo(tablero_casillas_por_lado, tablero_k_inicial, fila_nodo_destino, columna_nodo_destino, estado_nodo_fuente);
+			// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
+			// alcanzable en estado_nodo_actual 0 ya que no gaste ningun k para llegar ahi
+			grafo->add_edge(nro_nodo_fuente,nro_nodo_destino);
+		
+		// Veo si puedo llegar usando k
+		}else{
+			int diferencia = indice_fuente-(potencia_nodo_fuente+k_restantes);
+			
+			// Si el poder de la casilla mas los k restantes del estado me lo permiten
+			if( diferencia <= (int) indice_destino && indice_destino <= (indice_fuente+potencia_nodo_fuente+k_restantes)){
+				int cuanto_k_necesito = 0;
+				
+				if(indice_fuente <= (int) indice_destino){
+					cuanto_k_necesito = indice_destino - potencia_nodo_fuente - indice_fuente;
+				}else{
+					cuanto_k_necesito = indice_fuente - potencia_nodo_fuente - indice_destino;
+				}
+				// Lo voy a juntar con el nodo que puedo llegar pero a un estado correspondiente
+				nro_nodo_destino = getNumeroNodo(tablero_casillas_por_lado, tablero_k_inicial, fila_nodo_destino, columna_nodo_destino, estado_nodo_fuente+cuanto_k_necesito);
+				// Conecto el nodo de la casilla actual en estado_nodo_actual 0 con el nodo de la casilla 
+				// alcanzable a su estado_nodo_actual correspondiente segun el gasto de k
+				grafo->add_edge(nro_nodo_fuente,nro_nodo_destino);
+			}
+			
+		}
+	}
+}
+
+\end{lstlisting}
+
+\newpage
+
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+
+/*
+ * Funcion que dada una fila, una columna y un estado de consumo de k, devuelve el numero de nodo correspondiente
+ */
+unsigned int getNumeroNodo(unsigned int tablero_casilleros_lado, unsigned int tablero_k, unsigned int fila, unsigned int col, unsigned int estado){
+	
+	unsigned int nro_nodo = (fila*tablero_casilleros_lado*(tablero_k+1) + (col*(tablero_k+1)) + estado);
+	assert(0 <= nro_nodo);
+	assert(nro_nodo < tablero_casilleros_lado*tablero_casilleros_lado*(tablero_k+1));
+					
+	return nro_nodo;
+}
+/*****************************/
+/* CODIGO PRINCIPAL DEL MAIN */
+/*****************************/
+
+directed_graph * grafo = new directed_graph(cant_nodos);
+		
+unsigned int fila_nodo_fuente;
+unsigned int columna_nodo_fuente;
+unsigned int estado_nodo_fuente;
+unsigned int potencia_nodo_fuente;
+
+// Asigno las posibles aristas, i = todos los posibles nodos que representan tanto casillas sin gastos de k como con algun gasto
+for(unsigned int nro_nodo_fuente = 0; nro_nodo_fuente<cant_nodos; nro_nodo_fuente++){
+	
+	// Datos de la casilla fuente
+	fila_nodo_fuente = (nro_nodo_fuente / (k+1)) / n;
+	columna_nodo_fuente = ((nro_nodo_fuente / (k+1)) % n);
+	estado_nodo_fuente = nro_nodo_fuente % (k+1);
+	potencia_nodo_fuente = (*potencias)[fila_nodo_fuente][columna_nodo_fuente];
+					
+	// Recorro la fila y conecto la casilla con todas las alcanzables de la misma
+	for(unsigned int columna_nodo_destino=0; columna_nodo_destino<n; columna_nodo_destino++){
+		
+		int fila_nodo_destino = fila_nodo_fuente;
+		
+		// Si corresponde, se unen el nodo_fuente con el nodo_destino
+		unirNodos(grafo, nro_nodo_fuente, columna_nodo_fuente, fila_nodo_fuente, potencia_nodo_fuente, estado_nodo_fuente, columna_nodo_destino, fila_nodo_destino, true, n, k);
+
+	}
+	// Recorro la columna y conecto la casilla con todas las alcanzables de la misma
+	for(unsigned int fila_nodo_destino=0; fila_nodo_destino<n; fila_nodo_destino++){
+		
+		int columna_nodo_destino = columna_nodo_fuente;
+		
+		// Si corresponde, se unen el nodo_fuente con el nodo_destino
+		unirNodos(grafo, nro_nodo_fuente, columna_nodo_fuente, fila_nodo_fuente, potencia_nodo_fuente, estado_nodo_fuente, columna_nodo_destino, fila_nodo_destino, false, n, k);
+		
+	}
+}
+
+\end{lstlisting}
+
+\newpage
 \subsection{Casos de prueba}
 
 \subsection{Performance}
