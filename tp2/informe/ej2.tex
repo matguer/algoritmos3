@@ -52,9 +52,7 @@ Una vez agregados todos los nodos al \'arbol tenemos un \'arbol generador m\'ini
 
 \subsection{Complejidad del algoritmo}
 
-Veamos la complejidad del algoritmo propuesto utilizando un pseudoc\'odigo que facilite el an\'alisis.\\
-
-Analicemos primero el algoritmo\\
+Veamos la complejidad del algoritmo propuesto utilizando un pseudoc\'odigo que facilite el an\'alisis.
 
 \begin{itemize}
 \item poner puebloNuevo $\leftarrow$ primer pueblo de la lista
@@ -77,13 +75,24 @@ Analicemos primero el algoritmo\\
 \end{itemize}
 \end{itemize}
 
-Como se puede ver, la complejidad est\'a dada por el primer ciclo de la implementaci\'on, el cual hace n iteraciones (donde n corresponde a la cantidad de ciudades), ya que debe agregarlas una a una al \'arbol generador m\'inimo. Dentro de ese ciclo se actualizan las distancias de las ciudades al \'arbol; veremos la complejidad de hacerlo a continuaci\'on, pero podemos adelantar que realiza n iteraciones tambi\'en.\\
-Una vez obtenido el \'arbol lo ordenamos de mayor a menor, donde el par ($v_1$, $v_2$) es mayor a otro ($w_1$, $w_2$) si la distancia entre $v_1$ y $v_2$ es mayor a la distancia entre $w_1$ y $w_2$. Ordenar una lista con std::list::sort toma O(n*log(n)).\\
-Finalmente eliminamos los primeros k-1 (donde k es el n\'umero de centrales) pares de pueblos; es decir los pares que tienen mayor distancia. Esto toma O(k) que es, a lo sumo O(n).\\
+Como se puede ver, la complejidad est\'a dada por el primer ciclo, el cual hace n iteraciones (donde n corresponde a la cantidad de ciudades), ya que debe agregarlas una a una al \'arbol generador m\'inimo. Dentro de ese ciclo se actualizan las distancias de las ciudades al \'arbol; veremos la complejidad de hacerlo a continuaci\'on, pero podemos adelantar que realiza n iteraciones tambi\'en. Con lo cual la complejidad total del ciclo quedar\'ia en O(n).\\
+Una vez obtenido el \'arbol lo ordenamos de mayor a menor, donde el par ($v_1$, $v_2$) es mayor a otro ($w_1$, $w_2$) si la distancia entre $v_1$ y $v_2$ es mayor a la distancia entre $w_1$ y $w_2$. Ordenar una lista con std::list::sort toma O(n*log(n)). \cite{sort}\\
+Finalmente eliminamos los primeros k-1 (donde k es el n\'umero de centrales) pares de pueblos; es decir los pares que tienen mayor distancia. Cada eliminaci\'on toma O(1) usando std::list::erase \cite{erase}. En total toma O(k), que es a lo sumo O(n).\\
 
 Vemos ahora el pseudoc\'odigo de actualizarDsitancias para confirmar que es O(n).\\
 
-%Por el for anidado que tenemos, que nos lleva a recorrer dos veces la lista de pueblos, obtenemos una complejidad de $O(n^2)$
+\begin{itemize}
+\item poner puebloNuevo.distanciaAlArbol $\leftarrow$ 0
+\item para cada pueblo en pueblos
+\begin{itemize}
+	\item poner distanciaActual $\leftarrow$ pueblo.distanciaAlArbol
+	\item si distanciaActual es mayor a 0 (el pueblo no es parte del arbol)
+	\begin{itemize}
+		\item poner distanciaNueva $\leftarrow$ distancia(puebloNuevo, pueblo)
+		\item si distanciaNueva > distanciaActual poner pueblo.distanciaAlArbol $\leftarrow$ distanciaNueva
+	\end{itemize}
+\end{itemize}
+\end{itemize}
 
 \newpage
 
@@ -147,16 +156,18 @@ void Region::resolver(){
 	// Mientras que pueda instalar centrales achico el tam maximo de las tuberias
 	// Es decir, genero k componentes conexas, cada una con una central
 
-	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end(); p++){
+	list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin();
+	while (p != _arbol_pueblos->end()){
 		if(_centrales_instaladas<_centralitas){
 			// p representa la tuberia mas larga, la elimino e instalo una nueva central
 			((*p).second)->instalarCentral();
-			_centrales_instaladas++;
-			_arbol_pueblos->erase(p++);
-		}	
+			_centrales_instaladas+=1;
+			p = _arbol_pueblos->erase(p);
+			
+		}else{
+			p++;
+		}
 	}
-
-	printPueblosConectados();	
 }
 
 // Actualiza distancia minima al arbol de cada pueblo y devuelve el mas cercano
