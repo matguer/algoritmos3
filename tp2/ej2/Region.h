@@ -27,7 +27,6 @@ class Region {
 		void printPueblosConectados();
 		int getCentralesInstaladas();
 		int getTuberiasInstaladas();
-		bool hayTuberia(Pueblo & p1, Pueblo & p2);
 		Pueblo* actualizarDistancias(Pueblo* puebloNuevo);
 };
 

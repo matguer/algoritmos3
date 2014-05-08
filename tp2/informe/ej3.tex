@@ -17,7 +17,7 @@ Por otro lado el algoritmo no podr\'a tener una complejidad temporal de peor cas
 En caso de existir m\'as de una soluci\'on \'optima se podr\'a retornar cualquiera de ellas.
 
 
-\subsection{Resoluci\'on}
+\subsection{Resoluci\'on y demostraci\'on}
 
 Para la resoluci\'on del ejercicio decidimos modelar el tablero con un grafo dirigido. Una primera intuici\'on nos llev\'o a asignarle a cada casilla un nodo del grafo y las aristas que parten desde cada nodo representaban los posibles saltos entre casillas. Aunque este enfoque no es del todo incorrecto, no modela correctamente la variable de potencia adicional $k$ que uno posee a lo largo del juego. Si bien uno en una casilla de poder $p$ puede alcanzar las casillas tanto horizontales como verticales a distancia menor o igual a $p$, uno puede aumentar el rango de salto usando la potencia extra $k$. \\
 
@@ -37,9 +37,7 @@ Si unimos adecuadamente los nodos respetando las condiciones del juego, podremos
 \item Desde cualquier nodo en un estado $q$ de gasto de potencias extras y siendo $k$ el m\'aximo gasto extra posible, puedo saltar $p+(k-q)$ casilleros horizontal y verticalmente. Si el salto que realice supera los $p$ casilleros, el nodo de llegada debe ser el del casillero destino pero en estado igual a $q+k\_gastado$, donde $k\_gastado$ es el poder adicional usado para llegar a esa casilla. Esto garantiza tener una "memoria" de los $k$ utilizados durante uno de los caminos posibles. Notese que en los nodos que representan casillas con $k$ agotados, las unicas aristas posibles son las que solo utilizan la potencia de la casilla y siempre van a nodos que representan casillas sin $k$ restante. No hacer esto haria que el jugador gane unidades de $k$ que no le corresponden.
 \end{itemize}
 
-Una vez armado este grafo dirigido que contiene todos los posibles caminos desde todas las casillas, solo resta ver cual es el camino con menor cantidad de saltos que logra llegar a la casilla de salida. Cabe destacar que nuestro grafo no es un grafo con pesos, ya que eliminamos ese factor creando aristas con todos los posibles caminos dependiendo el $p$ de la casilla. Este camino minimo lo buscamos con el algoritmo de recorrido de grafos BFS, una de sus utilidades es buscar caminos minimos en grafos sin peso o con todos pesos iguales.
-
-\subsection{Demostraci\'on de la resoluci\'on}
+Una vez armado este grafo dirigido que contiene todos los posibles caminos desde todas las casillas (respetando las reglas del juego), solo resta ver cual es el camino con menor cantidad de saltos que logra llegar a la casilla de salida. Cabe destacar que nuestro grafo no es un grafo con pesos, ya que eliminamos ese factor creando aristas con todos los posibles caminos dependiendo el $p$ de la casilla. Este camino minimo lo buscamos con el algoritmo de recorrido de grafos BFS, una de sus utilidades es buscar caminos minimos en grafos sin peso o con todos pesos iguales.
 
 \newpage
 \subsection{Complejidad del algoritmo}
@@ -48,18 +46,18 @@ Analizaremos la complejidad del algoritmo propuesto utilizando el siguiente pseu
 
 \begin{itemize}
 \item crear una tabla de n*n con las potencias de las casillas, donde $n$ en es el ancho/alto del tablero. (Esto demora exactamente $n^2$ iteraciones)
-\item crear un grafo dirigido $G$ de n*n*(k+1) nodos. (Usamos un arreglo de listas enlazadas para representar el grafo. Crear el arreglo cuesta $n^2*(k+1)$ iteraciones, creando una lista vacia en cada iteraci\'on en tiempo constante.)
+\item crear un grafo dirigido $G$ de n*n*(k+1) nodos. (Usamos una de listas de adyacencia para representar el grafo. La estructura es un arreglo indexado por el n\'umero de nodo apuntando a punteros de listas. Crear el arreglo cuesta $n^2*(k+1)$ iteraciones, creando una lista vacia en cada iteraci\'on en tiempo constante. \cite{complejidad_lista_construct})
 \item para cada nodo $v$ del grafo $G$ (Recorremos los nodos en $n^2*(k+1)$ iteraciones)
 	\begin{itemize}
 	\item para cada casilla $c$ de la fila del tablero donde se encuentra $v$ (Recorremos las n columnas del tablero, $n$ iteraciones)
 		\begin{itemize}
-			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matematicas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante)
+			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matem\'aticas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante \cite{complejidad_lista_push_back})
 		\end{itemize}
 	\end{itemize}
 	\begin{itemize}
 	\item para cada casilla $c$ de la columna del tablero donde se encuentra $v$ (Recorremos las n filas del tablero, $n$ iteraciones)
 		\begin{itemize}
-			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matematicas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante)
+			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matem\'aticas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante \cite{complejidad_lista_push_back})
 		\end{itemize}
 	\end{itemize}
 \item busco el camino m\'inimo entre la casilla $inicio$ y la casilla $fin$ del grafo $G$ usando BFS ($O(n^3*k)$ (*))
