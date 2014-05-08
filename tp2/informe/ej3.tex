@@ -46,18 +46,18 @@ Analizaremos la complejidad del algoritmo propuesto utilizando el siguiente pseu
 
 \begin{itemize}
 \item crear una tabla de n*n con las potencias de las casillas, donde $n$ en es el ancho/alto del tablero. (Esto demora exactamente $n^2$ iteraciones)
-\item crear un grafo dirigido $G$ de n*n*(k+1) nodos. (Usamos un arreglo de listas enlazadas para representar el grafo. Crear el arreglo cuesta $n^2*(k+1)$ iteraciones, creando una lista vacia en cada iteraci\'on en tiempo constante.)
+\item crear un grafo dirigido $G$ de n*n*(k+1) nodos. (Usamos una de listas de adyacencia para representar el grafo. La estructura es un arreglo indexado por el n\'umero de nodo apuntando a punteros de listas. Crear el arreglo cuesta $n^2*(k+1)$ iteraciones, creando una lista vacia en cada iteraci\'on en tiempo constante. \cite{complejidad_lista_construct})
 \item para cada nodo $v$ del grafo $G$ (Recorremos los nodos en $n^2*(k+1)$ iteraciones)
 	\begin{itemize}
 	\item para cada casilla $c$ de la fila del tablero donde se encuentra $v$ (Recorremos las n columnas del tablero, $n$ iteraciones)
 		\begin{itemize}
-			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matematicas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante)
+			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matem\'aticas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante \cite{complejidad_lista_push_back})
 		\end{itemize}
 	\end{itemize}
 	\begin{itemize}
 	\item para cada casilla $c$ de la columna del tablero donde se encuentra $v$ (Recorremos las n filas del tablero, $n$ iteraciones)
 		\begin{itemize}
-			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matematicas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante)
+			\item determino si debo unir el nodo $v$ con algun nodo de la casilla $c$ (Esto se realiza en tiempo constante ya que realiza operaciones matem\'aticas y en caso de tener que unirlos agrega un elemento a una lista en tiempo constante \cite{complejidad_lista_push_back})
 		\end{itemize}
 	\end{itemize}
 \item busco el camino m\'inimo entre la casilla $inicio$ y la casilla $fin$ del grafo $G$ usando BFS ($O(n^3*k)$ (*))
