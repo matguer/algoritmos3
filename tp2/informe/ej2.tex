@@ -4,7 +4,7 @@ En este punto se nos pide resolver el problema de ubicar centrales de gas de man
 
 Dados $n$ pueblos con sus respectivas coordenadas en el plano y $k$ centrales de gas, la idea es decidir en qu\'e pueblos ubicar las centrales. Adem\'as es posible construir tuber\'ias entre pueblos: una tuber\'ia que va de un pueblo con central a uno sin no s\'olo transporta el gas a este \'ultimo sino que adem\'as lo convierte en potencial proveedor. Es decir que se da una especie de transitividad entre los pueblos: si un pueblo $a$ con central de gas se conecta a otro pueblo $b$ y a su vez $b$ se conecta con $c$ entonces $c$ tambi\'en recibe gas (y puede distribuirlo).\\
 
-El \'unico problema que presentan las tuber\'ias es que, a mayor longitud aumenta la posibilidad de rotura de las mismas. Evidentemente \'este es un factor que se quiere evitar, por lo cual se nos pide que, al elegir los pueblos donde instalar las centrales y y las conecciones entre los mismos minimicemos el tama\~o de la tuber\'ia m\'as larga.\\
+El \'unico problema que presentan las tuber\'ias es que, a mayor longitud aumenta la posibilidad de rotura de las mismas. Evidentemente \'este es un factor que se quiere evitar, por lo cual se nos pide que, al elegir los pueblos donde instalar las centrales y y las conecciones entre los mismos minimicemos el tama\~no de la tuber\'ia m\'as larga.\\
 
 Veamos algunos ejemplos, la siguiente es una situacion trivial en la que tenemos la misma cantidad de pueblos que de centrales:
 
@@ -203,3 +203,44 @@ Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
 \subsection{Casos de prueba}
 
 \subsection{Performance}
+
+Para el an\'alisis de performance de este ejercicio decidimos ejecutar lotes aleatorios de tests siguiendo los siguientes criterios:
+
+\begin{itemize}
+	\item Iteramos entre 50.000 y alrededor de 80.000 pueblos.
+	\item En cada iteraci\'on incrementamos la cantidad de pueblos en 1.000 unidades.
+	\item Generamos un input con coordenadas aleatorias de los pueblos.
+	\item Para cada iteraci\'on tomamos los siguientes valores de centrales:
+	\begin{itemize}
+		\item Comenzamos desde 1 central hasta 100.000.
+		\item Incrementamos en cada iteraci\'on la cantidad de centrales en 4.000 unidades
+	\end{itemize}
+\end{itemize}
+
+Para realizar esto generamos dos scripts de bash, uno que va iterando la cantidad de pueblos y centrales y por cada caso invoca al otro script, quien se encarga de generar las coordenadas aleatorias para la cantidad de pueblos deseada.
+
+En cuanto a las cantidades de pueblos y centrales entendimos que para evitar la aleatoriedad en los resultados deb\'iamos ejecutar una gran cantidad de casos e ir incrementando la cantidad de pueblos hasta un n\'umero considerable. 
+Adem\'as, nos pareci\'o interesante pasar por distintas cantidades de centrales, empezando por una, en la cual no iban a ser necesarios recortes de conexiones entre pueblos, e ir incrementando los valores hasta llegar a cantidades similares a la de pueblos, en donde iba a ser conveniente realizar m\'as recortes por ende la implementaci\'on iba a tener que realizar m\'as procesamiento y poder visualizar as\'i que la complejidad no se ve\'ia afectada.
+
+\begin{center}
+\begin{figure}[h!]
+\includegraphics[scale=0.4]{./img/ej2_chart.png}
+\caption{Tiempo transcurrido por cantidad de pueblos}
+\end{figure}
+\end{center}
+
+
+
+
+
+Como podemos observar, con los datos obtenidos de las ejecuciones, se genera un gr\'afico con, a priori, la pinta de una funci\'on cuadr\'atica. 
+
+Para poder observar este comportamiento mejor es necesario acompanarlo por la funci\'on $c*n*n$ con $c$ constante tal que permita ajustar la funci\'on cuadr\'atica al gr\'afico generado.
+
+Para poder obtener dicha constante multiplicamos cada $n$, cantidad de pueblos, por si mismo y luego dividimos el tiempo resultante por dicho valor. De esta manera obtenemos una relaci\'on entre el cuadrado de la cantidad de pueblos y el tiempo de ejecuci\'on para cada valor. 
+Finalmente, tomando un valor de $c$ apenas m\'as grande que el mayor obtenido en las anteriores operaciones, podemos aproximarnos a una constante que nos permita visualizar con mayor claridad que la complejidad solicitada no es superada y que el comportamiento se asemeja al deseado/solicitado.
+
+Como peque\~na aclaraci\'on vale decir que los saltos que se producen en el eje x en el gr\'afico se corresponden con que ibamos iterando la cantidad de pueblos de mil en mil y es por eso que no se observan valores intermedios. 
+As\'i tambi\'en, podemos observar que los distintos valores de tiempo para una misma cantidad de pueblos se corresponden con resultados para distintas cantidades de centrales.
+
+Siguiendo por esta l\'inea de an\'alisis, entre los 55.000 y los 65.000 pueblos se puede notar una gran densidad en los valores, indicandonos que para dichas cantidades de pueblos, los tiempos de ejecuci\'on no se ven afectados por la cantidad de centrales.
