@@ -116,7 +116,7 @@ Vamos a demostrar el problema usando inducci\'on en la iteraci\'on del algoritmo
                 breaklines=true
 }
 \begin{lstlisting}
-cartas_inicio = 0;
+indice_inicio = 0;
 
 for(i = cant_cartas-1; i>=0; i--){
 
@@ -125,16 +125,16 @@ for(i = cant_cartas-1; i>=0; i--){
 		q = 0
 		
 		if (i == j){
-			q = CARTAS\_{i}
-			cartas_inicio = i
+			q = CARTAS_{i}
+			indice_inicio = i
 		}else{
 			q = SUM(CARTAS[cartas_inicio..j])
 			
-			for(k=cartas_inicio; k < j; k++)
-				MAX(q, SUM(CARTAS[cartas_inicio][k]) - f[k+1][j])
+			for(k=indice_inicio; k < j; k++)
+				MAX(q, SUM(CARTAS[indice_inicio][k]) - f[k+1][j])
 			
 			for(k=j; k > cartas_inicio; k--)
-				MAX(q, SUM(CARTAS[k][j]) - f[cartas_inicio][k-1])
+				MAX(q, SUM(CARTAS[k][j]) - f[indice_inicio][k-1])
 		}		
 		
 		f[i][j] = q
@@ -144,6 +144,15 @@ for(i = cant_cartas-1; i>=0; i--){
 }
 \end{lstlisting}
 
+El caso base P(1) en nuestro ciclo es cuando ocurre que los dos iteradores tienen el mismo valor, haciendo que el rango de cartas de esta iteraci\'on sea una sola carta. Como el juego nos obliga siempre a levantar una carta al menos esta es la \'unica (y \'optima) jugada posible. \\
+
+Supongamos que vale P(k) para todo 0 < k <= n, probemos la hip\'otesis para P(n+1). \\
+
+Por inducci\'on global, sabemos que los subproblemas ya recorridos hasta $n$ son \'optimos y sabemos su valor. Nuestro ciclo itera de tal forma que todos los subproblemas requeridos por P(n+1) ya fueron calculados en iteraciones anteriores, entonces por hip\'otesis inductiva estos son \'optimos. \\
+
+Tambien sabemos que para calcular P(n+1) evaluamos MAX(Sumatoria(CARTAS[0..n+1]), Sumatoria(CARTAS[0]) - P[1..n+1], Sumatoria(CARTAS[0..1]) - P[2..n+1], ... , Sumatoria(CARTAS[0..n]) - P[n+1..n+1], Sumatoria(CARTAS[n+1..n+1]) - P[0..n], ..., Sumatoria(CARTAS[1..n+1]) - P[0..0]). Como dijimos, por hipotesis, tenemos todos esos subproblemas calculados y sabemos que son \'optimos. Luego sabemos que va a haber un m\'aximo entre todas esas formas de levantar cartas restandole un subproblema \'optimo. De alguna forma se podr\'ia decir que los subproblemas del oponente nos determinan que cartas debemos levantar para obtener la mejor jugada.
+
+
 \newpage 
 
 \subsection{Complejidad del algoritmo}
@@ -151,7 +160,7 @@ for(i = cant_cartas-1; i>=0; i--){
 Analizaremos la complejidad del algoritmo propuesto utilizando el siguiente pseudo c\'odigo como gu\'ia: \\
 
 \begin{itemize}
-\item crear una tabla de n*n, donde $n$ en es la cantidad de cartas. (Esto demora exactamente $n^2$ iteraciones)
+\item crear una matriz de n*n, donde $n$ en es la cantidad de cartas. (Esto demora exactamente $n^2$ iteraciones)
 \item para cada fila $f$ (Recorremos las n filas, $n$ iteraciones)
 	\begin{itemize}
 	\item para cada columna $c$ (Recorremos las n columnas, $n$ iteraciones)
