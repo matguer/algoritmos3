@@ -37,37 +37,7 @@ int main(int argc, char* argv[]) {
 		cout << "TIEMPO: " << timer << endl;
 	}
 
-	//r->printPueblosConectados();
-	//r->print();
-
-	//Imprimo q y m
-	/*cout << r->getCentralesInstaladas() << " " << r->getTuberiasInstaladas() << endl;
-	
-	// Imprimo donde se instalaron centrales
-	for(list<Pueblo*>::iterator p = lista_pueblos->begin(); p != lista_pueblos->end(); p++){
-		if((**p).tieneCentral()){
-			cout << (**p).getId() << " ";
-		}
-	}
-	cout << endl;
-	
-	// Imprimo donde se pusieron las tuberias
-	int i = 1;
-	for(list<Pueblo*>::iterator p = lista_pueblos->begin(); p != lista_pueblos->end(); p++){
-		
-		int j = 1;
-		for(list<Pueblo*>::iterator p2 = lista_pueblos->begin(); p2 != lista_pueblos->end(); p2++){
-			
-			// Para evitar mostrar la tuberia simetrica
-			if(i > j && r->hayTuberia(**p,**p2)){
-				cout << (**p).getId() << " " << (**p2).getId() << endl;
-			}
-			
-			j++;
-			
-		}
-		i++;
-	}*/
+	r->printPueblosConectados();
 	
 	delete r;
 	delete lista_pueblos;

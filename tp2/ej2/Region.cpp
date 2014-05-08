@@ -28,10 +28,6 @@ Region::~Region(){
 	delete _pueblos_por_distancia;
 }
 
-bool pairCompare(pair< pair<Pueblo*, Pueblo*>, double> & firstElem, pair< pair<Pueblo*, Pueblo*>, double> & secondElem) {
-	return firstElem.second > secondElem.second;
-}
-
 bool compararDistancia(const pair<Pueblo*, Pueblo*> & firstElem,const pair<Pueblo*, Pueblo*> & secondElem){
 	double distanciaFirst = (*firstElem.first).distancia(*firstElem.second);
 	double distanciaSecond = (*secondElem.first).distancia(*secondElem.second);
@@ -126,17 +122,23 @@ void Region::resolver(){
 
 	// Mientras que pueda instalar centrales achico el tam maximo de las tuberias
 	// Es decir, genero k componentes conexas, cada una con una central
-
-	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end(); p++){
+	list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin();
+	//list<pair<Pueblo*,Pueblo*> >::iterator current = _arbol_pueblos->begin();
+	while (p != _arbol_pueblos->end()){
 		if(_centrales_instaladas<_centralitas){
+			//cout << ((*p).first)->getId() << " " << ((*p).second)->getId() << endl;
 			// p representa la tuberia mas larga, la elimino e instalo una nueva central
 			((*p).second)->instalarCentral();
-			_centrales_instaladas++;
-			_arbol_pueblos->erase(p++);
-		}	
+			_centrales_instaladas+=1;
+			/*if((current == _arbol_pueblos->end()) && !(((*p).first)->tieneCentral())){
+				((*p).first)->instalarCentral();
+			}*/
+			p = _arbol_pueblos->erase(p);
+			
+		}else{
+			p++;
+		}
 	}
-
-	printPueblosConectados();	
 }
 
 int Region::getCentralesInstaladas(){
@@ -147,14 +149,19 @@ int Region::getTuberiasInstaladas(){
 	return _tuberias_instaladas;
 }
 
-bool Region::hayTuberia(Pueblo & p1, Pueblo & p2){
-	return false;
-}
-
 void Region::printPueblosConectados(){
 
+	// para evitar irme a negativo si no hay conexiones
+	int conectados;
+	if(_arbol_pueblos->size() == 0){
+		cout << "sin conexiones" << endl;
+		conectados = 0;
+	}else{
+		conectados = _arbol_pueblos->size() - 1;
+	}
+
 	// q = centrales instaladas, p = pueblos
-	cout << _centrales_instaladas << " " << _arbol_pueblos->size() - 1 << endl;
+	cout << _centrales_instaladas << " " << conectados << endl;
 	// pueblos con central
 	for(list<Pueblo*>::iterator p = _pueblos->begin(); p != _pueblos->end(); p++){
 		if((*p)->tieneCentral()){
@@ -163,7 +170,8 @@ void Region::printPueblosConectados(){
 	}
 
 	// conexiones entre pueblos
-	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != _arbol_pueblos->end()--; p++){
+	// voy hasta el anteultimo porque no quiero imprimir el (1,1)
+	for(list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin(); p != --_arbol_pueblos->end(); p++){
 			cout << ((*p).first)->getId() << " " << ((*p).second)->getId() << endl;
 	}
 	
