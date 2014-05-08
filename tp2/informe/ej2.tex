@@ -83,7 +83,7 @@ Vemos ahora el pseudoc\'odigo de actualizarDsitancias para confirmar que es O(n)
 
 \begin{itemize}
 \item poner puebloNuevo.distanciaAlArbol $\leftarrow$ 0
-\item para cada pueblo en pueblos
+\item para cada pueblo en pueblos (iteramos todos los pueblos, O(n))
 \begin{itemize}
 	\item poner distanciaActual $\leftarrow$ pueblo.distanciaAlArbol
 	\item si distanciaActual es mayor a 0 (el pueblo no es parte del arbol)
@@ -93,6 +93,10 @@ Vemos ahora el pseudoc\'odigo de actualizarDsitancias para confirmar que es O(n)
 	\end{itemize}
 \end{itemize}
 \end{itemize}
+
+En actualizarDistancias es claro que la complejidad est\'a dada por la iteraci\'on a trav\'es de las ciudades, es decir O(n). Luego, dentro del ciclo s\'olo se realizan comparaciones y asignaciones, que no afectan la complejidad significativamente.\\
+
+Podemos decir ahora que la complejidad del algoritmo est\'a dada por el ciclo en el que se agregan nodos al \'arbol y que la misma es O($n^2$).
 
 \newpage
 
@@ -160,8 +164,10 @@ void Region::resolver(){
 	while (p != _arbol_pueblos->end()){
 		if(_centrales_instaladas<_centralitas){
 			// p representa la tuberia mas larga, la elimino e instalo una nueva central
-			((*p).second)->instalarCentral();
-			_centrales_instaladas+=1;
+			if(!((*p).second)->tieneCentral()){
+				((*p).second)->instalarCentral();
+				_centrales_instaladas+=1;
+			}
 			p = _arbol_pueblos->erase(p);
 			
 		}else{
@@ -212,5 +218,11 @@ Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
 \end{lstlisting}
 
 \subsection{Casos de prueba}
+
+Como casos de prueba para el algoritmo elegimos inputs de los siguientes tipos:
+\begin{itemize}
+\item Casos en los que la cantidad de pueblos es igual a la cantidad de centrales.
+\item Casos en los que la cantidad de pueblos es menor a la cantidad de centrales.
+\end{itemize}
 
 \subsection{Performance}
