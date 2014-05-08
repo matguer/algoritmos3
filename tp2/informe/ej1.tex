@@ -31,7 +31,7 @@ Para este caso en particular el juego se desarrollar\'ia de la siguiente manera:
 
 El juego lo gana Mingo logrando una diferencia de 24 puntos.
 
-\subsection{Resoluci\'on y demostraci\'on}
+\subsection{Resoluci\'on}
 
 Para resolver el problema dado de $C$ cartas de longitud $n$, debemos construir una funcion $F$ tal que F(C[0..n-1]) est\'e definida como "La jugada que logre la mejor diferencia con el oponente, sabiendo que el mismo juega de forma \'optima" \\
 
@@ -101,6 +101,48 @@ Llenando la tabla de abajo hacia arriba y de izquierda a derecha garantiza que s
 \end{figure}
 
 Al terminar de completar la tabla, tendremos el resultado del problema F(C[0..n]) en la fila 0 columna n.
+
+\newpage
+\subsection{Demostraci\'on del problema}
+
+Vamos a demostrar el problema usando inducci\'on en la iteraci\'on del algoritmo que utilizamos. El pseudo codigo que nos interesa analizar es el siguiente:
+
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+cartas_inicio = 0;
+
+for(i = cant_cartas-1; i>=0; i--){
+
+	for(int j = 0; j<cant_cartas; j++){
+		
+		q = 0
+		
+		if (i == j){
+			q = CARTAS\_{i}
+			cartas_inicio = i
+		}else{
+			q = SUM(CARTAS[cartas_inicio..j])
+			
+			for(k=cartas_inicio; k < j; k++)
+				MAX(q, SUM(CARTAS[cartas_inicio][k]) - f[k+1][j])
+			
+			for(k=j; k > cartas_inicio; k--)
+				MAX(q, SUM(CARTAS[k][j]) - f[cartas_inicio][k-1])
+		}		
+		
+		f[i][j] = q
+		
+	}
+
+}
+\end{lstlisting}
 
 \newpage 
 
@@ -217,5 +259,18 @@ for(int i = cant_cartas-1; i>=0; i--){
 \newpage
 
 \subsection{Casos de prueba}
+
+Incorporamos entre los archivos adjuntos, en TP:/ej1/input/, varios casos de prueba, entre ellos algunos casos borde y otros triviales para comprobar la correctitud del algoritmo.
+
+\begin{itemize}
+\item Negativos Iguales: En este caso el juego es con un n\'umero par de cartas con el mismo n\'umero negativo. Como cada jugador juega \'optimamente, agarrar\'an s\'olo una carta por mano, y como hay una cantidad par de cartas, el juego termina con una diferencia 0 (cero) entre ambos jugadores.
+\item Trivial: Consiste en un juego de cartas todas positivas, por lo que el primer jugador obtendr\'a la mayor diferencia agarrando todas las cartas.
+\item TP: Es el ejemplo dado en el enunciado del TP, ejecutando el algoritmo con este input constatamos que la mayor diferencia jugando \'optimamente se obtiene cuando el primer jugador toma las primeras 5 cartas dejandole al segundo jugador solo la \'ultima, logrando una  diferencia de 24.   
+\item Negativos: Es un juego de cartas con valores negativos, este caso en principio fu\'e pensado para constatar el correcto funcionamiento del algoritmo cuando las cartas solo tienen valores negativos . 
+\item Simple: Consiste en una cantidad peque\~na de cartas, exactamente cuatro, donde una sola es negativa, para que el primer jugador no agarre todas y as\'i gane como en el input Trivial.
+\end{itemize}
+
+\newpage
+
 
 \subsection{Performance}
