@@ -19,16 +19,16 @@ En caso de existir m\'as de una soluci\'on \'optima se podr\'a retornar cualquie
 
 \subsection{Resoluci\'on y demostraci\'on}
 
-Para la resoluci\'on del ejercicio decidimos modelar el tablero con un grafo dirigido sin pesos en sus aristas. Una primera intuici\'on nos llev\'o a asignarle a cada casilla un nodo del grafo y las aristas que parten desde cada nodo representaban los posibles saltos entre casillas. Aunque este enfoque no es del todo incorrecto, no modela correctamente la variable de potencia adicional $k$ que uno posee a lo largo del juego. Si bien uno en una casilla de poder $p$ puede alcanzar las casillas tanto horizontales como verticales a distancia menor o igual a $p$, uno puede aumentar el rango de salto usando la potencia extra $k$. \\
+Para la resoluci\'on del ejercicio decidimos modelar el tablero con un grafo dirigido. Una primera intuici\'on nos llev\'o a asignarle a cada casilla un nodo del grafo y las aristas que parten desde cada nodo representaban los posibles saltos entre casillas. Aunque este enfoque no es del todo incorrecto, no modela correctamente la variable de potencia adicional $k$ que uno posee a lo largo del juego. Si bien uno en una casilla de poder $p$ puede alcanzar las casillas tanto horizontales como verticales a distancia menor o igual a $p$, uno puede aumentar el rango de salto usando la potencia extra $k$. \\
 
 Para poder representar esta informaci\'on en el grafo decidimos que los nodos ademas de representar casillas, representan a las mismas pero en distintos posibles estados. Estos estados pueden ser el no haber gastado ningun $k$ en el momento que se encuentra en esa casilla, o caso contrario cuanto fue gastado para llegar hasta esa casilla a lo largo del camino realizado.
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale=0.6]{./img/ej3_res1.png}
-\caption{Ejemplo de modelado del grafo. Cada casilla posee k+1 nodos que representan sus posibles estados. En este ejemplo el k = 2 y el poder de salto de la casilla (1,1) marcada en violeta es p = 2. Las lineas rojas representan saltos sin usar unidades extra de potencia y las lineas azules usandolas.}
-\end{center}
-\end{figure}
+%\begin{figure}[h]
+%\begin{center}
+%\includegraphics[scale=0.6]{./img/ej3_res1.png}
+%\caption{Ejemplo de modelado del grafo. Cada casilla posee k+1 nodos que representan sus posibles estados. En este ejemplo el k = 2 y el poder de salto de la casilla (1,1) marcada en violeta es p = 2. Las lineas rojas representan saltos sin usar unidades extra de potencia y las lineas azules usandolas.}
+%\end{center}
+%\end{figure}
 
 Si unimos adecuadamente los nodos respetando las condiciones del juego, podremos modelar correctamente el tablero con todas sus condiciones. Luego solo restar\'a buscar el camino m\'inimo entre el nodo que represente la casilla de inicio y alguno de los nodos posibles de la casilla de salida. Las condiciones a respetar son las siguientes:
 
@@ -39,6 +39,30 @@ Si unimos adecuadamente los nodos respetando las condiciones del juego, podremos
 
 Una vez armado este grafo dirigido que contiene todos los posibles caminos desde todas las casillas (respetando las reglas del juego), solo resta ver cual es el camino con menor cantidad de saltos que logra llegar a la casilla de salida. Cabe destacar que nuestro grafo no es un grafo con pesos, ya que eliminamos ese factor creando aristas con todos los posibles caminos dependiendo el $p$ de la casilla. Este camino minimo lo buscamos con el algoritmo de recorrido de grafos BFS, una de sus utilidades es buscar caminos minimos en grafos sin peso o con todos pesos iguales.
 
+
+A continuaci\'on se muestran 2 im\'agenes a modo de ejemplo, un tablero, donde los n\'umeros de cada casillero representa la potencia de salto desde ese lugar, y la segunda imagen es un grafo donde se muestra como est\'an unidos los casilleros marcados en azul en la primera. La representaci\'on en el grafo se hace solo con estos tres casilleros para no hacer un grafo totalmente representativo, pero poco entendible.
+Para poder interpretar el grafo se debe tener en cuenta la notaci\'on usada:
+\begin{itemize}
+\item Los nodos en negrita representan los diferentes estados de las casillas pintadas en azul en la primer imagen.
+\item En los nodos se ve un valor ($x$,$y$) que representa la posici\'on en el tablero, y un valor $k$ que se identifica con la potencia restante en ese momento.
+\item Las aristas presentan un valor $p$ mediante el cual se muestra la potencia (de la casilla) de salto usada, y un valor $k$ que representa la cantidad de unidades extra de potencia que se sumaron en dicho salto.
+\end{itemize}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.3]{./img/ej3_tablero.png}
+\caption{Ejemplo de tablero de juego con k=1}
+\end{center}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.3]{./img/ej3_grafo.png}
+\caption{Grafo que representa los posibles saltos entre los casilleros (y estados) pintados en azul en el tablero anterior.}
+\end{center}
+\end{figure}
+
+Como puede observarse, cada vez que se realiza un salto, si se uso alguna unidad de potencia extra $k$, el salto tiene como destino un nodo que cuenta con la cantidad $k$ restante ($k\_antes\_del\_salto$ - $k\_usado\_en\_el\_salto$), y este a su vez s\'olo tiene aristas hacia nodos con valores $k$ iguales o menores, ya que las unidades no podr\'ian recuperarse.
 \newpage
 \subsection{Complejidad del algoritmo}
 
