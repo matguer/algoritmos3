@@ -20,7 +20,6 @@ En caso de existir m\'as de una soluci\'on \'optima se podr\'a retornar cualquie
 \subsection{Resoluci\'on y demostraci\'on}
 
 Para la resoluci\'on del ejercicio decidimos modelar el tablero con un grafo dirigido. Una primera intuici\'on nos llev\'o a asignarle a cada casilla un nodo del grafo y las aristas que parten desde cada nodo representaban los posibles saltos entre casillas. Aunque este enfoque no es del todo incorrecto, no modela correctamente la variable de potencia adicional $k$ que uno posee a lo largo del juego. Si bien uno en una casilla de poder $p$ puede alcanzar las casillas tanto horizontales como verticales a distancia menor o igual a $p$, uno puede aumentar el rango de salto usando la potencia extra $k$. \\
-
 Para poder representar esta informaci\'on en el grafo decidimos que los nodos ademas de representar casillas, representan a las mismas pero en distintos posibles estados. Estos estados pueden ser el no haber gastado ningun $k$ en el momento que se encuentra en esa casilla, o caso contrario cuanto fue gastado para llegar hasta esa casilla a lo largo del camino realizado.
 
 %\begin{figure}[h]
@@ -50,19 +49,19 @@ Para poder interpretar el grafo se debe tener en cuenta la notaci\'on usada:
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[scale=0.6]{./img/ej3_tablero.png}
-\caption{Ejemplo de tablero de juego.}
+\includegraphics[scale=0.3]{./img/ej3_tablero.png}
+\caption{Ejemplo de tablero de juego con k = 2}
 \end{center}
 \end{figure}
+
+Como puede observarse, cada vez que se realiza un salto, si se uso alguna unidad de potencia extra $k$, el salto tiene como destino un nodo que cuenta con la cantidad $k$ restante ($k\_antes\_del\_salto$ - $k\_usado\_en\_el\_salto$), y este a su vez s\'olo tiene aristas hacia nodos con valores $k$ iguales o menores, ya que las unidades no podr\'ian recuperarse. Tambien debe tenerse en cuenta que el grafo resultante no tiene pesos, las aristas tienen informaci\'on adicional a modo informativo para el lector.
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[scale=0.6]{./img/ej3_grafo.png}
+\includegraphics[scale=0.3]{./img/ej3_grafo.png}
 \caption{Grafo que representa los posibles saltos entre los casilleros (y estados) pintados en azul en el tablero anterior.}
 \end{center}
 \end{figure}
-
-Como puede observarse, cada vez que se realiza un salto, si se uso alguna unidad de potencia extra $k$, el salto tiene como destino un nodo que cuenta con la cantidad $k$ restante ($k antes del salto$ - $k usado en el salto$), y este a su vez s\'olo tiene aristas hacia nodos con valores $k$ iguales o menores, ya que las unidades no podr\'ian recuperarse.
 
 
 \newpage
