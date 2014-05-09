@@ -48,7 +48,43 @@ Como partimos de un \'arbol que s\'olo tiene al primer nodo de la lista ($n_0$) 
 As\'i ,cada vez que agregamos un nodo al \'arbol volvemos a computar la m\'inima distancia de los nodos restantes comparando la distancia que cada uno tiene guardada como m\'inima con la distancia al nuevo nodo.\\
 Una vez agregados todos los nodos al \'arbol tenemos un \'arbol generador m\'inimo.\\
 
+\newpage
+
 \subsection{Demostraci\'on de la resoluci\'on}
+
+Veamos que: sea T un \'arbol generador m\'inimo, eliminar las k-1 aristas de mayor peso nos da un bosque de k componentes de riesgo m\'inimo.\\
+
+\subsubsection{Caso base - k = 1}
+
+Queremos ver que para el caso de k=1, dado el grafo de n ciudades, cualquier AGM de ese grafo es un \'arbol generador de riesgo m\'inimo.\\
+En este caso, como k=1, k-1=0 no hay que eliminar ninguna arista; basta con ver que el AGM es de riesgo m\'inimo.\\
+
+Llamemos $T$ al AGM y supongamos que existe otro \'arbol generador $T'$ que tiene un riesgo menor que $T$. Sea $e = (n_i, n_j)$ la arista de peso m\'aximo de $T$ ($peso(e) == riesgo(T)$ \footnote{$riesgo(T) = \max_{e \in T} peso(e)$}), queda claro que \footnote{$riesgo(T') < riesgo(T) \Rightarrow \max_{e \in T'} peso(e) < \max_{e \in T} peso(e) \Rightarrow (\forall e' \in T')\, peso(e') < peso(e)$}:
+\begin{equation}\label{eq}
+(\forall e' \in T')\, peso(e') < peso(e)
+\end{equation}
+Entonces, me puedo armar un \'arbol $T''$ tal que $peso(T'') < peso(T)$ de la siguiente manera:
+
+\begin{itemize}
+ \item Elimino de $T$ la arista $e = (n_i, n_j)$. Luego, el \'arbol generador se parte en exactamente dos componentes conexas, la que posee al nodo $n_i$ y la que posee al nodo $n_j$.
+ \item Sabemos que existe una arista $e'$ en $T'$ que une ambas componentes conexas, ya que $T'$ es un AG del mismo grafo del que $T$ es un AGM (con lo cual $V(T) == V(T')$ y adem\'as $T'$ es conexo por ser un AG). Por \'ultimo, notemos que $e' \neq e$ pues $peso(e') < peso(e)$ por (\ref{eq}). Entonces puedo unir ambas componentes con $e'$ y esto no me genera ciclos (ya que estoy uniendo dos componentes conexas distintas).
+\end{itemize}
+Notar que si hay m\'as de una arista $e$ debemos eliminarlas tambi\'en y hacer el intercambio por su correspondiente en $T'$. 
+Con esto, obtenemos un \'arbol generador $T''$ tal que $peso(T'') < peso(T)$, pero esto es \textbf{absurdo} ya que estabamos suponiendo que $T$ era un AGM. El absurdo proviene de suponer que existe un AG con riesgo m\'inimo que no es AGM.\\
+
+\subsubsection{Paso inductivo}
+
+Suponemos ahora que vale P(k) = eliminar las k-1 aristas de mayor peso nos da un bosque de k componentes de riesgo m\'inimo, $(\forall k \leq n)$. Queremos ver que vale P(k+1).\\
+
+\begin{itemize}
+\item Caso $k + 1 \geq n$. En este caso vamos a cortar todas las aristas del \'arbol, terminando con n componentes de grado 0, es decir riesgo = 0. Es trivial ver que el riesgo en este caso es m\'inimo y que ningun otro AG lo podr\'ia mejorar.
+\item Caso $k + 1 < n$. Por HI sabemos que los \'arboles formados por las k primeras eliminaciones de aristas (siempre de mayor a menor) son de riesgo m\'inimo.\\
+Podemos entonces, de todos los \'arboles formados, concentrarnos en el que tiene la arista de mayor peso; que es la que se elimina en el paso k + 1. Llamemoslo $B$\\
+En el caso base probamos que $T$ el \'arbol generador m\'inimo sobre el cual estamos trabajando es de riesgo m\'inimo. En particular sabemos que no hay ninguna arista de $B$ que pueda ser reemplazada por otra de menor peso.\\
+Adem\'as, por HI sabemos que $B$ es de riesgo m\'inimo, ya que se obtuvo de eliminar k aristas de $T$.\\
+Ahora, si eliminamos $e = (n_i, n_j)$ la arista de peso m\'aximo de $B$, obtenemos dos \'arboles, de los cuales al menos uno tiene a $e' = (n_i', n_j')$, la arista de $B$ que le sigue inmediatamente en peso a $e$ (es decir que $peso(e') \leq peso(e) = (n_i, n_j)$).\\
+Es decir que pasamos de $B$ un \'arbol de riesgo $peso(e)$ a $B', B''$ dos \'arboles cuyo riesgo es, a lo sumo $peso(e)$; y el riesgo sigue siendo m\'inimo ya que es menor o igual al que ten\'iamos antes.\\ 
+\end{itemize}
 
 \subsection{Complejidad del algoritmo}
 
@@ -221,9 +257,12 @@ Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
 
 Como casos de prueba para el algoritmo elegimos inputs de los siguientes tipos:
 \begin{itemize}
-\item Casos en los que la cantidad de pueblos es igual a la cantidad de centrales.
-\item Casos en los que la cantidad de pueblos es menor a la cantidad de centrales.
+\item Caso en los que la cantidad de pueblos es igual a la cantidad de centrales.
+\item Caso en los que la cantidad de pueblos es menor a la cantidad de centrales.
+\item Caso en el que cada ciudad est\'a a distancia 1 de la siguiente.
 \end{itemize}
+
+Los casos utilizados se encuentran en el directorio /ej2/inputs/prueba y se puede verificar que funcionan ejectuando, desde /ej2, ./ej2 > inputs/prueba/algunCaso.txt.
 
 \subsection{Performance}
 
