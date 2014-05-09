@@ -37,7 +37,7 @@ Para resolver el problema dado de $C$ cartas de longitud $n$, debemos construir 
 
 Pensando de manera mas precisa la funci\'on, podriamos escribirla como: \\
 
-F(C[0..n-1]) = MAX(Tomar una carta desde la izquierda y restarle F(C[1..n-1]), Tomar dos cartas desde la izquierda y restarle F(C[2..n-1]), ..., Tomar todas las cartas, ... , Tomar n-2 cartas desde la derecha y restarte F(C[0..0])) \\
+F(C[0..n-1]) = MAX(Tomar una carta desde la izquierda y restarle F(C[1..n-1]), Tomar dos cartas desde la izquierda y restarle F(C[2..n-1]), ..., Tomar todas las cartas, ... , Tomar n-1 cartas desde la derecha y restarle F(C[0..0])) \\
 
 Como podemos ver, habr\'ia que tomar la m\'axima diferencia de puntos obtenidos entre las cartas que uno toma y las que toma el oponente, que tambien juega de manera \'optima. La jugada del rival es evaluar la misma funci\'on para el resto de las cartas que dejamos. \\
 
