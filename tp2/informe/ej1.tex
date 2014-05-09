@@ -53,7 +53,7 @@ F(P) =
 \right.
 $ \\
 
-Las funciones $h_{izq}$ y $h_{der}$ devuelven la diferencia de una jugada en particular tomando una cantidad de cartas y restandole el puntaje del rival con las cartas restantes: \\
+Las funciones $h_{izq}$ y $h_{der}$ devuelven la diferencia de una jugada en particular tomando una cantidad de cartas y rest\'andole el puntaje del rival con las cartas restantes: \\
 
 $h_{izq}(fin, n) =  (\sum\limits_{i=0}^{fin} C_{i}) - F(C[fin+1...n-1])$ \\
 $h_{der}(inicio, n) =  (\sum\limits_{i=inicio}^{n-1} C_{i}) - F(C[0...inicio-1])$\\
@@ -91,7 +91,7 @@ A partir de ese llenado inicial, podemos ir determinando el resto de los valores
 \end{center}
 \end{figure}
 
-Llenando la tabla de abajo hacia arriba y de izquierda a derecha garantiza que siempre tendremos los subproblemas necesarios para llenar el casillero actual. Por ejemplo, para calcular el problema F(C[3..5]) pondriamos en la fila 3 columna 5 el resultado de evaluar MAX(1-F(C[4..5]), 1+9 - F(C[5..5]), 1+9+(-10), -10 - F(C[3..4]), -10+9 - F(C[3..3])), como podemos ver en la tabla todos los subproblemas requeridos ya fueron calculados y sus valores los obtenemos en O(1) en esta ejecuci\'on.
+Llenando la tabla de abajo hacia arriba y de izquierda a derecha se garantiza que siempre tendremos los subproblemas necesarios para llenar el casillero actual. Por ejemplo, para calcular el problema F(C[3..5]) pondriamos en la fila 3 columna 5 el resultado de evaluar MAX(1-F(C[4..5]), 1+9 - F(C[5..5]), 1+9+(-10), -10 - F(C[3..4]), -10+9 - F(C[3..3])), como podemos ver en la tabla todos los subproblemas requeridos ya fueron calculados y sus valores los obtenemos en O(1) en esta ejecuci\'on.
 
 \begin{figure}[h]
 \begin{center}
@@ -105,7 +105,7 @@ Al terminar de completar la tabla, tendremos el resultado del problema F(C[0..n]
 \newpage
 \subsection{Demostraci\'on del problema}
 
-Vamos a demostrar el problema usando inducci\'on en la iteraci\'on del algoritmo que utilizamos. El pseudo codigo que nos interesa analizar es el siguiente:
+Vamos a demostrar el problema usando inducci\'on en la iteraci\'on del algoritmo que utilizamos. El pseudo c\'odigo que nos interesa analizar es el siguiente:
 
 \lstset{language=C++,
                 basicstyle=\ttfamily\footnotesize,
@@ -144,7 +144,7 @@ for(i = cant_cartas-1; i>=0; i--){
 }
 \end{lstlisting}
 
-El caso base P(1) en nuestro ciclo es cuando ocurre que los dos iteradores tienen el mismo valor, haciendo que el rango de cartas de esta iteraci\'on sea una sola carta. Como el juego nos obliga siempre a levantar una carta al menos esta es la \'unica (y \'optima) jugada posible. \\
+El caso base P(1) en nuestro ciclo es cuando ocurre que los dos iteradores tienen el mismo valor, haciendo que el rango de cartas de esta iteraci\'on sea una sola carta. Como el juego nos obliga siempre a al menos levantar una carta esta es la \'unica (y \'optima) jugada posible. \\
 
 Supongamos que vale P(k) para todo 0 < k <= n, probemos la hip\'otesis para P(n+1). \\
 
