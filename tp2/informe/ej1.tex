@@ -283,3 +283,19 @@ Incorporamos entre los archivos adjuntos, en TP:/ej1/input/, varios casos de pru
 
 
 \subsection{Performance}
+
+
+Para poder probar la performance del algoritmo, creamos el archivo test.cpp, en el cual generamos casos de test pseudo-aleatorios los cuales son determinados por una semilla la que se pasa como par\'ametro al ejecutable 'test', por ejemplo: ./test 5.
+
+Este crea 500 casos de prueba donde la cantidad de cartas con las que comenzar\'a el juego alterna en valores entre 2 y 2000 ya que la cantidad de cartas es el valor que esta directamente relacionado con el tiempo de ejecuci\'on. Para el caso de los valores que trendr\'a cada carta hicimos tres pruebas en las cuales cambiamos los rangos, de -200 a 200, de -150 a 400 y de -400 a 150, el motivo de estos casos era verificar si el rango de valores podr\'ia influir en la performance, por ejemplo como afectar\'ia el rendimiento habiendo mayor cantidad de cartas con valores negativos. 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.6]{./img/ej1_chart.png}
+\caption{Tiempo transcurrido por cantidad de cartas.}
+\end{center}
+\end{figure}
+
+Observando los resultados puede notarse que las cifras obtenidas de las ejecuciones de los casos de test generan una curvil\'inea muy parecida a la de $n*n*n$, para poder observar mejor este suceso, en el gr\'afico tambi\'en se muestra la representaci\'on gr\'afica de $n*n*n$, aunque esta decidimos multiplicarla por una constante para poder aproximar la funcion c\'ubica al gr\'afico de la ejecuci\'on.
+Se puede ver tambi\'en que los valores de la ejecuci\'on est\'an acotados superiormente por la funci\'on c\'ubica mostrada, de esta forma podemos confirmar que la complejidad del algoritmo es la deseada y no supera el l\'imite impuesto para su implementaci\'on.
+En cuanto a la pregunta de si el rango de valores de las cartas afectaba la performance, pudimos notar que no hay gran diferencia entre los tres casos impuestos, tanto para los valores pequeños como para los grandes, razon por la cual decidimos no agregar gr\'aficos que discriminen estos casos, ya que visualmente no aportaban informacion distinguible, en particular decidimos mostrar el gr\'afico de las cartas con valores entre -150 y 400, pero no hubo ninguna raz\'on particular para esta decisi\'on.
