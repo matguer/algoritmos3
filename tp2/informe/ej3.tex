@@ -62,7 +62,7 @@ Para poder interpretar el grafo se debe tener en cuenta la notaci\'on usada:
 \end{center}
 \end{figure}
 
-Como puede observarse, cada vez que se realiza un salto, si se uso alguna unidad de potencia extra $k$, el salto tiene como destino un nodo que cuenta con la cantidad $k$ restante ($k\_antes\_del\_salto$ - $k\_usado\_en\_el\_salto$), y este a su vez s\'olo tiene aristas hacia nodos con valores $k$ iguales o menores, ya que las unidades no podr\'ian recuperarse.
+Como puede observarse, cada vez que se realiza un salto, si se uso alguna unidad de potencia extra $k$, el salto tiene como destino un nodo que cuenta con la cantidad $k$ usado, osea, el nuevo estado actual, y este a su vez s\'olo tiene aristas hacia nodos con valores $k$ iguales o mayores, ya que las unidades no podr\'ian recuperarse.
 \newpage
 \subsection{Complejidad del algoritmo}
 
