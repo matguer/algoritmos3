@@ -63,9 +63,9 @@ Region::Region(list<Pueblo*> * lista_pueblos, int centralitas){
 			
 		}
 		i++;
-	}*/
+	}
 
-	//print();
+	print();*/
 	
 }
 
@@ -74,7 +74,7 @@ void Region::print(){
 	cout << "#Pueblos: " << _pueblos->size() << endl;
 	cout << "Centralitas: " << _centralitas << endl;
 	cout << "Distancias entre pueblos: " << endl;
-	
+
 	// Imprimo las distancias entre todos los pueblos
 	// Para test
 	for(unsigned int j = 0; j < _pueblos_por_distancia->size(); j++){
@@ -113,6 +113,7 @@ void Region::resolver(){
 		// Agrego masCercano al arbol
 		// En la proxima iteracion la distancia va a quedar en 0
 		parPueblos = pair<Pueblo*, Pueblo*>(masCercano->getPuebloCercano(), masCercano);
+		cout << (parPueblos.first)->getId() << " " << (parPueblos.second)->getId() << endl;
 		_arbol_pueblos->push_back(parPueblos);
 		puebloNuevo = masCercano;
 	}
@@ -123,16 +124,15 @@ void Region::resolver(){
 	// Mientras que pueda instalar centrales achico el tam maximo de las tuberias
 	// Es decir, genero k componentes conexas, cada una con una central
 	list<pair<Pueblo*,Pueblo*> >::iterator p = _arbol_pueblos->begin();
-	//list<pair<Pueblo*,Pueblo*> >::iterator current = _arbol_pueblos->begin();
 	while (p != _arbol_pueblos->end()){
 		if(_centrales_instaladas<_centralitas){
+
 			//cout << ((*p).first)->getId() << " " << ((*p).second)->getId() << endl;
 			// p representa la tuberia mas larga, la elimino e instalo una nueva central
-			((*p).second)->instalarCentral();
-			_centrales_instaladas+=1;
-			/*if((current == _arbol_pueblos->end()) && !(((*p).first)->tieneCentral())){
-				((*p).first)->instalarCentral();
-			}*/
+			if(!((*p).second)->tieneCentral()){
+				((*p).second)->instalarCentral();
+				_centrales_instaladas+=1;
+			}
 			p = _arbol_pueblos->erase(p);
 			
 		}else{
@@ -154,7 +154,6 @@ void Region::printPueblosConectados(){
 	// para evitar irme a negativo si no hay conexiones
 	int conectados;
 	if(_arbol_pueblos->size() == 0){
-		cout << "sin conexiones" << endl;
 		conectados = 0;
 	}else{
 		conectados = _arbol_pueblos->size() - 1;
@@ -202,15 +201,18 @@ Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
 				(**p).setDistanciaArbol(distNueva);
 			}
 
-			distActual = (**p).getDistanciaArbol();
+			if((**p).getId() == 2){
+				cout << "dist del 2: " << (**p).getDistanciaArbol() << "con " << (**p).getPuebloCercano()->getId() << endl;
+			}
 
 			// Si es el menor hasta el momento guardo la ciudad
-			if(distActual < min){
+			if((**p).getDistanciaArbol() < min){
 				masCercano = *p;
+				min = (**p).getDistanciaArbol();
 			}
 		}
 	
 	}
-
+	
 	return masCercano;
 }

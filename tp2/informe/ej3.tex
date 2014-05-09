@@ -203,4 +203,12 @@ for(unsigned int nro_nodo_fuente = 0; nro_nodo_fuente<cant_nodos; nro_nodo_fuent
 \newpage
 \subsection{Casos de prueba}
 
+Incorporamos entre los archivos adjuntos, en TP:/ej3/input/, varios casos de prueba, entre ellos algunos casos borde y otros triviales para comprobar la correctitud del algoritmo.
+
+\begin{itemize}
+\item input\_corto: El tablero esta dispuesto de tal forma que desde el casillero inicial se puede llegar en dos saltos al final sin tener que usar unidades extras de potencia.
+\item input\_largo: El caso opuesto al anterior, no hay unidades de potencia extra y todos los casilleros tienen el minimo de potencia. Todos los caminos posibles son igual de largos.
+\item input\_camino: Para lograr tomar el camino mas corto en este tablero se debe administrar bien las potencias extras ya que a cada salto debe usarse una \'unica unidad de la misma.
+\end{itemize}
+
 \subsection{Performance}
