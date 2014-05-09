@@ -37,7 +37,7 @@ set ylabel "K (saltos extra)" offset 0,-2
 set xtics 10 offset 0,-1
 set ytics 10 offset 0,-1
 set view 60,30,1,1
-splot "ejecuciones/ejecucion_total.csv" title "n - k - tiempo", x*x*x*y title "c*n^3*y, c=" 
+splot "ejecuciones/ejecucion_total.csv" title "n - k - tiempo", x*x*x*y title "c*n^3*y*22, c=22" 
 
 #XZ o N x Tiempo
 set xlabel "N (casillas por lado)" offset 0,-3
@@ -45,7 +45,7 @@ set xtics 10 offset 0,-2
 unset ylabel
 unset ytics
 set view 90,0,1,1
-splot "ejecuciones/ejecucion_total.csv" title "n - k - tiempo", x*x*x*y*0.3 title "c*n^3*y, c=" 
+splot "ejecuciones/ejecucion_total.csv" title "n - k - tiempo", x*x*x*y title "c*n^3*y*22, c=22" 
 
 #YZ o K x Tiempo
 set ylabel "K (saltos extra)" offset 0,-3
@@ -53,7 +53,7 @@ set ytics 10 offset 0,-2
 unset xlabel
 unset xtics
 set view 90,90,1,1
-splot "ejecuciones/ejecucion_total.csv" title "n - k - tiempo", x*x*x*y*0.3 title "c*n^3*y, c=" 
+splot "ejecuciones/ejecucion_total.csv" title "n - k - tiempo", x*x*x*y title "c*n^3*y*22, c=22" 
 
 unset multiplot
 

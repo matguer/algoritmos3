@@ -86,6 +86,8 @@ void unirNodos(directed_graph * grafo, int nro_nodo_fuente, int columna_nodo_fue
 
 int main(int argc, char* argv[]){
 		
+		clock_t timer = clock();	
+
 		// Leo la entrada
 		unsigned int n;
 		unsigned int fo;
@@ -159,24 +161,30 @@ int main(int argc, char* argv[]){
 		camino.reverse();
 		camino.pop_front();		
 		
-		cout << camino.size() << endl;
-	
-		// Muestro el camino
-		for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
-			int fila_nodo_actual = ((*i) / (k+1)) / n;
-			int columna_nodo_actual = (((*i) / (k+1)) % n);
-			int estado_nodo_actual = (*i) % (k+1);
-			
-			if(k_ultimo_estado!=estado_nodo_actual){
-				k_usado = estado_nodo_actual - k_ultimo_estado;
-				k_ultimo_estado = estado_nodo_actual;
-			}else{
-				k_usado = 0;
-			}
-			
-			cout << fila_nodo_actual+1 << " " << columna_nodo_actual+1 << " " << k_usado << endl;
-		}
+		// Si recibe un 1 como parametro se habilita el modo de medicion.
+		if(argc > 1 && atoi(argv[1]) == 1) {
+			timer = clock() - timer;
+			cout << "TIEMPO: " << timer << endl;
+		} else {
+		// escribo hago la salida solicitada por el enunciado
+			cout << camino.size() << endl;
 		
+			// Muestro el camino
+			for(list<int>::iterator i = camino.begin(); i != camino.end(); i++) {
+				int fila_nodo_actual = ((*i) / (k+1)) / n;
+				int columna_nodo_actual = (((*i) / (k+1)) % n);
+				int estado_nodo_actual = (*i) % (k+1);
+				
+				if(k_ultimo_estado!=estado_nodo_actual){
+					k_usado = estado_nodo_actual - k_ultimo_estado;
+					k_ultimo_estado = estado_nodo_actual;
+				}else{
+					k_usado = 0;
+				}
+				
+				cout << fila_nodo_actual+1 << " " << columna_nodo_actual+1 << " " << k_usado << endl;
+			}
+		}		
 		
 		delete grafo;
 		delete potencias;

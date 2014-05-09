@@ -236,3 +236,61 @@ Incorporamos entre los archivos adjuntos, en TP:/ej3/input/, varios casos de pru
 \end{itemize}
 
 \subsection{Performance}
+
+Para el an\'alisis de performance de este ejercicio decidimos ejecutar lotes aleatorios de tests siguiendo los siguientes criterios:
+
+Con $n$ = casillas por lado, $k$ = saltos extra
+
+\begin{itemize}
+	\item Iteramos $n$ entre 25 y 80 casillas.
+	\item En cada iteraci\'on incrementamos la cantidad de casillas en 1 unidad.
+	\item Generamos un input con potencias de saltos aleatorios de entre 1 y $n$.
+	\item Para cada valor de $n$ iteramos $k$, saltos extra, entre 0 y $n$:
+\end{itemize}
+
+Para realizar esto generamos dos scripts de bash:
+\begin{itemize}
+	\item generador\_inputs.sh
+	\item tests.sh
+\end{itemize}
+
+El segundo script, tests.sh, es quien se encarga de iterar los valores de $n$ y $k$, para luego, generando inputs mediante la invocaci\'on del otro script, invocar al programa e ir guardando los tiempos de ejecuci\'on para cada valor de $n$ y $k$.
+
+En cuanto a los valores de $n$ y $k$ elegidos cabe comentar la idea planteada: En un comienzo nuestro objetivo era poder experimentar con valores para la cantidad de casillas por lado de 1 al mayor que podamos ejecutar (en un tiempo razonable de algunas horas con computadoras hogare\~nas), pero para valores de $n$ inferiores a 25 la funcionalidad 'clock()' de $c++$ nos devolv\'ia un tiempo de ejecuci\'on igual a cero, por ende para representar gr\'aficamente los resultados debimos comenzar con $n=25$ y finalizar con $n=80$. 
+	Para los valores de $k$, los saltos extra, nos pareci\'o interesante ver que pasaba si lo iterabamos entre 0 y $n$ ya que la complejidad tambi\'en depende de los valores que vaya tomando dicha variable.
+
+A la hora de gr\'aficar entendimos que para poder apreciar mejor el comportamiento asint\'otico de los resultados iba a ser necesario normalizar los valores, en nuestro caso lo que realizamos fue dividir los tiempos obtenidos por el valor de $k$ en cada respectiva ejecuci\'on. De esta manera podemos representar los tiempos obtenidos en funci\'on de $n$.
+
+\newpage
+
+\begin{center}
+\begin{figure}[h!]
+\includegraphics[scale=0.4]{./img/ej3_chart_normalizado.png}
+\caption{Tiempo transcurrido por cantidad de casillas por lado (gr\'afico normalizado por $k$)}
+\end{figure}
+\end{center}
+
+
+Para poder analizar el comportamiento asint\'otico de los resultados obtenidos gr\'aficamente fue necerio graficar, junto a los tiempos, la funci\'on $c*n^3$, con $c$ una constante, ya que dicha funci\'on es nuestra cota superior.
+En cuanto a la b\'usqueda de la constante $c$ simplemente tomamos cada tiempo resultante y lo dividimos por su $n$ de input elevado al cubo, luego, de entre todos los valores calculados tomamos el m\'as grande y de esta manera pudimos ajustar ambos gr\'aficos de manera tal que se pueda visualizar correctamente los resultados.
+
+Como podemos observar, efectivamente los resultados obtenidos se comportan asint\'oticamente de manera correcta ya que su aspecto se asemeja a la funci\'in $n^3$ para los diversos valores de $n$.
+
+
+Por otro lado, sabiendo que el comportamiento depende de $n$ y $k$, quisimos visualizar para que valores de dichas variables el programa ten\'ia un mejor comportamiento, o, dicho de otra manera, en que momento ibamos a poder encontrar los 'mejores casos'.
+
+Para poder realizar esto fue necesario representar los tiempos obtenidos en funci\'on la cantidad de casillas por lado y de los saltos extra, es decir, en funci\'on de $n$ y $k$. 
+
+\newpage
+
+\begin{center}
+\begin{figure}[h!]
+\includegraphics[scale=0.7]{./img/ej3_n_k_tiempos.png}
+\caption{Tiempo transcurrido por cantidad de casillas por lado y saltos extrar)}
+\end{figure}
+\end{center}
+
+
+Nuevamente utilizamos la constante $c$ calculada previamente para ajustar los resultados a la cota superior.
+
+Como podemos observar, a medida que $n$ y $k$ crecen los resultados se van despegando cada vez m\'as de la cota superior, por lo que el mejor comportamiento lo vamos encontrando a medida que se van incrementando ambas variables de las cuales depende la complejidad, o sea, las casillas por lado y la cantidad de saltos extra.
