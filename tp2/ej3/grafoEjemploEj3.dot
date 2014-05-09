@@ -44,10 +44,11 @@ digraph A {
 
 4 -> 3 [label="p=1 k=0"];
 4 -> 2 [label="p=2 k=0"];
-4 -> 1 [label="p=2 k=1"];
+4 -> 1 [label="p=2 k=0"];
 4 -> 8 [label="p=1 k=0"];
 4 -> 12 [label="p=2 k=0"];
 4 -> 17 [label="p=2 k=1"];
+4 -> 32 [label="p=2 k=1"];
 //4 -> 20  [label="", style=dashed];
 20 -> 17 [label="p=2 k=0"];
 20 -> 32 [label="p=2 k=0"];
