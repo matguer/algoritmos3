@@ -107,13 +107,11 @@ void Region::resolver(){
 	for(int i=0; i<cantPueblos-1 ; i++){
 		
 		// Actualizo las distancias al arbol y me quedo con la menor
-		//cout << "nuevo_id: " << puebloNuevo->getId() << endl;
 		masCercano = actualizarDistancias(puebloNuevo);
 
 		// Agrego masCercano al arbol
 		// En la proxima iteracion la distancia va a quedar en 0
 		parPueblos = pair<Pueblo*, Pueblo*>(masCercano->getPuebloCercano(), masCercano);
-		cout << (parPueblos.first)->getId() << " " << (parPueblos.second)->getId() << endl;
 		_arbol_pueblos->push_back(parPueblos);
 		puebloNuevo = masCercano;
 	}
@@ -127,7 +125,6 @@ void Region::resolver(){
 	while (p != _arbol_pueblos->end()){
 		if(_centrales_instaladas<_centralitas){
 
-			//cout << ((*p).first)->getId() << " " << ((*p).second)->getId() << endl;
 			// p representa la tuberia mas larga, la elimino e instalo una nueva central
 			if(!((*p).second)->tieneCentral()){
 				((*p).second)->instalarCentral();
@@ -199,10 +196,6 @@ Pueblo* Region::actualizarDistancias(Pueblo* puebloNuevo){
 			if(distNueva < distActual){
 				(**p).setPuebloCercano(puebloNuevo);
 				(**p).setDistanciaArbol(distNueva);
-			}
-
-			if((**p).getId() == 2){
-				cout << "dist del 2: " << (**p).getDistanciaArbol() << "con " << (**p).getPuebloCercano()->getId() << endl;
 			}
 
 			// Si es el menor hasta el momento guardo la ciudad
