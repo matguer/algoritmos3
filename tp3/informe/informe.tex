@@ -1,0 +1,75 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subfigure}
+\usepackage{caratula}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{calc}
+\usepackage{cite}
+\usepackage[nottoc,numbib]{tocbibind}
+
+\sloppy
+
+\parskip=5pt % 10pt es el tama�o de fuente
+
+% Pongo en 0 la distancia extra entre �temes.
+\let\olditemize\itemize
+\def\itemize{\olditemize\itemsep=0pt}
+
+% Acomodo fancyhdr.
+\pagestyle{fancy}
+\thispagestyle{fancy}
+\addtolength{\headheight}{1pt}
+\lhead{Algoritmos y Estructuras de Datos III}
+\rhead{$1^{\mathrm{er}}$ cuatrimestre de 2014}
+\cfoot{\thepage /\pageref{LastPage}}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\author{Algoritmos y Estructuras de Datos III, DC, UBA.}
+\date{}
+\title{Trabajo pr\'actico 2}
+
+\begin{document}
+
+\titulo{Trabajo Practico 2}
+\submateria{Primer cuatrimestre 2014}
+\materia{Algoritmos y Estructura de Datos III}
+\grupo{Grupo 4}
+\integrante{Paez, Ariel}{668/09}{twizt.hl@gmail.com}
+\integrante{Blundi, Solange}{336/10}{solange.blundi@gmail.com}
+\integrante{Guerson, Matias Carlos}{925/10}{matias.guerson@gmail.com}
+\integrante{Inzaghi Pronesti, Patricio Ezequiel}{255/11}{patricio.inzaghi@gmail.com}
+\maketitle
+
+\newpage\null\thispagestyle{empty}\newpage
+
+\tableofcontents
+
+%\newpage
+%\section{Problema 1: Roban\'umeros}
+%\input{ej1.tex}
+
+
+\newpage
+\begin{thebibliography}{2}
+
+
+%\bibitem{sort}
+%  C++ reference,
+%  \url{http://www.cplusplus.com/reference/list/list/sort/}
+
+	
+  
+\end{thebibliography}
+
+\end{document}
