@@ -13,14 +13,17 @@ class graph
 {
 	private:
 		vector<list<int>*> * graph_container;
-		vector<vector<int> > * weights1;
-		vector<vector<int> > * weights2;
+		vector<vector<double> > * weights1;
+		vector<vector<double> > * weights2;
 		int cant_nodos;
 	public:
 		graph(int cant_nodos);
 		graph();
 		~graph();
-		void add_edge(int u, int v, int w1, int w2);
+		void add_edge(int u, int v, double w1, double w2);
+		list<int> * get_adyacentes(int u);
+		double get_w1(int u, int v);
+		double get_w2(int u, int v);
 		void print();
 
 };
