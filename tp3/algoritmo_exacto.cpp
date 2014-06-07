@@ -9,12 +9,6 @@
 
 using namespace std;
 
-struct Camino{
-	list<int> * camino;
-	double w1_total;
-	double w2_total;
-};
-
 void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_visitados, Camino & camino_actual, Camino & mejor_camino);
 
 int main(int argc, char* argv[]){

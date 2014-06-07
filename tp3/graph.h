@@ -28,4 +28,10 @@ class graph
 
 };
 
+struct Camino{
+	list<int> * camino;
+	double w1_total;
+	double w2_total;
+};
+
 #endif
