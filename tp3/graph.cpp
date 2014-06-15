@@ -57,6 +57,57 @@ double graph::get_w2(int u, int v){
 	return (*weights2)[u][v];
 }
 
+
+//matrizNext debe estar inicializado a 0. Esta matriz se usa para reconstruir el camino.
+//matrizWeight es la matriz de pesos a la que se le calculará camino minimo.
+vector<vector<double> > graph::floyd(vector<vector<double> > matrizWeight, vector<vector<double> > matrizNext){
+//	vector<vector<double> > matrizAux = weights2;
+
+	double infinito = (double) INFINITY;
+	
+	//Inicializo la matrizNext con los nodos siguientes
+	for(int i = 0; i < cantNodos; i++){
+		for(int j = 0; j< cantNodos; j++){
+			if ((*matrizWeight)[i][j] != infinito && i != j){
+				(*matrizNext)[i][j] = j;
+			}
+		}
+	}
+	
+	
+	for(int k = 0; k < cantNodos; k++){
+		for(int i = 0; i < cantNodos; i++){
+			for(int j = 0; j< cantNodos; j++){
+				
+				if ((*matrizWeight)[i][j] != infinito && i != j){
+					if ((*matrizWeight)[i][j] > (*matrizWeight)[i][k] + (*matrizWeight)[k][j]){
+						(*matrizWeight)[i][j] = (*matrizWeight)[i][k] + (*matrizWeight)[k][j];
+						(*matrizNext)[i][j] = (*matrizNext)[i][k];
+					}
+				}
+			}
+		}
+	}
+}
+
+vector<int> graph::reconstruirPath(int u, int v, vector<vector<double> > matrizNext){
+	
+	vector<int> path;
+	
+	if((*matrizNext)[u][v] == null)
+		return path;
+		
+	path = new vector<double>;
+	i = 0;
+	
+	while(u != v){
+		u = (*matrizNext)[u][v];
+		(*path)[i] = u;
+		i++;
+	}
+	return path;
+}
+
 void graph::print(){ 
 	
 	for(int i=1; i <= cant_nodos; i++){
