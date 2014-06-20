@@ -25,6 +25,8 @@ class graph
 		double get_w1(int u, int v);
 		double get_w2(int u, int v);
 		void print();
+		vector<vector<double> > get_weights1();
+		vector<vector<double> > get_weights2();
 
 };
 

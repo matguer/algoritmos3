@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <list>
 #include <vector>
+#include <cmath>
 #include <queue>
 #include "graph.h"
 
@@ -16,18 +17,25 @@ graph::graph() {
 
 graph::graph(int n) { 
 	cant_nodos = n;
-	graph_container = new vector<list<int>* >(n+1);
+	graph_container = new vector<list<int>* >(n);
 		
-	for(int i=1; i <= n; i++){
+	for(int i=0; i<n; i++){
 		(*graph_container)[i] = new list<int>();
 	}
 	
-	weights1 = new vector<vector<double> >(n+1, vector<double>(n+1, 0));
-	weights2 = new vector<vector<double> >(n+1, vector<double>(n+1, 0));
+	// Se setean todos los pesos en infinito, es decir que a priori no hay ejes
+	weights1 = new vector<vector<double> >(n, vector<double>(n, INFINITY));
+	weights2 = new vector<vector<double> >(n, vector<double>(n, INFINITY));
+
+	// Se setea la distancia de cada nodo a si mismo en 0
+	for(int i=0; i<n; i++) {
+		(*weights1)[i][i] = 0;
+		(*weights2)[i][i] = 0;
+	}
 }
 
 graph::~graph() { 
-	for(int i=1; i <= cant_nodos; i++){
+	for(int i=0; i < cant_nodos; i++){
 		delete (*graph_container)[i];
 	}
 	delete graph_container;
@@ -58,59 +66,9 @@ double graph::get_w2(int u, int v){
 }
 
 
-//matrizNext debe estar inicializado a 0. Esta matriz se usa para reconstruir el camino.
-//matrizWeight es la matriz de pesos a la que se le calculará camino minimo.
-vector<vector<double> > graph::floyd(vector<vector<double> > matrizWeight, vector<vector<double> > matrizNext){
-//	vector<vector<double> > matrizAux = weights2;
-
-	double infinito = (double) INFINITY;
-	
-	//Inicializo la matrizNext con los nodos siguientes
-	for(int i = 0; i < cantNodos; i++){
-		for(int j = 0; j< cantNodos; j++){
-			if ((*matrizWeight)[i][j] != infinito && i != j){
-				(*matrizNext)[i][j] = j;
-			}
-		}
-	}
-	
-	
-	for(int k = 0; k < cantNodos; k++){
-		for(int i = 0; i < cantNodos; i++){
-			for(int j = 0; j< cantNodos; j++){
-				
-				if ((*matrizWeight)[i][j] != infinito && i != j){
-					if ((*matrizWeight)[i][j] > (*matrizWeight)[i][k] + (*matrizWeight)[k][j]){
-						(*matrizWeight)[i][j] = (*matrizWeight)[i][k] + (*matrizWeight)[k][j];
-						(*matrizNext)[i][j] = (*matrizNext)[i][k];
-					}
-				}
-			}
-		}
-	}
-}
-
-vector<int> graph::reconstruirPath(int u, int v, vector<vector<double> > matrizNext){
-	
-	vector<int> path;
-	
-	if((*matrizNext)[u][v] == null)
-		return path;
-		
-	path = new vector<double>;
-	i = 0;
-	
-	while(u != v){
-		u = (*matrizNext)[u][v];
-		(*path)[i] = u;
-		i++;
-	}
-	return path;
-}
-
 void graph::print(){ 
 	
-	for(int i=1; i <= cant_nodos; i++){
+	for(int i=0; i < cant_nodos; i++){
 
 		cout << "Aristas del nodo " << i << ": ";
 		for(list<int>::iterator f = ((*graph_container)[i])->begin(); f != ((*graph_container)[i])->end(); f++){
@@ -120,4 +78,12 @@ void graph::print(){
 		cout << endl;
 		
 	}
+}
+
+vector<vector<double> > graph::get_weights1() { 
+	return (*weights1); 
+}
+
+vector<vector<double> > graph::get_weights2() {
+	return (*weights2); 
 }
