@@ -4,11 +4,7 @@ algoritmos::algoritmos(){}
 
 algoritmos::~algoritmos(){}
 
-vector<vector<int> > algoritmos::floyd(graph* grafo, int w) {
-
-	vector<vector<double> > matrizWeight;
-	if(w==1) matrizWeight = vector<vector<double> >(grafo->get_weights1());
-	else matrizWeight = vector<vector<double> >(grafo->get_weights2());
+vector<vector<int> > algoritmos::floyd(vector<vector<double> >& matrizWeight) {
 
 	int cant_nodos = matrizWeight.size();
 
@@ -33,14 +29,6 @@ vector<vector<int> > algoritmos::floyd(graph* grafo, int w) {
 				}
 			}
 		}
-	}
-
-	cout << "PESOS: " << endl;
-	for(unsigned int i=0; i<matrizWeight.size(); i++) {
-		for(unsigned int j=0; j<matrizWeight.size(); j++) {
-			cout << matrizWeight[i][j] << " ";
-		}
-		cout << endl;
 	}
 
 	return matrizNext;

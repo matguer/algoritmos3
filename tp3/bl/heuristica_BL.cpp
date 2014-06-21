@@ -22,7 +22,6 @@ int main(int argc, char* argv[]) {
 	unsigned int m;
 	unsigned int u;
 	unsigned int v;
-	double k;
 	
 	unsigned int v1;
 	unsigned int v2;
@@ -47,17 +46,25 @@ int main(int argc, char* argv[]) {
 
 	algoritmos* algoritmo = new algoritmos();
 
-	vector<vector<int> > floyd1 = algoritmo->floyd(grafo,1);
-	vector<int> camino1 = algoritmo->reconstruirPath(u,v,floyd1);
 	vector<vector<double> > pesos1 = grafo->get_weights1();
+	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
+	//cout << "PESOS: " << endl;
+	//for(unsigned int i=0; i<pesos1.size(); i++) {
+	//	for(unsigned int j=0; j<pesos1.size(); j++) {
+	//		cout << pesos1[i][j] << " ";
+	//	}
+	//	cout << endl;
+	//}
+
+	vector<int> camino1 = algoritmo->reconstruirPath(u,v,floyd1);
 
 	if(!pesoEnRegla(camino1,pesos1)) {
 		cout << "no" << endl;
 		return 0;
 	}
-	imprimirCamino(camino1);
 
-	vector<vector<int> > floyd2 = algoritmo->floyd(grafo,2);
+	vector<vector<double> > pesos2 = grafo->get_weights2();
+	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
 
 	unsigned int j = 0;
 	while(j!=camino1.size() - 1) {
@@ -72,39 +79,19 @@ int main(int argc, char* argv[]) {
 
 	imprimirCamino(camino1);
 
-//	for(vector<vector<int> >::const_iterator it = floyd1.begin(); it != floyd1.end(); ++it) {
-//		vector<int> fila = *it;
-//		for(vector<int>::const_iterator it_fila = fila.begin(); it_fila != fila.end(); ++it_fila) {
-//			cout << *it_fila << " ";
-//		}
-//		cout << endl;
-//	}
-
-	//cout << endl;
-
-	//for(vector<int>::const_iterator it = path.begin(); it != path.end(); ++it) {
-	//	cout << *it << " ";
-	//}
-	//cout << endl;
-
-
 	return 0;
 }
 
 
 bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
-	//cout << "k: " << k << " peso: " << getPeso(camino, pesos) << endl;
-	return k <= getPeso(camino, pesos);
+	return k >= getPeso(camino, pesos);
 }
 
 double getPeso(vector<int> camino, vector<vector<double> > pesos) {
 	double pesoTotal = 0.0;
-	//cout << "pesos" << endl;
 	for(unsigned int i=0; i<camino.size()-1; i++) {
-		//cout << pesos[i][i+1] << " ";
-		pesoTotal += pesos[i][i+1];
+		pesoTotal += pesos[camino[i]][camino[i+1]];
 	}
-	cout << endl;
 	return pesoTotal;
 }
 
