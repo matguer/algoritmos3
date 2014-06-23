@@ -5,7 +5,7 @@
 #include <vector>
 #include <assert.h>
 #include <math.h>
-#include "graph.h"
+#include "../graph.h"
 
 using namespace std;
 
