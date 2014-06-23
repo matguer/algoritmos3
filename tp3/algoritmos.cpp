@@ -35,7 +35,7 @@ vector<vector<int> > algoritmos::floyd(vector<vector<double> >& matrizWeight) {
 }
 
 
-vector<int> algoritmos::reconstruirPath(int u, int v, vector<vector<int> > matrizNext){
+vector<int> algoritmos::reconstruirPathFloyd(int u, int v, vector<vector<int> > matrizNext){
 	
 	vector<int> path = vector<int>();
 	
