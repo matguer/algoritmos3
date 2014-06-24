@@ -1,0 +1,88 @@
+\subsection{Descripci\'on del algoritmo}
+
+Para resolver el algoritmo exacto que resuelve el problema se eligi\'o la t\'ecnica de programaci\'on Backtracking, la misma recorre todas las posibilidades de caminos posibles de $u$ a $v$ realizando podas para mejorar la $performance$, el mismo puede encontrarse en la hoja siguiente.
+
+Iniciamos el algoritmo creando una variable para guardar el mejor camino encontrado hasta el momento, la misma guarda la suma de $w_{1}$ y $w_{2}$ del camino para poder comparar con otros. Tambi\'en inicializamos otra variable para ir armando el camino que se va generando en cada llamada recursiva.
+
+El problema comienza a ser resuelto con la primer llamada a la funci\'on $backtrack$ a la cual se le pasa por parametro el grafo en donde se debe buscar el camino, el nodo de destino, la cota de $K$, un arreglo para controlar los nodos que ya fueron visitados (para no entrar en un $loop$) y las referencias al camino actual y el mejor camino encontrado.
+
+
+\newpage
+\subsection{Algoritmo}
+
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+struct Camino{
+	list<int> * camino;
+	double w1_total;
+	double w2_total;
+};
+
+// Estructura que guarda el mejor camino que encontre cumpliendo ambas condiciones
+Camino mejorcamino = Camino();
+mejorcamino.camino = new list<int>();
+mejorcamino.w1_total = 0;
+mejorcamino.w2_total = INFINITY;
+
+// El camino que voy construyendo en cada rama del backtracking, siempre arranca desde u
+Camino camino_actual = Camino();
+camino_actual.camino = new list<int>();
+(*camino_actual.camino).push_back(u);
+camino_actual.w1_total = 0.0;
+camino_actual.w2_total = 0.0;
+vector<bool> * nodos_visitados = new vector<bool>(n+1, false);
+(*nodos_visitados)[u] = true;
+		
+backtrack(grafo, v, k, nodos_visitados, camino_actual, mejorcamino);
+
+void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_visitados, Camino & camino_actual, Camino & mejor_camino) {
+	
+	int ultimo_nodo = (*camino_actual.camino).back(); // Ultimo nodo agregado
+	list<int> * nodos_adyacentes = grafo->get_adyacentes(ultimo_nodo); // Nodos adyacentes al ultimo nodo recorrido
+	
+	// Si me pase de la cota K corto esta rama
+	if(camino_actual.w1_total > k){
+		return;
+	}
+	
+	// Si ya encontre el nodo final termino
+	if(ultimo_nodo == nodo_objetivo){
+
+		if(camino_actual.w2_total < mejor_camino.w2_total){
+			delete mejor_camino.camino;
+			mejor_camino.camino = new list<int>((*camino_actual.camino));
+			mejor_camino.w1_total = camino_actual.w1_total;
+			mejor_camino.w2_total = camino_actual.w2_total;
+		}
+		return;
+	}
+	
+	// Recorro los adyancentes del ultimo nodo recorrido
+	for(list<int>::iterator nodo = nodos_adyacentes->begin(); nodo != nodos_adyacentes->end(); nodo++){
+		// Si ya visite el nodo termino
+		if((*nodos_visitados)[*nodo] == true){
+			continue;
+		}
+
+		(*nodos_visitados)[*nodo] = true; // Marco el nodo como visitado para hacer el llamado recursivo
+		(*camino_actual.camino).push_back(*nodo);
+		camino_actual.w1_total = camino_actual.w1_total + grafo->get_w1(ultimo_nodo, *nodo);
+		camino_actual.w2_total = camino_actual.w2_total + grafo->get_w2(ultimo_nodo, *nodo);
+		
+		backtrack(grafo, nodo_objetivo, k, nodos_visitados, camino_actual, mejor_camino);
+		// Restauro el estado para cuando vuelva
+		camino_actual.w1_total = camino_actual.w1_total - grafo->get_w1(ultimo_nodo, *nodo);
+		camino_actual.w2_total = camino_actual.w2_total - grafo->get_w2(ultimo_nodo, *nodo);
+		(*nodos_visitados)[*nodo] = false;
+		(*camino_actual.camino).pop_back();		
+	}
+}
+\end{lstlisting}
+
