@@ -60,10 +60,6 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
-	cout << "camino1: ";
-	imprimirCamino(camino1);
-	cout << endl;
-	
 	vector<vector<double> > pesos2 = grafo->get_weights2();
 	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
 	
@@ -73,12 +69,8 @@ int main(int argc, char* argv[]) {
 	unsigned int j = 0;
 	while(j!=camino1.size() - 1) {
 		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);
-		cout << "tramo: ";
-		imprimirCamino(tramoCamino2);
-		cout << endl;
 		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);
 		if(pesoEnRegla(caminoNuevo,pesos1)) {
-			cout << "entro" << endl;
 			camino1 = caminoNuevo;
 			j += tramoCamino2.size() - 2;
 		}
