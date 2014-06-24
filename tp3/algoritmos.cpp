@@ -40,9 +40,10 @@ vector<int> algoritmos::reconstruirPathFloyd(int u, int v, vector<vector<int> > 
 	vector<int> path = vector<int>();
 	
 	while(u != v){
-		u = (matrizNext)[u][v];
 		path.push_back(u);
+		u = (matrizNext)[u][v];
 	}
+	path.push_back(v);
 	return path;
 }
 

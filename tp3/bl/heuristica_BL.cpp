@@ -60,6 +60,10 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
+	cout << "camino1: ";
+	imprimirCamino(camino1);
+	cout << endl;
+	
 	vector<vector<double> > pesos2 = grafo->get_weights2();
 	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
 	
@@ -69,10 +73,14 @@ int main(int argc, char* argv[]) {
 	unsigned int j = 0;
 	while(j!=camino1.size() - 1) {
 		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);
+		cout << "tramo: ";
+		imprimirCamino(tramoCamino2);
+		cout << endl;
 		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);
 		if(pesoEnRegla(caminoNuevo,pesos1)) {
+			cout << "entro" << endl;
 			camino1 = caminoNuevo;
-			j += tramoCamino2.size() - 1;
+			j += tramoCamino2.size() - 2;
 		}
 		j++;
 	}
@@ -99,7 +107,7 @@ vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSou
 	unsigned int sizeCamino1 = camino1.size();
 	unsigned int sizeTramoNuevo = tramoNuevo.size();
 
-	vector<int> caminoNuevo = vector<int>(sizeCamino1 + sizeTramoNuevo - 1, 0);
+	vector<int> caminoNuevo = vector<int>(sizeCamino1 + sizeTramoNuevo - 2, 0);
 
 	/* El caminoNuevo se mantiene igual que camino1 hasta la posicion indicada como nodoSource */
 	for(int i=0; i<=nodoSource; i++) {
@@ -107,13 +115,13 @@ vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSou
 	}
 
 	/* A partir del nodoSource en adelante se agrega el tramoNuevo */
-	for(int i=nodoSource+1; i<(nodoSource + sizeTramoNuevo); i++) {
-		caminoNuevo[i] = tramoNuevo[i-nodoSource-1];
+	for(int i=nodoSource+1; i<(nodoSource + sizeTramoNuevo - 1); i++) {
+		caminoNuevo[i] = tramoNuevo[i-nodoSource];
 	}
 
 	/* Una vez que se completo el tramoNuevo se siguen agregando las ultimas posiciones del camino1 */
-	for(unsigned int i=nodoSource+sizeTramoNuevo; i<caminoNuevo.size(); i++) {
-		caminoNuevo[i] = camino1[i-sizeTramoNuevo+1];
+	for(unsigned int i=nodoSource+sizeTramoNuevo - 1; i<caminoNuevo.size(); i++) {
+		caminoNuevo[i] = camino1[i-sizeTramoNuevo+2];
 	}
 	
 	return caminoNuevo;
