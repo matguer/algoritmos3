@@ -6,8 +6,11 @@
 #include <assert.h>
 #include <math.h>
 #include "../graph.h"
+#include "backtrack.cpp"
 
 using namespace std;
+
+void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_visitados, Camino & camino_actual, Camino & mejor_camino);
 
 int main(int argc, char* argv[]){
 		
