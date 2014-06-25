@@ -1,0 +1,36 @@
+\subsection{B\'usqueda Local}
+
+Una heur\'istica de b\'usqueda local toma una soluci\'on inicial $s$, obtenida por ejemplo a partir de una heur\'istica constructiva. Luego, en cada iteraci\'on la mejora reemplaz\'andola por otra soluci\'on, perteneciente al conjunto de soluciones vecinas de $s$. El procedimiento se repite hasta alcanzar un \'optimo local.\\
+El siguiente es un esquema general de esta heur\'istica:\\
+Componentes principales
+
+\begin{itemize}
+\item S = conjunto de soluciones
+\item N(s) = soluciones vecinas de s
+\item f(s) = valor de la soluci\'on s
+\end{itemize}
+
+Forma del algoritmo
+\begin{itemize}
+\item elegir una soluci\'on s $\in$ S (soluci\'on inicial)
+\item mientras exista s' $\in$ N(s) donde f(s') $<$ f(s)
+\begin{itemize}
+	\item reemplazar s por s'
+\end{itemize}
+\item devolver s
+\end{itemize}
+
+\subsection{Descripci\'on del algoritmo}
+
+Analicemos la heur\'istica de b\'usqueda local propuesta utilizando como gu\'ia el esquema general descripto en la secci\'on anterior.\\
+
+Componentes principales
+\begin{itemize}
+\item S = conjunto de soluciones. En este caso, el conjunto de soluciones est\'a representado por todos los caminos entre $u$ y $v$ del grafo, que est\'en acotados por $K$ en $w_1$ y sean m\'inimos en $w_2$.
+\item N(s) = soluciones vecinas de s. Dos soluciones son vecinas si comparten el camino de $u$ a $w$ o de $w$ a $v$, donde $w$ es un nodo perteneciente al camino soluci\'on inicial. 
+\item f(s) = valor de la soluci\'on s. El valor de una soluci\'on s est\'a dado por su valor en $w_1$ y su valor en $w_2$.
+\end{itemize}
+
+Como soluci\'on inicial usamos el camino m\'inimo en $w_1$ entre $u$ y $v$, generado utilizando el algoritmo de Floyd.\\
+Inicialmente consideramos ambos caminos m\'inimos: tanto en $w_1$ como en $w_2$, pero finalmente nos decidimos por el de $w_1$ ya que, por como definimos la vecindad de una soluci\'on, si tom\'aramos el m\'inimo en $w_2$, ser\'ia muy probable que no est\'e acotado por $K$ y, peor a\'un, todos sus vecinos podr\'ian estar muy por arriba de la cota. As\'i, el algoritmo devolver\'ia una soluci\'on que ni siquiera es aproximada, ya que no estar\'ia acotada por $K$ y, por lo tanto, no ser\'ia la m\'inima de las acotadas por ese n\'umero.\\
+En cambio, tomando como base la m\'as chica en $w_1$ y suponiendo que la misma est\'a acotada por $K$ (en otro caso no existe soluci\'on para el problema); aunque al final el algoritmo no nos diera la soluci\'on exacta, tendr\'iamos al menos una buena aproximaci\'on, que seguro va a estar acotada por $K$ y que es la m\'inima entre sus vecinos (local) en $w_2$.
