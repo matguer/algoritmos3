@@ -1,11 +1,18 @@
 \subsection{Descripci\'on del algoritmo}
 
-Para resolver el algoritmo exacto que resuelve el problema se eligi\'o la t\'ecnica de programaci\'on Backtracking, la misma recorre todas las posibilidades de caminos posibles de $u$ a $v$ realizando podas para mejorar la $performance$, el mismo puede encontrarse en la hoja siguiente.
+El algoritmo exacto que resuelve el problema utiliza la t\'ecnica de programaci\'on Backtracking, la misma recorre todas las posibilidades de caminos posibles de $u$ a $v$ realizando podas para mejorar la $performance$, el mismo puede encontrarse en la hoja siguiente.
 
 Iniciamos el algoritmo creando una variable para guardar el mejor camino encontrado hasta el momento, la misma guarda la suma de $w_{1}$ y $w_{2}$ del camino para poder comparar con otros. Tambi\'en inicializamos otra variable para ir armando el camino que se va generando en cada llamada recursiva.
 
 El problema comienza a ser resuelto con la primer llamada a la funci\'on $backtrack$ a la cual se le pasa por parametro el grafo en donde se debe buscar el camino, el nodo de destino, la cota de $K$, un arreglo para controlar los nodos que ya fueron visitados (para no entrar en un $loop$) y las referencias al camino actual y el mejor camino encontrado.
 
+Al recorrer todas las posibles combinaciones se va acumulando el peso $w_{1}$ acumulado, si en alguna rama de la ejecuci\'on este supera la cota $K$ la rama es descartada.
+
+\subsection{Complejidad}
+
+El algoritmo debe recorrer en peor caso todo el grafo reiteradas veces. Imaginando un grafo completo, desde cada nodo tenemos $n-1$ nodos adyacentes para recorrer. Nuestra funci\'on no repite nodos, por lo tanto a medida que va recorriendo los mismos se reducen las opciones en uno. Tenemos $n-1$ llamadas recursivas para el primer nodo, $n-2$ para el siguiente que recorramos y asi sucesivamente. Dentro de la funci\'on de $backtrack$ se realizan operaciones aritmeticas y constantes, por lo tanto la complejidad final seria: $O((n-1)*(n-2)*...*1)$ = $O(n!)$
+
+Como podemos apreciar el algoritmo arroja una respuesta exacta con una complejidad temporal imposible de escalar. En los siguientes apartados desarrollaremos distintas heur\'isticas para intentar lograr una soluci\'on aceptable en tiempo polinomial.
 
 \newpage
 \subsection{Algoritmo}
@@ -85,4 +92,7 @@ void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_
 	}
 }
 \end{lstlisting}
+\newpage
+
+\subsection{Experimentaci\'on}
 
