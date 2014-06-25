@@ -10,10 +10,10 @@ algoritmo_exacto: algoritmo_exacto.o ../graph.o
 test: test.o ../graph.o
 	$(CXX) $(CXXFLAGS) test.o ../graph.o -o test 
 		
-algoritmo_exacto.o: algoritmo_exacto.cpp ../graph.h
+algoritmo_exacto.o: algoritmo_exacto.cpp backtrack.cpp ../graph.h
 ../graph.o: ../graph.cpp ../graph.h
 
-test.o: test.cpp ../graph.h
+test.o: test.cpp backtrack.cpp ../graph.h
 
 .PHONY: clean
 clean:

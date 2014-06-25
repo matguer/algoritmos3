@@ -36,6 +36,4 @@ struct Camino{
 	double w2_total;
 };
 
-void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_visitados, Camino & camino_actual, Camino & mejor_camino);
-
 #endif

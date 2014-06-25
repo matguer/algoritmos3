@@ -1,8 +1,11 @@
 #include "../graph.h"
+#include "backtrack.cpp"
 #include <time.h>
 #include <cmath>
 
 using namespace std;
+
+void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_visitados, Camino & camino_actual, Camino & mejor_camino);
 
 /**
  * La función main toma el listado de trabajos por std input:
