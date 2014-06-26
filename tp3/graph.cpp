@@ -92,3 +92,8 @@ vector<vector<double> > graph::get_weights1() {
 vector<vector<double> > graph::get_weights2() {
 	return (*weights2); 
 }
+
+
+int graph::get_cant_nodos() {
+	return cant_nodos;
+}

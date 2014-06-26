@@ -27,6 +27,7 @@ class graph
 		void print();
 		vector<vector<double> > get_weights1();
 		vector<vector<double> > get_weights2();
+		int get_cant_nodos();
 
 };
 

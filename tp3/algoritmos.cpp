@@ -1,4 +1,5 @@
 #include "algoritmos.h"
+#include <assert.h>
 
 algoritmos::algoritmos(){}
 
@@ -46,4 +47,56 @@ vector<int> algoritmos::reconstruirPathFloyd(int u, int v, vector<vector<int> > 
 	path.push_back(v);
 	return path;
 }
+
+
+int minimo(const list<int>* nodos) {
+	assert(nodos->size() > 0);
+	int min = nodos->back();
+	for(list<int>::const_iterator it_nodos = nodos->begin(); it_nodos != nodos->end(); ++it_nodos)
+		if(*it_nodos < min) min = *it_nodos;
+	return min;
+}
+
+vector<int> algoritmos::dijkstra(graph* grafo, int f_pesos, int source, int target) {
+
+	vector<vector<double> > pesos;
+	if(f_pesos == 1) pesos = grafo->get_weights1();
+	else pesos = grafo->get_weights2();
+	
+	int cant_nodos = grafo->get_cant_nodos();
+	vector<int>* predecesores = new vector<int>(cant_nodos,source);
+	list<int>* adyacentes = new list<int>();
+	vector<bool>* recorridos = new vector<bool>(cant_nodos, false);
+	list<int>* no_recorridos = new list<int>();
+	
+	no_recorridos->push_back(source);
+	while(no_recorridos->size() > 0) {
+		int nodo = minimo(no_recorridos);
+		(*recorridos)[nodo] = true;
+		no_recorridos->remove(nodo);
+		
+		adyacentes = grafo->get_adyacentes(nodo);
+		for(list<int>::iterator it_ady = adyacentes->begin(); it_ady != adyacentes->end(); ++it_ady) {
+			int adyacente = *it_ady;
+			double dist_ady = pesos[adyacente][source];
+			double dist_nodo = pesos[nodo][source];
+			double dist_ady_nodo = pesos[adyacente][nodo];
+			
+			if(dist_ady > dist_nodo + dist_ady_nodo) {
+				pesos[adyacente][source] = dist_nodo + dist_ady_nodo;
+				pesos[source][adyacente] = dist_nodo + dist_ady_nodo;
+				(*predecesores)[adyacente] = nodo;
+				
+			}
+			if((*recorridos)[adyacente] == false)
+				no_recorridos->push_back(adyacente);
+		}
+	}
+
+	return *predecesores;
+}
+
+
+
+
 
