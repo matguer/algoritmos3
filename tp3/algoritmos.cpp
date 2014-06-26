@@ -92,8 +92,27 @@ vector<int> algoritmos::dijkstra(graph* grafo, int f_pesos, int source, int targ
 				no_recorridos->push_back(adyacente);
 		}
 	}
-
-	return *predecesores;
+	
+	
+	/* reconstruccion del camino */
+	list<int> path_reverse = list<int>();
+	
+	while(target != source){
+		path_reverse.push_back(target);
+		target = (*predecesores)[target];
+	}
+	
+	path_reverse.push_back(source);
+	vector<int> path = vector<int>(path_reverse.size(),0);
+	
+	/* como el camino se fue reconstruyendo de atras para adelante lo doy vuelta */
+	for(unsigned int i=0; i<path.size(); i++) {
+		path[i] = path_reverse.back();
+		path_reverse.pop_back();
+	}
+	
+	return path;
+	
 }
 
 
