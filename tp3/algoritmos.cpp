@@ -57,12 +57,8 @@ int minimo(const list<int>* nodos) {
 	return min;
 }
 
-vector<int> algoritmos::dijkstra(graph* grafo, int f_pesos, int source, int target) {
+vector<int> algoritmos::dijkstra(graph* grafo, vector<vector<double> >& pesos, int source, int target) {
 
-	vector<vector<double> > pesos;
-	if(f_pesos == 1) pesos = grafo->get_weights1();
-	else pesos = grafo->get_weights2();
-	
 	int cant_nodos = grafo->get_cant_nodos();
 	vector<int>* predecesores = new vector<int>(cant_nodos,source);
 	list<int>* adyacentes = new list<int>();
