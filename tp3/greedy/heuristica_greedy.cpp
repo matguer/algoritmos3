@@ -11,33 +11,17 @@
 
 using namespace std;
 
-heuristicaGreedy::heuristicaGreedy(){}
+heuristicaGreedy::heuristicaGreedy(double k, unsigned int n, unsigned int m, unsigned int u, unsigned int v){
+	this->k = k;
+	this->n = n;
+	this->m = m;
+	this->u = u;
+	this->v = v;
+}
 heuristicaGreedy::~heuristicaGreedy(){}
 
-void heuristicaGreedy::execute() {
-		
+void heuristicaGreedy::execute(graph * grafo) {
 
-	// Leo la entrada
-
-	cin >> n;
-	cin >> m;
-	cin >> u;
-	cin >> v;
-	/* en el input los nodos van de 1 a N y el grafo los trabaja de 0 a N-1 */
-	u--;
-	v--;
-	cin >> k;
-	
-	graph * grafo = new graph(n);
-	
-	for(unsigned int i = 0; i<m; i++){
-			cin >> v1;
-			cin >> v2;
-			cin >> w1;
-			cin >> w2;
-			grafo->add_edge(v1-1,v2-1,w1,w2);
-	}
-	
 	vector<vector<double> > pesos1 = grafo->get_weights1();
 	vector<vector<double> > pesos2 = grafo->get_weights2();
 	algoritmos* algoritmo = new algoritmos();
