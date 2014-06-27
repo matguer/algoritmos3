@@ -11,10 +11,8 @@
 
 using namespace std;
 
-heuristicaGreedy::heuristicaGreedy(double k, unsigned int n, unsigned int m, unsigned int u, unsigned int v){
+heuristicaGreedy::heuristicaGreedy(double k, unsigned int u, unsigned int v){
 	this->k = k;
-	this->n = n;
-	this->m = m;
 	this->u = u;
 	this->v = v;
 }
@@ -32,7 +30,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 	vector<int> camino_w1 = algoritmo->reconstruirPathFloyd(u, v, floyd1);
 	vector<int> camino_w2;
 	if(!pesoEnRegla(camino_w1, pesos1)) {
-		cout << "no" << endl;
+		cout << "no";
 		return;
 	}
 
@@ -76,7 +74,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 					/* primer nodo del camino_w1 */
 					nodoActual = camino_w1_potencial[1]; 				
 				} else {
-					cout << "no" << endl;
+					cout << "no";
 					return;
 				}
 			}
@@ -88,6 +86,9 @@ void heuristicaGreedy::execute(graph * grafo) {
 	caminoFinal.push_back(v);
 
 	imprimirSolucion(caminoFinal, pesos1, pesos2);
+	
+	delete algoritmo;
+	
 	return;
 	
 }
@@ -116,7 +117,6 @@ void heuristicaGreedy::imprimirSolucion(vector<int> camino, vector<vector<double
 	
 	cout << pesoTotal1 << " " << pesoTotal2 << " " << camino.size() << " ";
 	imprimirCamino(camino);
-	cout << endl;
 }
 
 vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camino2) {

@@ -4,10 +4,14 @@ CXXFLAGS=-g -Wall -std=c++98 -Werror -fno-stack-protector
 .PHONY: all
 all: main
 
-main: heuristica_BL.o ../algoritmos.o ../graph.o
-	$(CXX) $(CXXFLAGS) heuristica_BL.o ../graph.o ../algoritmos.o -o heuristica_BL 
-		
-heuristica_BL.o: heuristica_BL.cpp ../algoritmos.h ../graph.h
+main: main.o heuristica_BL.o ../algoritmos.o ../graph.o
+	$(CXX) $(CXXFLAGS) main.o heuristica_BL.o ../graph.o ../algoritmos.o -o heuristica_BL 
+	
+test: test.o ../graph.o heuristica_BL.o
+	$(CXX) $(CXXFLAGS) test.o ../graph.o heuristica_BL.o ../algoritmos.o -o test 
+			
+main.o: main.cpp
+heuristica_greedy.o: heuristica_BL.cpp ../algoritmos.h ../graph.h
 ../algoritmos.o: ../algoritmos.cpp ../algoritmos.h
 ../graph.o: ../graph.cpp ../graph.h
 

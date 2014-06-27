@@ -1,7 +1,7 @@
 #ifndef __BACKTRACK__
 #define __BACKTRACK__
 
-void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_visitados, Camino & camino_actual, Camino & mejor_camino) {
+void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_visitados, Camino & camino_actual, Camino & mejor_camino, list<pair<double, double> > * posibles_caminos) {
 	
 	int ultimo_nodo = (*camino_actual.camino).back(); // Ultimo nodo agregado
 	list<int> * nodos_adyacentes = grafo->get_adyacentes(ultimo_nodo); // Nodos adyacentes al ultimo nodo recorrido
@@ -28,6 +28,9 @@ void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_
 			mejor_camino.w1_total = camino_actual.w1_total;
 			mejor_camino.w2_total = camino_actual.w2_total;
 		}
+		
+		posibles_caminos->push_back(pair<double, double>(camino_actual.w1_total, camino_actual.w2_total));
+		
 		return;
 	}
 	
@@ -43,7 +46,7 @@ void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_
 		camino_actual.w1_total = camino_actual.w1_total + grafo->get_w1(ultimo_nodo, *nodo);
 		camino_actual.w2_total = camino_actual.w2_total + grafo->get_w2(ultimo_nodo, *nodo);
 
-		backtrack(grafo, nodo_objetivo, k, nodos_visitados, camino_actual, mejor_camino);
+		backtrack(grafo, nodo_objetivo, k, nodos_visitados, camino_actual, mejor_camino, posibles_caminos);
 		// Restauro el estado para cuando vuelva
 		camino_actual.w1_total = camino_actual.w1_total - grafo->get_w1(ultimo_nodo, *nodo);
 		camino_actual.w2_total = camino_actual.w2_total - grafo->get_w2(ultimo_nodo, *nodo);

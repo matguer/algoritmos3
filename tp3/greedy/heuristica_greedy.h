@@ -19,7 +19,6 @@ class heuristicaGreedy {
 		vector<int> unirCaminos(vector<int> camino1, vector<int> camino2);
 		double k;
 		unsigned int n;
-		unsigned int m;
 		unsigned int u;
 		unsigned int v;
 		
@@ -28,7 +27,7 @@ class heuristicaGreedy {
 		double w1;
 		double w2;
 	public:
-		heuristicaGreedy(double k, unsigned int n, unsigned int m, unsigned int u, unsigned int v);
+		heuristicaGreedy(double k, unsigned int u, unsigned int v);
 		~heuristicaGreedy();
 		void execute(graph * grafo);
 };

@@ -5,46 +5,12 @@
 #include <vector>
 #include "../graph.h"
 #include "../algoritmos.h"
+#include "heuristica_BL.h"
 
 using namespace std;
 
-bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos);
-double getPeso(vector<int> camino, vector<vector<double> > pesos);
-vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSource);
-void imprimirCamino(vector<int> camino);
-void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2);
-double k;
-graph* grafo;
-
-int main(int argc, char* argv[]) {
-
-	// Leo la entrada
-	unsigned int n;
-	unsigned int m;
-	unsigned int u;
-	unsigned int v;
+void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 	
-	unsigned int v1;
-	unsigned int v2;
-	double w1;
-	double w2;
-
-	cin >> n;
-	cin >> m;
-	cin >> u;
-	cin >> v;
-	cin >> k;
-	
-	grafo = new graph(n);
-	
-	for(unsigned int i = 0; i<m; i++){
-			cin >> v1;
-			cin >> v2;
-			cin >> w1;
-			cin >> w2;
-			grafo->add_edge(v1,v2,w1,w2);
-	}
-
 	algoritmos* algoritmo = new algoritmos();
 
 	vector<vector<double> > pesos1 = grafo->get_weights1();
@@ -55,9 +21,8 @@ int main(int argc, char* argv[]) {
 
 	/* Si este peso supera el K entonces no voy a encontrar uno menor,
 		por lo tanto no hay solucion */
-	if(!pesoEnRegla(camino1,pesos1)) {
-		cout << "no" << endl;
-		return 0;
+	if(!pesoEnRegla(camino1,pesos1,k)) {
+		cout << "no";
 	}
 
 	vector<vector<double> > pesos2 = grafo->get_weights2();
@@ -70,20 +35,20 @@ int main(int argc, char* argv[]) {
 	while(j!=camino1.size() - 1) {
 		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);
 		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);
-		if(pesoEnRegla(caminoNuevo,pesos1)) {
+		if(pesoEnRegla(caminoNuevo,pesos1,k)) {
 			camino1 = caminoNuevo;
 			j += tramoCamino2.size() - 2;
 		}
 		j++;
 	}
+	
+	delete algoritmo;
 
 	imprimirSolucion(camino1, pesos1, pesos2);
-
-	return 0;
 }
 
 
-bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
+bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos, double k) {
 	return k >= getPeso(camino, pesos);
 }
 
@@ -121,7 +86,7 @@ vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSou
 
 void imprimirCamino(vector<int> camino) {
 	for(vector<int>::const_iterator it = camino.begin(); it != camino.end(); ++it)
-		cout << *it << " ";
+		cout << (*it+1) << " ";
 }
 
 void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2) {
@@ -130,5 +95,4 @@ void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector
 	
 	cout << pesoTotal1 << " " << pesoTotal2 << " " << camino.size() << " ";
 	imprimirCamino(camino);
-	cout << endl;
 }

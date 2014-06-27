@@ -1,5 +1,5 @@
 #include "../graph.h"
-#include "backtrack.cpp"
+#include "heuristica_greedy.h"
 #include <time.h>
 #include <cmath>
 
@@ -59,31 +59,14 @@ int main(int argc, char *argv[])
 						}
 					}
 				}
-				
-				// Todos los caminos que llegan
-				list<pair<double, double> > * posibles_caminos = new list<pair<double, double> >();
-				
-				// Estructura que guarda el mejor camino que encontre cumpliendo ambas condiciones
-				Camino mejorcamino = Camino();
-				mejorcamino.camino = new list<int>();
-				mejorcamino.w1_total = 0;
-				mejorcamino.w2_total = INFINITY;
 
-				// El camino que voy construyendo en cada rama del backtracking, siempre arranca desde u
-				Camino camino_actual = Camino();
-				camino_actual.camino = new list<int>();
-				(*camino_actual.camino).push_back(u-1);
-				camino_actual.w1_total = 0.0;
-				camino_actual.w2_total = 0.0;
-				vector<bool> * nodos_visitados = new vector<bool>(n, false);
-				(*nodos_visitados)[u-1] = true;
-				
 				clock_t t = clock();
-				backtrack(grafo, v-1, k, nodos_visitados, camino_actual, mejorcamino, posibles_caminos);
+				heuristicabl(grafo,u-1,v-1,k);
 				t = clock() - t;
 
 				cout << n << "\t" << (cant_aristas/2) << "\t" << t << endl;
 			
+				delete heuristica;
 				delete grafo;
 				
 			}	
