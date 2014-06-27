@@ -1,6 +1,6 @@
-\subsection{Heur\'istica Golosa}
+\subsection{Heur\'istica constructiva Golosa}
 
-Una heur\'istica golosa va construyendo la soluci\'on tomando en cada paso la mejor decisi\'on local.
+Una heur\'istica constructiva golosa es una que va armando la soluci\'on tomando, en cada paso, la mejor decisi\'on local; es decir la que conviene en ese momento, sin tener en cuenta las posibles consecuencas que esa decisi\'on puede tener en los pasos futuros.\\
 
 \subsection{Descripci\'on del algoritmo}
 
@@ -26,3 +26,6 @@ Llamaremos $n_actual$ al nodo actual, que inicialmente es $u$.\\
 	\item si no se cumple ninguna de las anteriores: obtenemos $potencial_1$ el camino m\'inimo en $w_1$ desde $n_actual$ a $v$ y lo unimos a $c_s$. Si el peso de este \'ultimo est\'a acotado por $K$ ponemos en $n_actual$ al primer nodo del camino unido y repetimos. Si no, no hay soluci\'on.
 \end{itemize}
 \end{itemize}
+
+\newpage
+\subsection{Algoritmo}

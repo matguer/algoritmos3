@@ -1,10 +1,10 @@
 \subsection{Descripci\'on del algoritmo}
 
-Como algoritmo exacto para resolver el problema se eligi\'o la t\'ecnica de programaci\'on Backtracking, la misma recorre todas las posibilidades de caminos posibles de $u$ a $v$ realizando podas para mejorar la $performance$, el mismo puede encontrarse en la hoja siguiente.
+Como algoritmo exacto para resolver el problema se eligi\'o la t\'ecnica de programaci\'on Backtracking, la cual recorre todas los caminos posibles de $u$ a $v$, realizando a su vez podas para mejorar la $performance$ (el mismo puede encontrarse en la p\'agina siguiente).\\\\
 
-Iniciamos el algoritmo creando una variable para guardar el mejor camino encontrado hasta el momento, la misma guarda la suma de $w_{1}$ y $w_{2}$ del camino para poder comparar con otros. Tambi\'en inicializamos otra variable para ir armando el camino que se va generando en cada llamada recursiva.
+Iniciamos el algoritmo creando una variable para guardar el mejor camino encontrado hasta el momento, que guarda la suma de $w_{1}$ y $w_{2}$ del camino para poder comparar con otros. Tambi\'en inicializamos otra variable para ir armando el camino que se va generando en cada llamada recursiva.\\
 
-El problema comienza a ser resuelto con la primer llamada a la funci\'on $backtrack$ a la cual se le pasa por parametro el grafo en donde se debe buscar el camino, el nodo de destino, la cota de $K$, un arreglo para controlar los nodos que ya fueron visitados (para no entrar en un $loop$) y las referencias al camino actual y el mejor camino encontrado.
+El problema comienza a ser resuelto con la primera llamada a la funci\'on $backtrack$ a la cual se le pasa por par\'ametro el grafo para el que se debe buscar el camino, el nodo de destino, la cota $K$, un arreglo para controlar los nodos que ya fueron visitados (para no entrar en un $loop$) y las referencias al camino actual y al mejor camino encontrado.
 
 
 \newpage
@@ -88,7 +88,10 @@ void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_
 
 \subsection{Conclusiones}
 
-A partir de la experimentaci\'on se pudo ver que un algoritmo exacto, si bien resuelve el problema, no es eficiente, ya que debe verificar todas las soluciones posibles (incluso aunque no sean todas, ya que el backtracking descarta algunas).\\
+A partir de la experimentaci\'on se pudo ver que un algoritmo exacto, si bien resuelve el problema, no es eficiente para un problema de estas caracter\'isticas, ya que verificar todas las soluciones posibles (incluso aunque no sean todas, ya que el backtracking descarta las que sabe que no son viables) lo hace muy lento.\\
 En casos como \'este puede ser una mejor opci\'on pensar y testear distintas heur\'isticas.\\
 
-En referencia a algoritmos, una heur\'istica es un algoritmo no necesariamente exacto que permite llegar a la soluci\'on a un problema en tiempo razonable. Si bien muchas veces la soluci\'on que se obtiene puede ser aproximada (por eso no necesariamente exacto), la soluci\'on alcanzada puede ser suficiente en algunos casos.\\
+Una heur\'istica es un algoritmo no necesariamente exacto que permite llegar a la soluci\'on de un problema en tiempo razonable, a diferencia de uno exacto como el probado m\'as arriba.\\
+Pero, a diferencia de un algoritmo exacto, muchas veces la soluci\'on que se obtiene es aproximada (por eso no es necesariamente exacto). Sin embargo, la soluci\'on alcanzada puede ser suficiente en algunos casos.\\\\
+
+Veamos a continuaci\'on implementaciones de distintos tipos de heur\'isticas para resolver el mismo problema.\\
