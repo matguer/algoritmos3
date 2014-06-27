@@ -7,29 +7,17 @@
 #include <math.h>
 #include "../graph.h"
 #include "../algoritmos.h"
+#include "heuristica_greedy.h"
 
 using namespace std;
 
-bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos);
-double getPeso(vector<int> camino, vector<vector<double> > pesos);
-void imprimirCamino(vector<int> camino);
-void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2);
-vector<int> unirCaminos(vector<int> camino1, vector<int> camino2);
-double k;
+heuristicaGreedy::heuristicaGreedy(){}
+heuristicaGreedy::~heuristicaGreedy(){}
 
-int main(int argc, char* argv[]){
+void heuristicaGreedy::execute() {
 		
 
 	// Leo la entrada
-	unsigned int n;
-	unsigned int m;
-	unsigned int u;
-	unsigned int v;
-	
-	unsigned int v1;
-	unsigned int v2;
-	double w1;
-	double w2;
 
 	cin >> n;
 	cin >> m;
@@ -58,7 +46,7 @@ int main(int argc, char* argv[]){
 	vector<int> camino_w2;
 	if(!pesoEnRegla(camino_w1, pesos1)) {
 		cout << "no" << endl;
-		return 0;
+		return;
 	}
 
 	unsigned int nodoActual = u;
@@ -102,7 +90,7 @@ int main(int argc, char* argv[]){
 					nodoActual = camino_w1_potencial[1]; 				
 				} else {
 					cout << "no" << endl;
-					return 0;
+					return;
 				}
 			}
 			
@@ -113,16 +101,16 @@ int main(int argc, char* argv[]){
 	caminoFinal.push_back(v);
 
 	imprimirSolucion(caminoFinal, pesos1, pesos2);
-	return 0;
+	return;
 	
 }
 
 
-bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
+bool heuristicaGreedy::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
 	return k >= getPeso(camino, pesos);
 }
 
-double getPeso(vector<int> camino, vector<vector<double> > pesos) {
+double heuristicaGreedy::getPeso(vector<int> camino, vector<vector<double> > pesos) {
 	double pesoTotal = 0.0;
 	for(unsigned int i=0; i<camino.size()-1; i++) {
 		pesoTotal += pesos[camino[i]][camino[i+1]];
@@ -130,12 +118,12 @@ double getPeso(vector<int> camino, vector<vector<double> > pesos) {
 	return pesoTotal;
 }
 
-void imprimirCamino(vector<int> camino) {
+void heuristicaGreedy::imprimirCamino(vector<int> camino) {
 	for(vector<int>::const_iterator it = camino.begin(); it != camino.end(); ++it)
 		cout << *it << " ";
 }
 
-void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2) {
+void heuristicaGreedy::imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2) {
 	double pesoTotal1 = getPeso(camino, pesos1);
 	double pesoTotal2 = getPeso(camino, pesos2);
 	
@@ -144,7 +132,7 @@ void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector
 	cout << endl;
 }
 
-vector<int> unirCaminos(vector<int> camino1, vector<int> camino2) {
+vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camino2) {
 	int size1 = camino1.size();
 	int size2 = camino2.size();
 	vector<int> caminoNuevo = vector<int>(size1 + size2 - 1, 0);
