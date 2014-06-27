@@ -28,9 +28,9 @@ class heuristicaGreedy {
 		double w1;
 		double w2;
 	public:
-		heuristicaGreedy();
+		heuristicaGreedy(double k, unsigned int n, unsigned int m, unsigned int u, unsigned int v);
 		~heuristicaGreedy();
-		void execute();
+		void execute(graph * grafo);
 };
 
 #endif
