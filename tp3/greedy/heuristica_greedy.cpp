@@ -23,6 +23,9 @@ void heuristicaGreedy::execute() {
 	cin >> m;
 	cin >> u;
 	cin >> v;
+	/* en el input los nodos van de 1 a N y el grafo los trabaja de 0 a N-1 */
+	u--;
+	v--;
 	cin >> k;
 	
 	graph * grafo = new graph(n);
@@ -32,7 +35,7 @@ void heuristicaGreedy::execute() {
 			cin >> v2;
 			cin >> w1;
 			cin >> w2;
-			grafo->add_edge(v1,v2,w1,w2);
+			grafo->add_edge(v1-1,v2-1,w1,w2);
 	}
 	
 	vector<vector<double> > pesos1 = grafo->get_weights1();
@@ -120,7 +123,7 @@ double heuristicaGreedy::getPeso(vector<int> camino, vector<vector<double> > pes
 
 void heuristicaGreedy::imprimirCamino(vector<int> camino) {
 	for(vector<int>::const_iterator it = camino.begin(); it != camino.end(); ++it)
-		cout << *it << " ";
+		cout << (*it + 1) << " ";
 }
 
 void heuristicaGreedy::imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2) {
