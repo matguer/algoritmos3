@@ -20,6 +20,9 @@ heuristicaGreedy::~heuristicaGreedy(){}
 
 void heuristicaGreedy::execute(graph * grafo) {
 
+	vector<vector<double> > pesos1_orig = grafo->get_weights1();
+	vector<vector<double> > pesos2_orig = grafo->get_weights2();
+
 	vector<vector<double> > pesos1 = grafo->get_weights1();
 	vector<vector<double> > pesos2 = grafo->get_weights2();
 	algoritmos* algoritmo = new algoritmos();
@@ -29,7 +32,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 	
 	vector<int> camino_w1 = algoritmo->reconstruirPathFloyd(u, v, floyd1);
 	vector<int> camino_w2;
-	if(!pesoEnRegla(camino_w1, pesos1)) {
+	if(!pesoEnRegla(camino_w1, pesos1_orig)) {
 		cout << "no";
 		return;
 	}
@@ -54,7 +57,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 		vector<int> camino_aux = unirCaminos(caminoFinal, camino_w2_potencial);
 		camino_aux.push_back(v);
 
-		if(pesoEnRegla(camino_aux, pesos1)) {
+		if(pesoEnRegla(camino_aux, pesos1_orig)) {
 			/* caso 1 */
 			caminoFinal = unirCaminos(caminoFinal, camino_w2_potencial);
 			finalRecorrido = true;
@@ -63,7 +66,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 			vector<int> camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd1);
 			vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);
 			camino_aux.push_back(v);
-			if(pesoEnRegla(camino_aux, pesos1)) {
+			if(pesoEnRegla(camino_aux, pesos1_orig)) {
 				/* caso 2 */
 				nodoActual = nodo1_w2;
 			} else {
@@ -85,7 +88,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 	/* por ultimo agregamos v al camino final */
 	caminoFinal.push_back(v);
 
-	imprimirSolucion(caminoFinal, pesos1, pesos2);
+	imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
 	
 	delete algoritmo;
 	

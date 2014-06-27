@@ -13,6 +13,9 @@ void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 	
 	algoritmos* algoritmo = new algoritmos();
 
+	vector<vector<double> > pesos1_orig = grafo->get_weights1();
+	vector<vector<double> > pesos2_orig = grafo->get_weights2();
+
 	vector<vector<double> > pesos1 = grafo->get_weights1();
 	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
 
@@ -21,7 +24,7 @@ void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 
 	/* Si este peso supera el K entonces no voy a encontrar uno menor,
 		por lo tanto no hay solucion */
-	if(!pesoEnRegla(camino1,pesos1,k)) {
+	if(!pesoEnRegla(camino1,pesos1_orig,k)) {
 		cout << "no";
 		return;
 	}
@@ -37,7 +40,7 @@ void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);
 		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);
 		borrarRepetidos(caminoNuevo);
-		if(pesoEnRegla(caminoNuevo,pesos1,k)) {
+		if(pesoEnRegla(caminoNuevo,pesos1_orig,k)) {
 			camino1 = caminoNuevo;
 		}
 		j++;
@@ -45,7 +48,7 @@ void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 	
 	delete algoritmo;
 
-	imprimirSolucion(camino1, pesos1, pesos2);
+	imprimirSolucion(camino1, pesos1_orig, pesos2_orig);
 }
 
 
