@@ -1,6 +1,6 @@
 \subsection{Heur\'istica constructiva Golosa}
 
-Una heur\'istica constructiva golosa es una que va armando la soluci\'on tomando, en cada paso, la mejor decisi\'on local; es decir la que conviene en ese momento, sin tener en cuenta las posibles consecuencas que esa decisi\'on puede tener en los pasos futuros.\\
+Una heur\'istica constructiva golosa es una que va armando la soluci\'on tomando, en cada paso, la mejor decisi\'on local; es decir la que conviene en ese momento, sin tener en cuenta las posibles consecuencias que esa decisi\'on puede tener en los pasos futuros.\\
 
 \subsection{Descripci\'on del algoritmo}
 
@@ -29,3 +29,103 @@ Llamaremos $n_actual$ al nodo actual, que inicialmente es $u$.\\
 
 \newpage
 \subsection{Algoritmo}
+\lstset{language=C++,
+                basicstyle=\ttfamily\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true
+}
+\begin{lstlisting}
+
+void heuristicaGreedy::execute(graph * grafo) {
+
+	vector<vector<double> > pesos1_orig = grafo->get_weights1();
+	vector<vector<double> > pesos2_orig = grafo->get_weights2();
+
+	vector<vector<double> > pesos1 = grafo->get_weights1();
+	vector<vector<double> > pesos2 = grafo->get_weights2();
+	algoritmos* algoritmo = new algoritmos();
+
+	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
+	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
+	
+	vector<int> camino_w1 = algoritmo->reconstruirPathFloyd(u, v, floyd1);
+	vector<int> camino_w2;
+	if(!pesoEnRegla(camino_w1, pesos1_orig)) {
+		cout << "no";
+		return;
+	}
+
+	unsigned int nodoActual = u;
+	bool finalRecorrido = false;
+	vector<int> caminoFinal = vector<int>();
+	while(nodoActual != v && !finalRecorrido) {
+		caminoFinal.push_back(nodoActual);
+		camino_w2 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd2);
+
+		/* tomo el primer nodo nodo_1 del camino_w2 entre el nodoActual y v */
+
+		/* primer nodo del camino_w2 */
+		int nodo1_w2 = camino_w2[1];
+		vector<int> camino_w2_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd2);
+		vector<int> camino_aux = unirCaminos(caminoFinal, camino_w2_potencial);
+		camino_aux.push_back(v);
+
+		if(pesoEnRegla(camino_aux, pesos1_orig)) {
+			/* caso 1 */
+			caminoFinal = unirCaminos(caminoFinal, camino_w2_potencial);
+			finalRecorrido = true;
+		} else {
+			/* caso 2 o 3 */
+			vector<int> camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd1);
+			vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);
+			camino_aux.push_back(v);
+			if(pesoEnRegla(camino_aux, pesos1_orig)) {
+				/* caso 2 */
+				nodoActual = nodo1_w2;
+			} else {
+				camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd1);
+				vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);
+				camino_aux.push_back(v);
+				if(pesoEnRegla(camino_aux, pesos1)) {
+					/* primer nodo del camino_w1 */
+					nodoActual = camino_w1_potencial[1]; 				
+				} else {
+					cout << "no";
+					return;
+				}
+			}
+			
+		}
+	}
+
+	/* por ultimo agregamos v al camino final */
+	caminoFinal.push_back(v);
+
+	imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
+	
+	delete algoritmo;
+	
+	return;
+	
+}
+
+vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camino2) {
+	int size1 = camino1.size();
+	int size2 = camino2.size();
+	vector<int> caminoNuevo = vector<int>(size1 + size2 - 1, 0);
+	
+	for(int i=0; i<size1; i++) {
+		caminoNuevo[i] = camino1[i];
+	}
+
+	for(int i=0; i<size2 - 1; i++) {
+		caminoNuevo[size1 + i] = camino2[i];
+	}
+
+	return caminoNuevo;
+}
+
+\end{lstlisting}
