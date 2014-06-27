@@ -1,0 +1,28 @@
+\subsection{Heur\'istica Golosa}
+
+Una heur\'istica golosa va construyendo la soluci\'on tomando en cada paso la mejor decisi\'on local.
+
+\subsection{Descripci\'on del algoritmo}
+
+Para resolver el problema mediante una heur\'istica golosa elegimos el enfoque constructivo; es decir, en el cual la soluci\'on se genera tomando la mejor elecci\'on local a cada paso.\\\\
+
+Inicialmente el algoritmo obtiene los caminos m\'inimos entre $u$ y $v$ tanto en $w_1$ como en $w_2$ utilizando el algoritmo de Floyd, el cual nos da adem\'as todos los caminos m\'inimos entre todos los nodos (todos a todos).\\
+Llamaremos a partir de ahora $c_1$ al camino m\'inimo entre $u$ y $v$ en $w_1$ y $c_2$ al camino m\'inimo entre los mismos nodos pero en $w_2$.\\
+Una vez obtenidos $c_1$ y $c_2$ verificamos que el peso de $c_1$ est\'e acotado por $K$; caso contrario, no hay soluci\'on.\\
+Pasada esta verificaci\'on, y si $c_2$ no est\'a acotado por $K$ (en cuyo caso ya tendr\'iamos una soluci\'on exacta) el algoritmo procede a modificar el camino $c_2$ para que cumpla con la cota pedida en $w_1$.\\
+Ahora, para armar el camino soluci\'on $c_s$ partimos de un camino vac\'io, al cual le iremos agregando nodos. La elecci\'on de qu\'e nodo conviene agregar a cada paso se hace de la siguiente forma:\\
+Llamaremos $n_actual$ al nodo actual, que inicialmente es $u$.\\
+
+\begin{itemize}
+\item ponemos en $c_s$ a $n_actual$. Inicialmente ser\'a el primer nodo de $c_2$, es decir $u$ o $n_actual$.
+\item mientras que $n_actual$ no sea $v$:
+\item tomamos el nodo $n_1$ (primer nodo) del camino m\'inimo en $w_2$ entre $n_actual$ y $v$.
+\item obtenemos $potencial_2$, el camino m\'inimo en $w_2$ entre $n_1$ y $v$
+\item juntamos $c_s$ con $potencial_2$, es decir que tenemos un camino de la forma $c_s$ + $potencial_2$ que va de $u$ a $v$
+\item verificamos:
+\begin{itemize}
+	\item si el peso del camino que unimos est\'a acotado por $K$: como adem\'as sabemos que es m\'inimo en $w_2$, tenemos nuestro $c_s$ armado y podemos devolverlo.
+	\item si el peso del camino m\'inimo en $w_1$ entre $n_actual$ y $v$ est\'a acotado por $K$: $n_actual$ pasa a ser $n_1$ y repito el procedimiento.  
+	\item si no se cumple ninguna de las anteriores: obtenemos $potencial_1$ el camino m\'inimo en $w_1$ desde $n_actual$ a $v$ y lo unimos a $c_s$. Si el peso de este \'ultimo est\'a acotado por $K$ ponemos en $n_actual$ al primer nodo del camino unido y repetimos. Si no, no hay soluci\'on.
+\end{itemize}
+\end{itemize}
