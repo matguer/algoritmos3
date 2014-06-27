@@ -17,5 +17,6 @@ vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSou
 void imprimirCamino(vector<int> camino);
 void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2);
 void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k);
+void borrarRepetidos(vector<int>& v);
 
 #endif

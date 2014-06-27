@@ -23,6 +23,7 @@ void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 		por lo tanto no hay solucion */
 	if(!pesoEnRegla(camino1,pesos1,k)) {
 		cout << "no";
+		return;
 	}
 
 	vector<vector<double> > pesos2 = grafo->get_weights2();
@@ -32,12 +33,12 @@ void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 		camino minimo entre ese par de nodos para w2. En cada iteracion si no se supera el 
 		valor de K entonces se realiza el reemplazo.*/
 	unsigned int j = 0;
-	while(j!=camino1.size() - 1) {
+	while(j<camino1.size() - 1) {
 		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);
 		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);
+		borrarRepetidos(caminoNuevo);
 		if(pesoEnRegla(caminoNuevo,pesos1,k)) {
 			camino1 = caminoNuevo;
-			j += tramoCamino2.size() - 2;
 		}
 		j++;
 	}
@@ -95,4 +96,28 @@ void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector
 	
 	cout << pesoTotal1 << " " << pesoTotal2 << " " << camino.size() << " ";
 	imprimirCamino(camino);
+}
+
+
+void borrarRepetidos(vector<int>& v) {
+    int i=v.size() - 1;
+    int j=i-1;
+    list<int> camino;
+    while(i>=0) {
+        camino.push_back(v[i]);
+        int aux = j;
+        while(aux >= 0) {
+            if(v[aux] == v[i]) {
+            	j = aux-1;
+            }
+            aux--;
+        }
+        i=j;
+        j--;
+    }
+    v = vector<int>(camino.size(), 0);
+    for(unsigned int x=0; x<v.size(); x++) {
+        v[x] = camino.back();
+        camino.pop_back();
+    }
 }
