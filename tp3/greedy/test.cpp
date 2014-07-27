@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 		
 		// Tests aleatorios	
 		list<int> list_n = list<int>();
-		for (int i=10; i<=100; i++) {
+		for (int i=10; i<=300; i++) {
 		  list_n.push_back(i);
 		}
 		
@@ -63,8 +63,9 @@ int main(int argc, char *argv[])
 				heuristicaGreedy* heuristica = new heuristicaGreedy(k, u-1, v-1);
 				heuristica->execute(grafo);
 				t = clock() - t;
-
-				cout << n << "\t" << (cant_aristas/2) << "\t" << t << endl;
+				
+				if((double)t > 0.0)
+					cerr << n << "\t" << (cant_aristas/2) << "\t" << t << endl;
 			
 				delete heuristica;
 				delete grafo;

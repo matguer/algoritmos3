@@ -129,6 +129,7 @@ void heuristicaGreedy::imprimirSolucion(vector<int> camino, vector<vector<double
 	
 	cout << pesoTotal1 << " " << pesoTotal2 << " " << camino.size() << " ";
 	imprimirCamino(camino);
+	cout << endl;
 }
 
 vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camino2) {
