@@ -153,7 +153,8 @@ vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camin
 
 
 \newpage
-\subsection{Familia de grafos sin soluci\'on \'optima}
+\subsection{Familia de grafos}
+\subsubsection{Familia sin soluci\'on \'optima}
 Dado que la her\'istica es golosa constructiva, en cada paso se quedar\'a con la mejor opci\'on posible para poder continuar armando la soluci\'on. En nuestro caso la mejor opci\'on posible comienza siendo el camino m\'inimo en $w_2$ desde el $nodo\_actual$ hasta $v$, luego pasa por seguir iterando desde el primer nodo del camino m\'inimo desde el primer nodo del camino anterior hasta el target en $w_1$ y sino, de ser posible, se queda con el primer nodo del camino m\'inimo desde el $nodo\_actual$ hasta $v$. 
 Como podemos ver nuestra elecci\'on est\'a limitada a los primeros nodos pertenecientes a los caminos m\'inimos en $w_1$ y $w_2$. Por lo tanto podr\'iamos identificar la siguiente familia para la cual podr\'ia no retornar una soluci\'on \'optima o ni siquiera encontrar alguna:
 
@@ -165,7 +166,6 @@ Para esta familia de grafos, no podr\'amos estimar de antemano que tan mala pued
  	\includegraphics[scale=0.6]{img/familia_greedy.jpeg}
 \end{figure}
 \end{itemize}
-
 
 \newpage
 \subsection{An\'alisis de complejidad}
