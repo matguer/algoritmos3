@@ -34,14 +34,14 @@ void heuristicaGreedy::execute(graph * grafo) {
 	/* Si el camino minimo en w1 es mayor a la cota K entonces no hay solucion */
 	vector<int> camino_w1 = algoritmo->reconstruirPathFloyd(u, v, floyd1);
 	if(!pesoEnRegla(camino_w1, pesos1_orig)) {
-		//cout << "no" << endl;
+		cout << "no" << endl;
 		return;
 	}
 
 	/* Si el camino minimo en w2 respeta la cota K entonces es la solucion exacta */
 	vector<int> camino_w2 = algoritmo->reconstruirPathFloyd(u, v, floyd2);
 	if(pesoEnRegla(camino_w1, pesos1_orig)) {
-		//imprimirSolucion(camino_w2, pesos1_orig, pesos2_orig);
+		imprimirSolucion(camino_w2, pesos1_orig, pesos2_orig);
 		delete algoritmo;
 		return;
 	}
@@ -97,7 +97,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 	/* por ultimo agregamos v al camino final */
 	caminoFinal.push_back(v);
 
-	//imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
+	imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
 	
 	delete algoritmo;
 	
