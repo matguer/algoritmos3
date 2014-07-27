@@ -165,3 +165,27 @@ Para esta familia de grafos, no podr\'amos estimar de antemano que tan mala pued
  	\includegraphics[scale=0.6]{img/familia_greedy.jpeg}
 \end{figure}
 \end{itemize}
+
+
+\newpage
+\subsection{An\'alisis de complejidad}
+Para el an\'alisis de complejidad separaremos el algoritmo en tres tramos:
+\begin{itemize}
+\item Generaci\'on de caminos m\'inimos mediante el algoritmo de Floyd:
+	Antes de comenzar a construir la soluci\'on debemos contar con los caminos m\'inimos de todos los nodos contra todos los dem\'as, tanto para el peso $w_1$ como para $w_2$. Es por eso que para esta tarea utilizamos el algoritmo de Floyd, cuya complejidad es O($n^3$). 
+\item Validaci\'on de casos borde:
+	Antes de comenzar a armar el camino corroboramos que pueda llegar a existir una soluci\'on, para esto reconstru\'imos el camino de $u$ a $v$ en $w_1$ y vemos que no supere la cota $K$. 
+	Lo mismo hacemos para la mejor soluci\'on, si al reconstruir el camino en $w_2$ tenemos un camino que respeta la cota indicada, entonces tenemos la mejor soluci\'on, por ende no es necesario seguir con el procesamiento.
+	En ambos casos utilizamos dos funciones auxiliares:
+	\begin{itemize}
+	\item reconstruirPathFloyd: Documentada en el c\'odigo con complejidad de peor caso O($n$).
+	\item pesoEnRegla: Documentada en el c\'odigo con complejidad de peor caso O($n$).
+	\end{itemize}
+\item Construcci\'on de la soluci\'on:
+	En este tramo vamos a ir armando el camino realizando a lo sumo n iteraciones, caso en el que tendr\'iamos un camino hamiltoniano que pasa por todos los nodos. Por ende, habr\'ia que ver que pasa en cada iteraci\'on y as\'i poder evaluar la complejidad del tramo completo.
+	Para esta parte tambi\'en se utiliza la funci\'on $unirCaminos$ cuya complejidad del peor caso es O($n^2$).
+	Si analizamos el c\'odigo podremos notar que se utilizan por separado las 3 funciones mencionadas al momento, por lo tanto para obtener la complejidad de este tramo tendr\'iamos que "anidar" la mayor complejidad dentro de cada iteraci\'on a la cantidad de iteraciones realizadas. En este caso ser\'ian $n$ iteraciones con complejidad O($n^2$) cada una, obteniendo una complejidad total del peor caso de este tramo de O($n^3$).
+\end{itemize}
+
+Acabamos de analizar las complejidades de 3 tramos del algoritmo que se ejecutan de manera separada, por ende si sumamos sus complejidades, O($n^3$) + O($n$) + O($n^3$), vemos que la complejidad total del peor caso de la heur\'istica es O($n^3$).
+

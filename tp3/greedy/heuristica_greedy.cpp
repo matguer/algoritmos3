@@ -49,9 +49,9 @@ void heuristicaGreedy::execute(graph * grafo) {
 	unsigned int nodoActual = u;
 	bool finalRecorrido = false;
 	vector<int> caminoFinal = vector<int>();
-	while(nodoActual != v && !finalRecorrido) {
-		caminoFinal.push_back(nodoActual);
-		camino_w2 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd2);
+	while(nodoActual != v && !finalRecorrido) {	// O(n), caso en el cual tenemos un camino hamiltoniano que pasa por todos los nodos.
+		caminoFinal.push_back(nodoActual);								// O(1)
+		camino_w2 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd2);				// O(n)
 
 		/* tomo el primer nodo nodo_1 del camino_w2 entre el nodoActual y v, 
 			- caso 1: si es menor a k el peso en w1 entonces es el minimo posible por aca en w2 y cumple w1 
@@ -61,33 +61,33 @@ void heuristicaGreedy::execute(graph * grafo) {
 		 		primer nodo del camino_w1 y repetir el procedimiento */
 
 		/* primer nodo del camino_w2 */
-		int nodo1_w2 = camino_w2[1];
-		vector<int> camino_w2_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd2);
-		vector<int> camino_aux = unirCaminos(caminoFinal, camino_w2_potencial);
-		camino_aux.push_back(v);
+		int nodo1_w2 = camino_w2[1];									// O(1)
+		vector<int> camino_w2_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd2);	// O(n)
+		vector<int> camino_aux = unirCaminos(caminoFinal, camino_w2_potencial);			// O(n^2)
+		camino_aux.push_back(v);									// O(1)
 
-		if(pesoEnRegla(camino_aux, pesos1_orig)) {
+		if(pesoEnRegla(camino_aux, pesos1_orig)) {							// O(n^2)
 			/* caso 1 */
-			caminoFinal = unirCaminos(caminoFinal, camino_w2_potencial);
-			finalRecorrido = true;
+			caminoFinal = unirCaminos(caminoFinal, camino_w2_potencial);				// O(n^2)
+			finalRecorrido = true;									// O(1)
 		} else {
 			/* caso 2 o 3 */
-			vector<int> camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd1);
-			vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);
-			camino_aux.push_back(v);
-			if(pesoEnRegla(camino_aux, pesos1_orig)) {
+			vector<int> camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd1);	// O(n)
+			vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);		// O(n^2)
+			camino_aux.push_back(v);								// O(1)
+			if(pesoEnRegla(camino_aux, pesos1_orig)) {						// O(n^2)
 				/* caso 2 */
-				nodoActual = nodo1_w2;
+				nodoActual = nodo1_w2;								// O(1)
 			} else {
-				camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd1);
-				vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);
-				camino_aux.push_back(v);
-				if(pesoEnRegla(camino_aux, pesos1)) {
+				camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd1);	// O(n)
+				vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);	// O(n^2)
+				camino_aux.push_back(v);							// O(1)
+				if(pesoEnRegla(camino_aux, pesos1)) {						// O(n^2)
 					/* primer nodo del camino_w1 */
-					nodoActual = camino_w1_potencial[1]; 				
+					nodoActual = camino_w1_potencial[1]; 					// O(1)
 				} else {
-					cout << "no";
-					return;
+					cout << "no";								// O(1)
+					return;									// O(1)
 				}
 			}
 			
@@ -106,14 +106,23 @@ void heuristicaGreedy::execute(graph * grafo) {
 }
 
 
-bool heuristicaGreedy::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
-	return k >= getPeso(camino, pesos);
+/***
+ * La funcion pesoEnRegla obtiene el peso del camino y lo compara con la cota K.
+ * La complejidad es O(n) siendo n la longitud del camino.
+ */
+bool heuristicaGreedy::pesoEnRegla(vector<int> camino, &vector<vector<double> > pesos) {
+	return k >= getPeso(camino, pesos);	// O(n)
 }
 
-double heuristicaGreedy::getPeso(vector<int> camino, vector<vector<double> > pesos) {
+
+/***
+ * La funcion getPeso recorre todos los nodos del camino pasado por parametro sumando los pesos
+ * de los mismos en un acumulador. Su complejidad es O(n) siendo n la longitud del camino.
+ */
+double heuristicaGreedy::getPeso(vector<int> camino, &vector<vector<double> > pesos) {
 	double pesoTotal = 0.0;
-	for(unsigned int i=0; i<camino.size()-1; i++) {
-		pesoTotal += pesos[camino[i]][camino[i+1]];
+	for(unsigned int i=0; i<camino.size()-1; i++) {	// O(n), caso en el cual tenemos un camino hamiltoniano que pasa por todos los nodos.
+		pesoTotal += pesos[camino[i]][camino[i+1]];	// acceso a la matriz en O(1)
 	}
 	return pesoTotal;
 }
@@ -131,6 +140,12 @@ void heuristicaGreedy::imprimirSolucion(vector<int> camino, vector<vector<double
 	imprimirCamino(camino);
 }
 
+/***
+ * La funcion unirCaminos toma los dos caminos pasados por parametros y los retorna unidos en un vector nuevo.
+ * La complejidad es entonces O(l1+l2) siendo l1 y l2 las longitudes de ambos caminos.
+ * Para nuestro problema en el peor caso los dos caminos pasan por todos los nodos, por lo tanto la complejidad
+ * del peor caso es O(n^2)
+ */
 vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camino2) {
 	int size1 = camino1.size();
 	int size2 = camino2.size();
