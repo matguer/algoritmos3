@@ -110,7 +110,7 @@ void heuristicaGreedy::execute(graph * grafo) {
  * La funcion pesoEnRegla obtiene el peso del camino y lo compara con la cota K.
  * La complejidad es O(n) siendo n la longitud del camino.
  */
-bool heuristicaGreedy::pesoEnRegla(vector<int> camino, &vector<vector<double> > pesos) {
+bool heuristicaGreedy::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
 	return k >= getPeso(camino, pesos);	// O(n)
 }
 
@@ -119,7 +119,7 @@ bool heuristicaGreedy::pesoEnRegla(vector<int> camino, &vector<vector<double> > 
  * La funcion getPeso recorre todos los nodos del camino pasado por parametro sumando los pesos
  * de los mismos en un acumulador. Su complejidad es O(n) siendo n la longitud del camino.
  */
-double heuristicaGreedy::getPeso(vector<int> camino, &vector<vector<double> > pesos) {
+double heuristicaGreedy::getPeso(vector<int> camino, vector<vector<double> > pesos) {
 	double pesoTotal = 0.0;
 	for(unsigned int i=0; i<camino.size()-1; i++) {	// O(n), caso en el cual tenemos un camino hamiltoniano que pasa por todos los nodos.
 		pesoTotal += pesos[camino[i]][camino[i+1]];	// acceso a la matriz en O(1)

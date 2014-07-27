@@ -13,7 +13,6 @@ int main(int argc, char* argv[]) {
 
 	// Leo la entrada
 	double k;
-	graph* grafo;
 	int separador;
 	unsigned int n;
 	unsigned int m;
@@ -36,13 +35,17 @@ int main(int argc, char* argv[]) {
 		cin >> m;
 		cin >> u;
 		cin >> v;
-		cin >> k;
 		
 		if(n == 0){
 			break;
 		}
 		
-		grafo = new graph(n);
+		/* en el input los nodos van de 1 a N y el grafo los trabaja de 0 a N-1 */
+		u--;
+		v--;
+		cin >> k;
+		
+		graph * grafo = new graph(n);
 		
 		for(unsigned int i = 0; i<m; i++){
 				cin >> v1;
@@ -51,15 +54,16 @@ int main(int argc, char* argv[]) {
 				cin >> w2;
 				grafo->add_edge(v1-1,v2-1,w1,w2);
 		}
-
-		heuristicabl(grafo,u-1,v-1,k);
+		
+		heuristicabl* heuristica = new heuristicabl(k, u, v);
+		heuristica->execute(grafo);
+		delete heuristica;
+		delete grafo;
 		
 		// Capturo el 0 final
 		cin >> separador;
 		cout << endl;
 		n = 0;
-		
-		delete grafo;
 		
 	}
 

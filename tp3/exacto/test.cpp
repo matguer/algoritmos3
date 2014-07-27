@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 		
 		// Tests aleatorios	
 		list<int> list_n = list<int>();
-		for (int i=23; i<=25; i++) {
+		for (int i=24; i<=25; i++) {
 		  list_n.push_back(i);
 		}
 		

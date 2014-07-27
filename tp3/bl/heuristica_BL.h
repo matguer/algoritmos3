@@ -11,12 +11,27 @@
 
 using namespace std;
 
-bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos, double k);
-double getPeso(vector<int> camino, vector<vector<double> > pesos);
-vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSource);
-void imprimirCamino(vector<int> camino);
-void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2);
-void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k);
-void borrarRepetidos(vector<int>& v);
+class heuristicabl {
+	private:
+		bool pesoEnRegla(vector<int> camino, vector<vector<double> > pesos, double k);
+		double getPeso(vector<int> camino, vector<vector<double> > pesos);
+		vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSource);
+		void imprimirCamino(vector<int> camino);
+		void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2);
+		void borrarRepetidos(vector<int>& v);
+		double k;
+		unsigned int n;
+		unsigned int u;
+		unsigned int v;
+		
+		unsigned int v1;
+		unsigned int v2;
+		double w1;
+		double w2;
 
+	public:
+		heuristicabl(double k, unsigned int u, unsigned int v);
+		~heuristicabl();
+		void execute(graph * grafo);
+};
 #endif

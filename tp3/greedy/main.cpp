@@ -58,4 +58,6 @@ int main(int argc, char* argv[]){
 		n = 0;
 		
 	}
+
+	return 0;
 }
