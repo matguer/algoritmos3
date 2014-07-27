@@ -92,7 +92,7 @@ void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_
 \subsection{An\'alisis de complejidad}
 
 Para este punto debemos indicar la complejidad del algoritmo en el peor caso, para esto es necesario primero identificar que ser\'ia un peor caso.
-Analizando el funcionamiento del backtracking, el comportamiento se orienta hacia el peor caso si en cada paso se abren la mayor cantidad de ramas, por lo tanto esto nos lleva a pensar que el peor caso ser\'a un grafo completo, ya que al estar todos los nodos conectados contra todos, en primera instancia recorreremos $n-1$ ramas, correspondientes a los $n-1$ nodos adyacentes al nodo source, luego cada una de estas se abrir\'a a los $n-2$ nodos adyacentes restantes a los que se puede conectar cada uno y as\'i sucesivamente. En este sentido la complejidad del peor caso ser\'ia O($(n-1)!$), acotado asint\'oticamente por O($n!$)
+Analizando el funcionamiento del backtracking, el comportamiento se orienta hacia el peor caso si en cada paso se abren la mayor cantidad de ramas, por lo tanto esto nos lleva a pensar que el peor caso ser\'a un grafo completo, ya que al estar todos los nodos conectados contra todos, en primera instancia recorreremos $n-1$ ramas, correspondientes a los $n-1$ nodos adyacentes al nodo source, luego cada una de estas se abrir\'a a los $n-2$ nodos adyacentes restantes a los que se puede conectar cada uno y as\'i sucesivamente. En este sentido la complejidad del peor caso ser\'ia O($(n-1)!$), acotado asint\'oticamente por O($n!$).
 
 
 %\subsection{Conclusiones}
