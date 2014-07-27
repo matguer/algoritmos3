@@ -37,9 +37,7 @@ vector<vector<int> > Algoritmos::floyd(vector<vector<double> >& matrizWeight) {
 
 
 vector<int> Algoritmos::reconstruirPathFloyd(int u, int v, vector<vector<int> > matrizNext){		// O(n)
-	
-	cerr << "u: " << u << " - v:  " << v << endl;
-	
+
 	vector<int> path = vector<int>();
 	
 	while(u != v){				// O(n), caso en el cual tenemos un camino hamiltoniano que pasa por todos los nodos.
