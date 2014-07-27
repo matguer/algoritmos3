@@ -1,11 +1,11 @@
-#include "algoritmos.h"
+#include "Algoritmos.h"
 #include <assert.h>
 
-algoritmos::algoritmos(){}
+Algoritmos::Algoritmos(){}
 
-algoritmos::~algoritmos(){}
+Algoritmos::~Algoritmos(){}
 
-vector<vector<int> > algoritmos::floyd(vector<vector<double> >& matrizWeight) {
+vector<vector<int> > Algoritmos::floyd(vector<vector<double> >& matrizWeight) {
 
 	int cant_nodos = matrizWeight.size();
 
@@ -36,7 +36,7 @@ vector<vector<int> > algoritmos::floyd(vector<vector<double> >& matrizWeight) {
 }
 
 
-vector<int> algoritmos::reconstruirPathFloyd(int u, int v, vector<vector<int> > matrizNext){
+vector<int> Algoritmos::reconstruirPathFloyd(int u, int v, vector<vector<int> > matrizNext){
 	
 	vector<int> path = vector<int>();
 	
@@ -57,7 +57,7 @@ int minimo(const list<int>* nodos) {
 	return min;
 }
 
-vector<int> algoritmos::dijkstra(graph* grafo, vector<vector<double> >& pesos, int source, int target) {
+vector<int> Algoritmos::dijkstra(graph* grafo, vector<vector<double> >& pesos, int source, int target) {
 
 	int cant_nodos = grafo->get_cant_nodos();
 	vector<int>* predecesores = new vector<int>(cant_nodos,source);

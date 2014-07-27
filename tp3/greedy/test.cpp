@@ -25,10 +25,9 @@ int main(int argc, char *argv[])
 		
 		// Tests aleatorios	
 		list<int> list_n = list<int>();
-		list_n.push_back(10);
-		list_n.push_back(15);
-		list_n.push_back(20);
-		list_n.push_back(25);
+		for (int i=10; i<=100; i++) {
+		  list_n.push_back(i);
+		}
 		
 		for(list<int>::iterator it_n = list_n.begin(); it_n != list_n.end(); it_n++){
 			

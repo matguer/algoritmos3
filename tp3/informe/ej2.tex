@@ -5,7 +5,9 @@ Como algoritmo exacto para resolver el problema se eligi\'o la t\'ecnica de prog
 Iniciamos el algoritmo creando una variable para guardar el mejor camino encontrado hasta el momento, que guarda la suma de $w_{1}$ y $w_{2}$ del camino para poder comparar con otros. Tambi\'en inicializamos otra variable para ir armando el camino que se va generando en cada llamada recursiva.\\
 
 El problema comienza a ser resuelto con la primera llamada a la funci\'on $backtrack$ a la cual se le pasa por par\'ametro el grafo para el que se debe buscar el camino, el nodo de destino, la cota $K$, un arreglo para controlar los nodos que ya fueron visitados (para no entrar en un $loop$) y las referencias al camino actual y al mejor camino encontrado.
+\\
 
+Siguiendo con la t\'ecnica de Backtracking, la idea es tomar un nodo y recorrer todos los caminos posibles por cada nodo adyacente de manera recursiva, es decir, comenzamos por el nodo source, en este caso $u$, para cada uno de sus nodos adyacentes abrimos una rama que va a intentar llegar al nodo target, $v$ para nosotros, abriendo nuevas ramas a trav\'es de sus nodos adyacentes. Repitiendo recursivamente este procedimiento, logramos obtener todas los caminos de $u$ a $v$ posibles, quedandonos con el de menor costo en $w_{2}$ de los acotados por $K$.
 
 \newpage
 \subsection{Algoritmo}
@@ -85,6 +87,13 @@ void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_
 	}
 }
 \end{lstlisting}
+
+\newpage
+\subsection{An\'alisis de complejidad}
+
+Para este punto debemos indicar la complejidad del algoritmo en el peor caso, para esto es necesario primero identificar que ser\'ia un peor caso.
+Analizando el funcionamiento del backtracking, el comportamiento se orienta hacia el peor caso si en cada paso se abren la mayor cantidad de ramas, por lo tanto esto nos lleva a pensar que el peor caso ser\'a un grafo completo, ya que al estar todos los nodos conectados contra todos, en primera instancia recorreremos $n-1$ ramas, correspondientes a los $n-1$ nodos adyacentes al nodo source, luego cada una de estas se abrir\'a a los $n-2$ nodos adyacentes restantes a los que se puede conectar cada uno y as\'i sucesivamente. En este sentido la complejidad del peor caso ser\'ia O($(n-1)!$), acotado asint\'oticamente por O($n!$)
+
 
 %\subsection{Conclusiones}
 

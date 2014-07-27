@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <math.h>
 #include "../graph.h"
-#include "../algoritmos.h"
+#include "../Algoritmos.h"
 #include "heuristica_greedy.h"
 
 using namespace std;
@@ -25,15 +25,24 @@ void heuristicaGreedy::execute(graph * grafo) {
 
 	vector<vector<double> > pesos1 = grafo->get_weights1();
 	vector<vector<double> > pesos2 = grafo->get_weights2();
-	algoritmos* algoritmo = new algoritmos();
+	Algoritmos* algoritmo = new Algoritmos();
 
 	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
 	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
 	
+
+	/* Si el camino minimo en w1 es mayor a la cota K entonces no hay solucion */
 	vector<int> camino_w1 = algoritmo->reconstruirPathFloyd(u, v, floyd1);
-	vector<int> camino_w2;
 	if(!pesoEnRegla(camino_w1, pesos1_orig)) {
-		cout << "no";
+		//cout << "no" << endl;
+		return;
+	}
+
+	/* Si el camino minimo en w2 respeta la cota K entonces es la solucion exacta */
+	vector<int> camino_w2 = algoritmo->reconstruirPathFloyd(u, v, floyd2);
+	if(pesoEnRegla(camino_w1, pesos1_orig)) {
+		//imprimirSolucion(camino_w2, pesos1_orig, pesos2_orig);
+		delete algoritmo;
 		return;
 	}
 
@@ -45,7 +54,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 		camino_w2 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd2);
 
 		/* tomo el primer nodo nodo_1 del camino_w2 entre el nodoActual y v, 
-			- caso 1: si es menor a k el peso en w1 entonce es el minimo posible por aca en w2 y cumple w1 
+			- caso 1: si es menor a k el peso en w1 entonces es el minimo posible por aca en w2 y cumple w1 
 		 	- caso 2: sino me fijo si en el peor de los casos, siguiendo por nodo_1 y a partir de ahi hacer
 		 		el camino_w1 cumple que el peso sea menor a k, si es asi avanzo un nodo y repito el procedimiento
 		 	- caso 3: si ninguna de las dos condiciones anteriores se cumple entonces me veo obligado a avanzar al
@@ -88,7 +97,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 	/* por ultimo agregamos v al camino final */
 	caminoFinal.push_back(v);
 
-	imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
+	//imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
 	
 	delete algoritmo;
 	

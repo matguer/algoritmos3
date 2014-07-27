@@ -4,14 +4,14 @@
 #include <cmath>
 #include <vector>
 #include "../graph.h"
-#include "../algoritmos.h"
+#include "../Algoritmos.h"
 #include "heuristica_BL.h"
 
 using namespace std;
 
 void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
 	
-	algoritmos* algoritmo = new algoritmos();
+	Algoritmos* algoritmo = new Algoritmos();
 
 	vector<vector<double> > pesos1_orig = grafo->get_weights1();
 	vector<vector<double> > pesos2_orig = grafo->get_weights2();

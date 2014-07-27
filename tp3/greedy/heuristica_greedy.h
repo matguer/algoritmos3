@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "../graph.h"
-#include "../algoritmos.h"
+#include "../Algoritmos.h"
 
 using namespace std;
 

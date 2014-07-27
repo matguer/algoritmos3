@@ -4,11 +4,11 @@
 #include <vector>
 #include "graph.h"
 
-class algoritmos
+class Algoritmos
 {
 	public:
-		algoritmos();
-		~algoritmos();
+		Algoritmos();
+		~Algoritmos();
 		vector<vector<int> > floyd(vector<vector<double> >& matrizWeight);
 		vector<int> reconstruirPathFloyd(int u, int v, vector<vector<int> > matrizNext);
 		vector<int> dijkstra(graph* grafo, vector<vector<double> >& pesos, int source, int target);
