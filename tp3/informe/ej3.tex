@@ -189,3 +189,75 @@ Para el an\'alisis de complejidad separaremos el algoritmo en tres tramos:
 
 Acabamos de analizar las complejidades de 3 tramos del algoritmo que se ejecutan de manera separada, por ende si sumamos sus complejidades, O($n^3$) + O($n$) + O($n^2$), vemos que la complejidad total del peor caso de la heur\'istica es O($n^3$).
 
+Para redondear esta idea veamos el comportamiento de la heur\'istica gr\'aficamente y corroborar as\'i su comportamiento asint\'otico:
+
+\subsection{Gr\'afico de complejidad}
+\begin{figure}[!hp]
+	\centering
+ 	\includegraphics[scale=0.3]{img/greedy_time.png}
+\end{figure}
+
+
+
+
+\newpage
+\subsection{Experimentaci\'on}
+
+Para la experimentaci\'on decidimos armar casos de test siguiendo los siguientes criterios:
+
+\begin{itemize}
+\item Generaremos grafos de entre 10 y 300 nodos
+\item Generamos un \'arbol para tener al menos un camino entre el nodo source y el target. El mismo no es necesariamente soluc\'on del problema.
+\item Las aristas del grafo ir\'an pasando de tener menos del 5\% de aristas de un completo, incrementando el porcentaje en 5\%, hasta llegar a tener m\'as del 95\%.
+\item los pesos son asignados de manera random acotandolos a todos por el valor de $k$.
+\end{itemize}
+
+
+De esta manera realizamos un total de 28809 ejecuciones, abarcando as\'i un gran espectro de grafos. Veamos entonces como se ha comportado la heur\'istica durante esta experimentaci\'on:
+
+\subsection{Gr\'afico ejecuciones}
+\begin{figure}[!hp]
+	\centering
+ 	\includegraphics[scale=0.7]{img/greedy_soluciones.png}
+\end{figure}
+
+
+
+Como podemos observar, en el 88,74\% de los casos se han encontrado soluciones.
+Uno estar\'ia tentado a decir que el otro 11,26\% son casos en los que no ha encontrado una soluci\'on, pero si nos ponemos a pensar vemos que el grafo no necesariamente ten\'ia una soluci\'on factible, por lo tanto ese casi 12\% restante se debe repartir entre casos en los que no hab\'ia soluci\'on y los casos en los que s\'i, efectivamente, la heur\'istica no ha podido encontrar un camino factible.
+
+Por este m\'otivo decidimos, hasta donde fue viable, comparar los resultados de la heur\'istica con los del algoritmo exacto. 
+Para estas pruebas armamos grafos de entre 10 y 18 nodos con un porcentaje de completitud oscilando al igual que en la generaci\'on de test anterior, de menos del 5\% a m\'as de 95\%.
+
+Veamos entonces los resultados obtenidos:
+\\
+
+
+\begin{tabular}{ | l | l | l | l | l | }
+\hline
+ejecuciones & sin coluci\'on & con soluci\'on & iguales & distintos \\
+\hline
+179 & 68 & 111 & 74 & 37 \\
+\hline
+\end{tabular}
+
+
+Aclaraci\'on: los aciertos y los desaciertos no incluyen los casos en los que ninguno encontr\'o soluci\'on.
+Como podemos ver aqu\'i, de las 179 ejecuciones hab\'ia 111 casos con soluci\'on factible, de los cuales en 74 se ha encontrado la misma soluci\'on que el algoritmo exacto, lo que representa un 67\%. 
+El porcentaje de aciertos es relativamente alto, pero veamos tambi\'en el tiempo que les lleva tanto al algoritmo exacto como la heur\'istica obtener una soluc\'on y veremos si vale la pena o no.
+Debido a que la heur\'istica es muy r\'apida solo se han podido obtener los tiempos de pocos casos, en el resto la librer\'ia $ctime$ de C++ no lo llega a registrar. Veamos estos casos entonces:
+
+\begin{tabular}{ | l | l | l | l | }
+\hline
+nodos & aristas & tiempo heur\'istica & tiempo algoritmo exacto \\
+\hline
+10 & 32 & 10000	& 10000 \\
+12 & 52 & 10000 & 20000 \\
+15 & 8 & 10000 & 20000 \\
+16 & 28 & 10000 & 20000 \\
+17 & 82 & 10000 & 4720000 \\
+\hline
+\end{tabular}
+
+Como podemos ver en grafos chicos los valores son similares, pero a medida que se van agrandando los grafos las diferencias son abismales.
+Cabe aclarar que para todos estos casos mostrados hubo soluci\'on en ambos casos.
