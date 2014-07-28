@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 		
 		// Tests aleatorios	
 		list<int> list_n = list<int>();
-		for (int i=25; i<=25; i++) {
+		for (int i=10; i<=18; i++) {
 		  list_n.push_back(i);
 		}
 		
@@ -80,8 +80,19 @@ int main(int argc, char *argv[])
 				clock_t t = clock();
 				backtrack(grafo, v-1, k, nodos_visitados, camino_actual, mejorcamino, posibles_caminos);
 				t = clock() - t;
+				if((*mejorcamino.camino).size()>0){
+					cout << mejorcamino.w1_total << " " << mejorcamino.w2_total;
+					cout << " " << (*mejorcamino.camino).size();
+					for(list<int>::iterator f = (*mejorcamino.camino).begin(); f != (*mejorcamino.camino).end(); f++){
+						cout << " " << (*f+1);
+					}
+				}else{
+					cout << "no";
+				}
+				cout << endl;
 
-				cout << n << "\t" << (cant_aristas/2) << "\t" << t << endl;
+				if((double)t > 0.0)
+					cerr << n << "\t" << (cant_aristas/2) << "\t" << t << endl;
 			
 				delete grafo;
 				
