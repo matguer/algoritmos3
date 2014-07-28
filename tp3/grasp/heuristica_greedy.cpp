@@ -18,7 +18,7 @@ heuristicaGreedy::heuristicaGreedy(double k, unsigned int u, unsigned int v){
 }
 heuristicaGreedy::~heuristicaGreedy(){}
 
-void heuristicaGreedy::execute(graph * grafo) {
+vector<int> heuristicaGreedy::execute(graph * grafo, int seed) {
 
 	vector<vector<double> > pesos1_orig = grafo->get_weights1();
 	vector<vector<double> > pesos2_orig = grafo->get_weights2();
@@ -30,25 +30,23 @@ void heuristicaGreedy::execute(graph * grafo) {
 	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
 	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
 	
+	vector<int> caminoFinal = vector<int>();
 
 	/* Si el camino minimo en w1 es mayor a la cota K entonces no hay solucion */
 	vector<int> camino_w1 = algoritmo->reconstruirPathFloyd(u, v, floyd1);
 	if(!pesoEnRegla(camino_w1, pesos1_orig)) {
-		cout << "no" << endl;
-		return;
+		return caminoFinal;
 	}
 
 	/* Si el camino minimo en w2 respeta la cota K entonces es la solucion exacta */
 	vector<int> camino_w2 = algoritmo->reconstruirPathFloyd(u, v, floyd2);
 	if(pesoEnRegla(camino_w2, pesos1_orig)) {
-		imprimirSolucion(camino_w2, pesos1_orig, pesos2_orig);
-		delete algoritmo;
-		return;
+		return camino_w2;
 	}
 
 	unsigned int nodoActual = u;
 	bool finalRecorrido = false;
-	vector<int> caminoFinal = vector<int>();
+	
 	while(nodoActual != v && !finalRecorrido) {	// O(n), caso en el cual tenemos un camino hamiltoniano que pasa por todos los nodos.
 		caminoFinal.push_back(nodoActual);								// O(1)
 		camino_w2 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd2);				// O(n)
@@ -88,8 +86,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 					/* primer nodo del camino_w1 */
 					nodoActual = nodo1_w1; 							// O(1)
 				} else {
-					cout << "no";								// O(1)
-					return;									// O(1)
+					return vector<int>();									// O(1)
 				}
 			}
 			
@@ -101,12 +98,9 @@ void heuristicaGreedy::execute(graph * grafo) {
 		caminoFinal.push_back(v);
 
 	borrarRepetidos(caminoFinal);
-	imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
-	
 	delete algoritmo;
-	
-	return;
-	
+	return caminoFinal;
+		
 }
 
 

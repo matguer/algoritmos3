@@ -16,37 +16,18 @@ heuristicabl::heuristicabl(double k, unsigned int u, unsigned int v){
 }
 heuristicabl::~heuristicabl(){}
 
-void heuristicabl::execute(graph * grafo) {
+vector<int> heuristicabl::execute(graph * grafo, vector<int>& solucion_inicial) {
 
 	vector<vector<double> > pesos1_orig = grafo->get_weights1();
 	vector<vector<double> > pesos2_orig = grafo->get_weights2();
 	
 	Algoritmos* algoritmo = new Algoritmos();
 
-	vector<vector<double> > pesos1 = grafo->get_weights1();
-	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
-
-	/* Generacion del camino minimo para w1 */
-	vector<int> camino1 = algoritmo->reconstruirPathFloyd(u,v,floyd1);
+	vector<int> solucion_final = solucion_inicial;
 	
-	/* Si este peso supera el K entonces no voy a encontrar uno menor,
-		por lo tanto no hay solucion */
-	if(!pesoEnRegla(camino1,pesos1_orig,k)) {
-		cout << "no" << endl;
-		return;
-	}
-
 	vector<vector<double> > pesos2 = grafo->get_weights2();
 	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
-	
 	vector<int> camino2 = algoritmo->reconstruirPathFloyd(u,v,floyd2);
-
-	/* Si este peso no supera el K entonces es la solución óptima */
-	if(pesoEnRegla(camino2,pesos1_orig,k)) {
-		imprimirSolucion(camino2, pesos1_orig, pesos2_orig);
-		delete algoritmo;
-		return;
-	}
 	
 	/* Se recorre todo el camino c1 y para cada par de nodos se va reemplazando el tramo por el 
 		camino minimo entre ese par de nodos para w2. En cada iteracion si no se supera el 
@@ -54,19 +35,18 @@ void heuristicabl::execute(graph * grafo) {
 	   Como vemos la complejidad de este tramo de procesamiento se corresponde a n iteraciones de 
 	   acciones que en el peor caso demora O(n^2), por ende la complejidad total sera O(n^3).
 	*/
-	for(unsigned int j=0; j<camino1.size()-1; j++) {							// O(n)
-		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);	// O(n)
-		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);				// O(n)
+	for(unsigned int j=0; j<solucion_final.size()-1; j++) {							// O(n)
+		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(solucion_final[j],solucion_final[j+1], floyd2);	// O(n)
+		vector<int> caminoNuevo = switchTramo(solucion_final, tramoCamino2, j);				// O(n)
 		borrarRepetidos(caminoNuevo);									// O(n^2)
 		if(pesoEnRegla(caminoNuevo,pesos1_orig,k)) {							// O(n)
-			camino1 = caminoNuevo;									// O(n)
+			solucion_final = caminoNuevo;									// O(n)
 		}
 	}
 	
 	delete algoritmo;
 
-	imprimirSolucion(camino1, pesos1_orig, pesos2_orig);
-	return;
+	return solucion_final;
 }
 
 
@@ -74,7 +54,7 @@ void heuristicabl::execute(graph * grafo) {
  * La funcion pesoEnRegla obtiene el peso del camino y lo compara con la cota K.
  * La complejidad es O(n) siendo n la longitud del camino.
  */
-bool heuristicabl::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
+bool heuristicabl::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos, double k) {
 	return k >= getPeso(camino, pesos);	// O(n)
 }
 
