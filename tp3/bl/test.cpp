@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 				heuristica->execute(grafo);
 				t = clock() - t;
 				
-				//if((double)t > 0.0)
+				if((double)t > 0.0)
 					cerr << n << "\t" << (cant_aristas/2) << "\t" << t << endl;
 			
 				delete heuristica;
