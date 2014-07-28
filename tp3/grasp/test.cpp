@@ -1,5 +1,6 @@
 #include "../graph.h"
 #include "heuristica_grasp.h"
+#include "heuristica_greedy.h"
 #include <time.h>
 #include <cmath>
 
@@ -11,7 +12,6 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	int seed = (int) *argv[1]; // Semilla para los rand()
-	int iteraciones = (int) *argv[2]; // Cantidad de iteraciones para grasp
 	int cant_aristas = 0;
 	int u = 1;
 	int n = 0;
@@ -59,19 +59,24 @@ int main(int argc, char *argv[])
 						}
 					}
 				}
-
-				clock_t t = clock();
-				heuristicaGrasp* heuristica = new heuristicaGrasp(k, u-1, v-1);
-				heuristica->execute(grafo, seed, iteraciones);
-				t = clock() - t;
 				
-				if((double)t > 0.0)
-					cerr << n << "\t" << (cant_aristas/2) << "\t" << t << endl;
+				vector<vector<double> > pesos1 = grafo->get_weights1();
+				vector<vector<double> > pesos2 = grafo->get_weights2();
+				
+				cout << n << " " << cant_aristas*2 << " " << u << " " << v << " " << k << endl;
+				for(int i = 0; i<n; i++){
+					list<int> ady = *(grafo->get_adyacentes(i));
+					for(list<int>::iterator it = ady.begin(); it != ady.end(); ++it) {
+						int nodo = *it;
+						cout << i+1 << " " << nodo+1 << " " << pesos1[i][nodo] << " " << pesos2[i][nodo] << endl;
+					}
+				}
+				cout << "SEP" << endl;
 			
-				delete heuristica;
 				delete grafo;
 				
 			}	
+			
 		}
 	}
 	

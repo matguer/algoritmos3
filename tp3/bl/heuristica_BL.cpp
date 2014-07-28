@@ -74,7 +74,7 @@ void heuristicabl::execute(graph * grafo) {
  * La funcion pesoEnRegla obtiene el peso del camino y lo compara con la cota K.
  * La complejidad es O(n) siendo n la longitud del camino.
  */
-bool heuristicabl::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
+bool heuristicabl::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos, double k) {
 	return k >= getPeso(camino, pesos);	// O(n)
 }
 

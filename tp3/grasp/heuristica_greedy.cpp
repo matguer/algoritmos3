@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <assert.h>
-#include <math.h>
+#include <cmath>
 #include "../graph.h"
 #include "../Algoritmos.h"
 #include "heuristica_greedy.h"
@@ -43,60 +43,50 @@ vector<int> heuristicaGreedy::execute(graph * grafo, int seed) {
 	if(pesoEnRegla(camino_w2, pesos1_orig)) {
 		return camino_w2;
 	}
-
-	unsigned int nodoActual = u;
-	bool finalRecorrido = false;
 	
-	while(nodoActual != v && !finalRecorrido) {	// O(n), caso en el cual tenemos un camino hamiltoniano que pasa por todos los nodos.
-		caminoFinal.push_back(nodoActual);								// O(1)
-		camino_w2 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd2);				// O(n)
+	srand(seed);
 
-		/* tomo el primer nodo nodo_1 del camino_w2 entre el nodoActual y v, 
-			- caso 1: si es menor a k el peso en w1 entonces es el minimo posible por aca en w2 y cumple w1 
-		 	- caso 2: sino me fijo si en el peor de los casos, siguiendo por nodo_1 y a partir de ahi hacer
-		 		el camino_w1 cumple que el peso sea menor a k, si es asi avanzo un nodo y repito el procedimiento
-		 	- caso 3: si ninguna de las dos condiciones anteriores se cumple entonces me veo obligado a avanzar al
-		 		primer nodo del camino_w1 y repetir el procedimiento */
-
-		/* primer nodo del camino_w2 */
-		int nodo1_w2 = camino_w2[1];									// O(1)
-		vector<int> camino_w2_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd2);	// O(n)
-		vector<int> camino_aux = unirCaminos(caminoFinal, camino_w2_potencial);			// O(n^2)
-		//camino_aux.push_back(v);									// O(1)
-
-		if(pesoEnRegla(camino_aux, pesos1_orig)) {							// O(n^2)
-			/* caso 1 */
-			caminoFinal = unirCaminos(caminoFinal, camino_w2_potencial);				// O(n^2)
-			finalRecorrido = true;									// O(1)
-		} else {
-			/* caso 2 o 3 */
-			vector<int> camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd1);	// O(n)
-			vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);		// O(n^2)
-			//camino_aux.push_back(v);								// O(1)
-			if(pesoEnRegla(camino_aux, pesos1_orig)) {						// O(n^2)
-				/* caso 2 */
-				nodoActual = nodo1_w2;								// O(1)
-			} else {
-				camino_w1 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd1);		// O(n)
-				int nodo1_w1 = camino_w1[1];
-				camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w1, v, floyd1);	// O(n)
-				vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);	// O(n^2)
-				//camino_aux.push_back(v);							// O(1)
-				if(pesoEnRegla(camino_aux, pesos1_orig)) {					// O(n^2)
-					/* primer nodo del camino_w1 */
-					nodoActual = nodo1_w1; 							// O(1)
-				} else {
-					return vector<int>();									// O(1)
+	int cant_nodos = grafo->get_cant_nodos();
+	int visitados[cant_nodos];
+	for(int i=0; i<cant_nodos; i++){
+		visitados[i] = 0;
+	}
+	
+	unsigned int nodoActual = u;
+	while(nodoActual != v) {	
+		
+		caminoFinal.push_back(nodoActual);								
+		visitados[nodoActual] = 1;
+		
+		vector<int> nodos_potenciales;
+		list<int> adyacentes = *(grafo->get_adyacentes(nodoActual));
+		
+		for(list<int>::const_iterator it = adyacentes.begin(); it != adyacentes.end(); ++it) {
+			unsigned int nodo = *it;
+			if(visitados[nodo] == 0) {
+				vector<int> camino_temp = algoritmo->reconstruirPathFloyd(nodo, v, floyd1);
+				if(pesoEnRegla(unirCaminos(caminoFinal, camino_temp), pesos1_orig)){
+					if(nodo == v) {
+						nodoActual = v;
+						break;
+					} else {
+						nodos_potenciales.push_back(nodo);
+					}
 				}
 			}
-			
+		}
+		
+		if(nodoActual != v) {
+			if(nodos_potenciales.size() == 0) {
+				/* no encontro solucion */
+				return vector<int>();
+			}
+			int nodo_elegido = rand() % nodos_potenciales.size();	
+			nodoActual = nodos_potenciales[nodo_elegido];
 		}
 	}
 
-	/* por ultimo agregamos v al camino final */
-	if(!finalRecorrido)
-		caminoFinal.push_back(v);
-
+	caminoFinal.push_back(nodoActual);
 	borrarRepetidos(caminoFinal);
 	delete algoritmo;
 	return caminoFinal;

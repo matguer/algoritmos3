@@ -57,7 +57,6 @@ int main(int argc, char* argv[]){
 		
 		// Capturo el 0 final
 		cin >> separador;
-		cout << endl;
 		n = 0;
 		
 	}
