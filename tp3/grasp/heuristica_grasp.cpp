@@ -26,22 +26,22 @@ void heuristicaGrasp::execute(graph * grafo, int seed, int iteraciones) {
 	heuristicabl* heu_bl = new heuristicabl(k, u, v);
 	heuristicaGreedy* heu_greedy = new heuristicaGreedy(k, u, v);
 	
-	vector<int> solucion_inicial;
+	vector<int> solucion_inicial = heu_greedy->execute(grafo, seed);			// O(n^3)
 	vector<int> solucion_parcial;
 	vector<int> solucion_final;
 	int peso_solucion_final = (int)INFINITY;
 	
 	/* comienzan las iteraciones en busca de la mejor solucion */
-	for(int i=0; i<iteraciones; i++) {
-		
-		solucion_inicial = heu_greedy->execute(grafo, seed);	
-		
-		if(solucion_inicial.size() > 0) {
-			solucion_parcial = heu_bl->execute(grafo, solucion_inicial);
-			int peso_solucion_parcial = getPeso(solucion_parcial, pesos1_orig);
-			if(peso_solucion_parcial < peso_solucion_final) {
-				solucion_final = solucion_parcial;
-				peso_solucion_final = peso_solucion_parcial;
+	for(int i=0; i<iteraciones; i++) {							// O(k), siendo k la cantidad de iteraciones
+	/* K iteraciones con complejidad anidada O(n^3), quedando asi una complejidad del peor 
+	 * caso de O(k*(n^3))
+	 */		
+		if(solucion_inicial.size() > 0) {						// O(1)
+			solucion_parcial = heu_bl->execute(grafo, solucion_inicial);		// O(n^3)
+			int peso_solucion_parcial = getPeso(solucion_parcial, pesos1_orig);	// O(n)
+			if(peso_solucion_parcial < peso_solucion_final) {			// O(1)
+				solucion_final = solucion_parcial;				// O(n)
+				peso_solucion_final = peso_solucion_parcial;			// O(1)
 			}
 		}
 		

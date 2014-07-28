@@ -1,0 +1,199 @@
+\section{Heur\'istica GRASP}
+
+GRASP, Greedy Randomized Adaptative Search Procedure, es una combinaci\'on entre una heur\'istica golosa "aleatorizada" y un procedimiento de b\'usqueda local. La idea del algoritmo es la siguiente:
+
+\begin{itemize}
+\item Mientras no se alcance el criterio de terminaci\'on
+\item Obtener $s \in S$ mediante una heur\'istica golosa "aleatorizada"
+\item Mejorar s mediante la b\'usqueda local
+\item Recordar la mejor soluci\'on obtenida hasta el momento
+\end{itemize}
+
+\subsection{Descripci\'on del algoritmo}
+
+Toda heur\'istica GRASP, debido a su modo de funcionamiento, debe disponer de una criterio de terminaci\'on que puede ser completamente arbitrario siempre y cuando tenga sentido dentro del algoritmo. Algunos criterios v\'alidos pueden ser:
+
+\begin{itemize}
+\item Si no se encuentra una mejora en las \'ultimas k iteraciones
+\item Se cumplen K iteraciones fijadas de antemano
+\item Se obtuvo una soluci\'on cercana a una cota conocida
+\item Se obtuvo muchas veces la misma soluci\'on
+\end{itemize}
+
+En nuestro caso decidimos fijar un n\'umero K de iteraciones antes de cortar.
+
+Para poder implementar la heur\'isca GRASP es necesario contar con una implementaci\'on de una heur\'istica greedy y otra de b\'usqueda local.
+Las mismas ser\'an invocadas durante el procesamiento. Veamos entnces las implementaciones de las mismas:
+
+\subsubsection{Heur\'istica golosa}
+La heur\'istica golosa utiliza por GRASP debe ser randomizada, es decir que en cada paso ya no va a elegir la mejor opci\'on a nivel local, sino que se va a armar una RCL (Restrict Candidates List) y de all\'i se obtendr\'a el candidato.
+
+Nuestra primera intenci\'on fue utilizar la heur\'istica golosa ya implementada y armar en cada paso la RCL con los nodos candidatos a continuar con el procesamiento y de all\'i realizar la elecci\'on de un nodo random de la lista, pero en la misma el espectro de opciones disponibles en cada paso estaba limitada a dos nodos \'unicamente. 
+Por ende nos pareci\'o indispensable implementar una nueva en la que el tama\~no de la RCL pueda ser mayor.
+
+La nueva heur\'istica tambi\'en es constructiva, por ende en cada paso vamos a ir agregando un nodo a la soluci\'on S.
+
+Expliquemos entonces como funciona esta nueva heur\'istica greedy.
+
+\begin{itemize}
+\item Marcamos como $nodoActual$ al nodo source
+\item Comenzanzamos las iteraciones
+\item Elegimos de entre todos los nodos adyacentes al $nodoActual$ aquellos que, de incorporarlos a S, el peso de S en $w_1$ a\'un respete la cota $K$.
+Estos ser\'an los nodos que integraran la RCL y de donde obtendremos el pr\'oximo de S.
+\item Elegimos de manera random un nodo $v_i$ de la lista siempre y cuando el mismo no se encuentre ya en el camino. Si bien de esta manera es posible que lleguemos m\'as frecuentemente a "callejones sin salida", es decir que estemos parados en un nodo del cual ya no podramos escoger ning\'un adyacente porque ya han sido visitados, nos evitamos la generaci\'on de loops que podr\'ian llegar a ser infinitos.
+\item Luego simplemente marcamos a $v_i$ como $nodoActual$ y continuamos iterando hasta tratar de llegar al nodo target. En el caso de no disponer de un nodo adyacente v\'alido para poder continuar el algoritmo se detendr\'a.
+\end{itemize}
+
+
+\subsubsection{Heur\'istica de b\'usqueda local}
+En este caso si nos pareci\'o oportuno utilizar la implementaci\'on que ya dispon\'iamos ya que no encontramos ning\'un impedimento para usarla, como si nos hab\'ia pasado en el caso de la greedy, donde "aleatorizarla" no habr\'ia tenido mucho sentido ni consecuencias.
+
+
+\subsection{Algoritmo}
+
+\subsubsection{Heur\'istica GRASP}
+
+\begin{lstlisting}
+void heuristicaGrasp::execute(graph * grafo, int seed, int iteraciones) {
+	
+	vector<vector<double> > pesos1_orig = grafo->get_weights1();
+	vector<vector<double> > pesos2_orig = grafo->get_weights2();
+	
+	heuristicabl* heu_bl = new heuristicabl(k, u, v);
+	heuristicaGreedy* heu_greedy = new heuristicaGreedy(k, u, v);
+	
+	vector<int> solucion_inicial;
+	vector<int> solucion_parcial;
+	vector<int> solucion_final;
+	int peso_solucion_final = (int)INFINITY;
+	
+	/* comienzan las iteraciones en busca de la mejor solucion */
+	for(int i=0; i<iteraciones; i++) {
+		
+		solucion_inicial = heu_greedy->execute(grafo, seed);	
+		
+		if(solucion_inicial.size() > 0) {
+			solucion_parcial = heu_bl->execute(grafo, solucion_inicial);
+			int peso_solucion_parcial = getPeso(solucion_parcial, pesos1_orig);
+			if(peso_solucion_parcial < peso_solucion_final) {
+				solucion_final = solucion_parcial;
+				peso_solucion_final = peso_solucion_parcial;
+			}
+		}
+		
+		
+	}
+	
+	if(solucion_final.size() > 0) {
+		imprimirSolucion(solucion_final, pesos1_orig, pesos2_orig);
+	} else {
+		cout << "no" << endl;
+	}
+	
+	delete heu_bl;
+	delete heu_greedy;
+	
+	return;
+	
+}
+
+\end{lstlisting}
+
+
+\subsubsection{Heur\'istica greedy nueva}
+
+\begin{lstlisting}
+
+vector<int> heuristicaGreedy::execute(graph * grafo, int seed) {
+
+	vector<vector<double> > pesos1_orig = grafo->get_weights1();
+	vector<vector<double> > pesos2_orig = grafo->get_weights2();
+
+	vector<vector<double> > pesos1 = grafo->get_weights1();
+	vector<vector<double> > pesos2 = grafo->get_weights2();
+	Algoritmos* algoritmo = new Algoritmos();
+
+	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
+	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
+	
+	vector<int> caminoFinal = vector<int>();
+
+	/* Si el camino minimo en w1 es mayor a la cota K entonces no hay solucion */
+	vector<int> camino_w1 = algoritmo->reconstruirPathFloyd(u, v, floyd1);
+	if(!pesoEnRegla(camino_w1, pesos1_orig)) {
+		return caminoFinal;
+	}
+
+	/* Si el camino minimo en w2 respeta la cota K entonces es la solucion exacta */
+	vector<int> camino_w2 = algoritmo->reconstruirPathFloyd(u, v, floyd2);
+	if(pesoEnRegla(camino_w2, pesos1_orig)) {
+		return camino_w2;
+	}
+	
+	srand(seed);
+
+	int cant_nodos = grafo->get_cant_nodos();
+	int visitados[cant_nodos];
+	for(int i=0; i<cant_nodos; i++){
+		visitados[i] = 0;
+	}
+	
+	unsigned int nodoActual = u;
+	while(nodoActual != v) {	
+		
+		caminoFinal.push_back(nodoActual);								
+		visitados[nodoActual] = 1;
+		
+		vector<int> nodos_potenciales;
+		list<int> adyacentes = *(grafo->get_adyacentes(nodoActual));
+		
+		for(list<int>::const_iterator it = adyacentes.begin(); it != adyacentes.end(); ++it) {
+			unsigned int nodo = *it;
+			if(visitados[nodo] == 0) {
+				vector<int> camino_temp = algoritmo->reconstruirPathFloyd(nodo, v, floyd1);
+				if(pesoEnRegla(unirCaminos(caminoFinal, camino_temp), pesos1_orig)){
+					if(nodo == v) {
+						nodoActual = v;
+						break;
+					} else {
+						nodos_potenciales.push_back(nodo);
+					}
+				}
+			}
+		}
+		
+		if(nodoActual != v) {
+			if(nodos_potenciales.size() == 0) {
+				/* no encontro solucion */
+				return vector<int>();
+			}
+			int nodo_elegido = rand() % nodos_potenciales.size();	
+			nodoActual = nodos_potenciales[nodo_elegido];
+		}
+	}
+
+	caminoFinal.push_back(nodoActual);
+	delete algoritmo;
+	return caminoFinal;
+		
+}
+
+\end{lstlisting}
+
+\subsection{Familia de grafos}
+\subsubsection{Familia sin soluci\'on \'optima}
+
+\subsection{An\'alisis de complejidad}
+Como mencionamos en la descripci\'on de la heur\'stica, la misma generar\'a una solucion inicial utilizando la heur\'istica greedy y luego la ir\'a mejorando mediante b\'usqueda local un total de $k$ iteraciones. 
+
+Por ende la complejidad total del peor caso del algoritmo estar\'a dada por la siguiente formula:
+
+$O(n,k) = O(heu. greedy) + O(k*(heu. BL))$
+
+Pero de alg\'un modo $k$ es una constante que no ir\'a creciendo a medida que lo haga n, y por otro lado los valores que se le pueden asignar no son demasiado grandes, por lo que podr\'iamos prescindir de esta variable para el an\'alisis de complejidad, quedando el calculo de la siguiente forma:
+
+$O(n) = O(heu. greedy) + O(heu. BL)$
+
+y sabiendo que las complejidades de ambas heur\'isticas es $O(n^3)$, por ende la complejidad total del peor caso es $O(2*(n^3))$, que asint\'oticamente podemos decir que es $O(n^3)$.
+
+

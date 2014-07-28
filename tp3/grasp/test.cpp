@@ -1,6 +1,4 @@
 #include "../graph.h"
-#include "heuristica_grasp.h"
-#include "heuristica_greedy.h"
 #include <time.h>
 #include <cmath>
 
@@ -26,7 +24,7 @@ int main(int argc, char *argv[])
 		
 		// Tests aleatorios	
 		list<int> list_n = list<int>();
-		for (int i=10; i<=18; i++) {
+		for (int i=10; i<=300; i++) {
 		  list_n.push_back(i);
 		}
 		

@@ -1,4 +1,5 @@
 #include "heuristica_grasp.h"
+#include <time.h>
 
 int main(int argc, char* argv[]){
 	
@@ -50,8 +51,13 @@ int main(int argc, char* argv[]){
 				grafo->add_edge(v1-1,v2-1,w1,w2);
 		}
 		
+		clock_t t = clock();
 		heuristicaGrasp* heuristica = new heuristicaGrasp(k, u, v);
 		heuristica->execute(grafo, seed, iteraciones);
+		t = clock() - t;			
+		if((double)t > 0.0)
+			cerr << n << "\t" << (m/2) << "\t" << t << endl;
+		
 		delete heuristica;
 		delete grafo;
 		

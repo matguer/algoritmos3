@@ -1,17 +1,18 @@
 #!/bin/bash
 
-tests_inputs=/tmp/a
-tests_outputs=./ejecuciones_result_compare.csv
+tests_inputs=../inputs/instacias_grasp.csv
+tests_outputs=./ejecuciones_result.csv
+tests_times=./ejecuciones_time.csv
 ejecutable=./heuristica_grasp
 input=""
 
-test "$1" == "1" && rm -f $tests_outputs
+test "$1" == "1" && rm -f $tests_outputs $tests_times
 
 cat $tests_inputs | \
 while read line
 do
 	if [ "$line" == "SEP" ]; then
-		echo -e "$input" | $ejecutable 7 2 >> $tests_outputs
+		echo -e "$input" | $ejecutable 7 2 2>> $tests_times 1>> $tests_outputs
 		input=""
 	else
 		input=`echo -e "$input\n$line"`
