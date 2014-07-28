@@ -17,6 +17,7 @@ class heuristicaGreedy {
 		void imprimirCamino(vector<int> camino);
 		void imprimirSolucion(vector<int> camino, vector<vector<double> > pesos1, vector<vector<double> > pesos2);
 		vector<int> unirCaminos(vector<int> camino1, vector<int> camino2);
+		void borrarRepetidos(vector<int>& v);
 		double k;
 		unsigned int n;
 		unsigned int u;

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 			n = *it_n;
 			v = n;
 
-			for(int porcentaje = 1; porcentaje<=100; porcentaje=porcentaje+5){
+			for(int porcentaje = 1; porcentaje<=100; porcentaje+=5){
 				
 				cant_aristas = 0;
 				graph * grafo = new graph(n);

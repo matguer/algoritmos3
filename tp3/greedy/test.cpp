@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 		
 		// Tests aleatorios	
 		list<int> list_n = list<int>();
-		for (int i=10; i<=300; i++) {
+		for (int i=10; i<=18; i++) {
 		  list_n.push_back(i);
 		}
 		
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 			n = *it_n;
 			v = n;
 
-			for(int porcentaje = 2; porcentaje<=100; porcentaje++){
+			for(int porcentaje = 1; porcentaje<=100; porcentaje+=5){
 				
 				cant_aristas = 0;
 				graph * grafo = new graph(n);

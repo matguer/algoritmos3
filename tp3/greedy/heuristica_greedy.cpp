@@ -40,7 +40,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 
 	/* Si el camino minimo en w2 respeta la cota K entonces es la solucion exacta */
 	vector<int> camino_w2 = algoritmo->reconstruirPathFloyd(u, v, floyd2);
-	if(pesoEnRegla(camino_w1, pesos1_orig)) {
+	if(pesoEnRegla(camino_w2, pesos1_orig)) {
 		imprimirSolucion(camino_w2, pesos1_orig, pesos2_orig);
 		delete algoritmo;
 		return;
@@ -64,7 +64,7 @@ void heuristicaGreedy::execute(graph * grafo) {
 		int nodo1_w2 = camino_w2[1];									// O(1)
 		vector<int> camino_w2_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd2);	// O(n)
 		vector<int> camino_aux = unirCaminos(caminoFinal, camino_w2_potencial);			// O(n^2)
-		camino_aux.push_back(v);									// O(1)
+		//camino_aux.push_back(v);									// O(1)
 
 		if(pesoEnRegla(camino_aux, pesos1_orig)) {							// O(n^2)
 			/* caso 1 */
@@ -74,17 +74,19 @@ void heuristicaGreedy::execute(graph * grafo) {
 			/* caso 2 o 3 */
 			vector<int> camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w2, v, floyd1);	// O(n)
 			vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);		// O(n^2)
-			camino_aux.push_back(v);								// O(1)
+			//camino_aux.push_back(v);								// O(1)
 			if(pesoEnRegla(camino_aux, pesos1_orig)) {						// O(n^2)
 				/* caso 2 */
 				nodoActual = nodo1_w2;								// O(1)
 			} else {
-				camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd1);	// O(n)
+				camino_w1 = algoritmo->reconstruirPathFloyd(nodoActual, v, floyd1);		// O(n)
+				int nodo1_w1 = camino_w1[1];
+				camino_w1_potencial = algoritmo->reconstruirPathFloyd(nodo1_w1, v, floyd1);	// O(n)
 				vector<int> camino_aux = unirCaminos(caminoFinal, camino_w1_potencial);	// O(n^2)
-				camino_aux.push_back(v);							// O(1)
-				if(pesoEnRegla(camino_aux, pesos1)) {						// O(n^2)
+				//camino_aux.push_back(v);							// O(1)
+				if(pesoEnRegla(camino_aux, pesos1_orig)) {					// O(n^2)
 					/* primer nodo del camino_w1 */
-					nodoActual = camino_w1_potencial[1]; 					// O(1)
+					nodoActual = nodo1_w1; 							// O(1)
 				} else {
 					cout << "no";								// O(1)
 					return;									// O(1)
@@ -95,8 +97,10 @@ void heuristicaGreedy::execute(graph * grafo) {
 	}
 
 	/* por ultimo agregamos v al camino final */
-	caminoFinal.push_back(v);
+	if(!finalRecorrido)
+		caminoFinal.push_back(v);
 
+	borrarRepetidos(caminoFinal);
 	imprimirSolucion(caminoFinal, pesos1_orig, pesos2_orig);
 	
 	delete algoritmo;
@@ -150,15 +154,38 @@ void heuristicaGreedy::imprimirSolucion(vector<int> camino, vector<vector<double
 vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camino2) {
 	int size1 = camino1.size();
 	int size2 = camino2.size();
-	vector<int> caminoNuevo = vector<int>(size1 + size2 - 1, 0);
+	vector<int> caminoNuevo = vector<int>(size1 + size2, 0);
 	
 	for(int i=0; i<size1; i++) {
 		caminoNuevo[i] = camino1[i];
 	}
 
-	for(int i=0; i<size2 - 1; i++) {
+	for(int i=0; i<size2; i++) {
 		caminoNuevo[size1 + i] = camino2[i];
 	}
 
 	return caminoNuevo;
+}
+
+void heuristicaGreedy::borrarRepetidos(vector<int>& v) {
+    int i=v.size() - 1;
+    int j=i-1;
+    list<int> camino;
+    while(i>=0) {
+        camino.push_back(v[i]);
+        int aux = j;
+        while(aux >= 0) {
+            if(v[aux] == v[i]) {
+            	j = aux-1;
+            }
+            aux--;
+        }
+        i=j;
+        j--;
+    }
+    v = vector<int>(camino.size(), 0);
+    for(unsigned int x=0; x<v.size(); x++) {
+        v[x] = camino.back();
+        camino.pop_back();
+    }
 }
