@@ -149,7 +149,7 @@ void heuristicaGreedy::imprimirSolucion(vector<int> camino, vector<vector<double
  * La funcion unirCaminos toma los dos caminos pasados por parametros y los retorna unidos en un vector nuevo.
  * La complejidad es entonces O(l1+l2) siendo l1 y l2 las longitudes de ambos caminos.
  * Para nuestro problema en el peor caso los dos caminos pasan por todos los nodos, por lo tanto la complejidad
- * del peor caso es O(n^2)
+ * del peor caso es O(2*n), asintoticamente O(n).
  */
 vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camino2) {
 	int size1 = camino1.size();
@@ -167,25 +167,33 @@ vector<int> heuristicaGreedy::unirCaminos(vector<int> camino1, vector<int> camin
 	return caminoNuevo;
 }
 
-void heuristicaGreedy::borrarRepetidos(vector<int>& v) {
-    int i=v.size() - 1;
-    int j=i-1;
-    list<int> camino;
-    while(i>=0) {
-        camino.push_back(v[i]);
-        int aux = j;
-        while(aux >= 0) {
-            if(v[aux] == v[i]) {
-            	j = aux-1;
+/***
+ * El metodo borrarRepetidos comienza a recorrer del final hacia adelante
+ * el camino pasado por parametro y bueca las repeticiones. En caso de haber 
+ * mas de una se queda con la mas cercana al comienzo del camino
+ * y elimina todo el tramo intermedio entre el nodo y su repeticion.
+ * La complejidad esta dada por dos for anidados que en el peor de los casos
+ * recorren n nodos, por ende es O(n^2).
+ */
+void heuristicabl::borrarRepetidos(vector<int>& v) {
+    int i=v.size() - 1;				// O(1)
+    int j=i-1;					// O(1)
+    list<int> camino;				// O(1)
+    while(i>=0) {				// O(n)
+        camino.push_back(v[i]);			// O(1)
+        int aux = j;				// O(1)
+        while(aux >= 0) {			// O(n)
+            if(v[aux] == v[i]) {		// O(1)
+            	j = aux-1;			// O(1)
             }
-            aux--;
+            aux--;				// O(1)
         }
-        i=j;
-        j--;
+        i=j;					// O(1)
+        j--;					// O(1)
     }
-    v = vector<int>(camino.size(), 0);
-    for(unsigned int x=0; x<v.size(); x++) {
-        v[x] = camino.back();
-        camino.pop_back();
+    v = vector<int>(camino.size(), 0);		// O(n)
+    for(unsigned int x=0; x<v.size(); x++) {	// O(n)
+        v[x] = camino.back();			// O(1)
+        camino.pop_back();			// O(1)
     }
 }

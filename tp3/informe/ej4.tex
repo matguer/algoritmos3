@@ -27,16 +27,22 @@ Analicemos la heur\'istica de b\'usqueda local propuesta utilizando como gu\'ia 
 Componentes principales
 \begin{itemize}
 \item S = conjunto de soluciones. En este caso, el conjunto de soluciones est\'a representado por todos los caminos entre $u$ y $v$ del grafo, que est\'en acotados por $K$ en $w_1$ y sean m\'inimos en $w_2$.
-\item N(s) = soluciones vecinas de s. Dos soluciones son vecinas si comparten el camino de $u$ a $w$ o de $w$ a $v$, donde $w$ es un nodo perteneciente al camino soluci\'on inicial. 
+\item N(s) = soluciones vecinas de s. Dos soluciones son vecinas si comparten el camino de $w$ a $v$, donde $w$ es un nodo intermedio perteneciente al camino soluci\'on inicial. 
+Es decir Sea $S=\lbrace v_1, v_2, ..., v_{x-1}, v_x \rbrace$ a soluci\'on inicial,
+\\
+$S' \in N(S) \Longleftrightarrow \exists v_i \in S' \diagup 
+(\forall j \in \mathbb{N}, i \leqslant j < x,
+\exists e \in E(S'), e=(v_j,v_{j+1}))$
 \item f(s) = valor de la soluci\'on s. El valor de una soluci\'on s est\'a dado por su valor en $w_1$ y su valor en $w_2$.
 \end{itemize}
 
 Como soluci\'on inicial usamos el camino m\'inimo en $w_1$ entre $u$ y $v$, generado utilizando el algoritmo de Floyd.\\
-En un principio consideramos usar tanto el camino m\'inimo en $w_1$ como el de $w_2$, pero finalmente nos decidimos por el de $w_1$ ya que, por como definimos la vecindad de una soluci\'on, si tom\'aramos el m\'inimo en $w_2$, ser\'ia probable que no est\'e acotado por $K$ y, peor a\'un, todos sus vecinos podr\'ian estar muy por arriba de esa cota. As\'i, el algoritmo devolver\'ia una soluci\'on que ni siquiera es aproximada, ya que no estar\'ia acotada por $K$ y, por lo tanto, no ser\'ia ni la m\'inima ni una cercana a la m\'inima de las acotadas por ese n\'umero.\\
+En un principio consideramos usar tanto el camino m\'inimo en $w_1$ como el de $w_2$, pero finalmente nos decidimos por el de $w_1$ ya que, por como definimos la vecindad de una soluci\'on, si tom\'aramos el m\'inimo en $w_2$, ser\'ia probable que no est\'e acotado por $K$ y, peor a\'un, todos sus vecinos podr\'ian estar muy por arriba de esa cota. As\'i, el algoritmo hallar\'ia una soluci\'on no factible, ya que no estar\'ia acotada por $K$ y, por lo tanto, no ser\'ia ni la m\'inima ni una cercana a la m\'inima de las acotadas por ese n\'umero.\\
 En cambio, tomando como base la m\'as chica en $w_1$ y suponiendo que la misma est\'a acotada por $K$ (en otro caso no existe soluci\'on para el problema); aunque al final el algoritmo no nos diera la soluci\'on exacta, tendr\'iamos al menos una buena aproximaci\'on, que seguro va a estar acotada por $K$ y que es la m\'inima entre sus vecinos (local) en $w_2$.\\
 Una vez que tenemos la soluci\'on inicial $s$ entramos en el ciclo que se encarga de mejorarla utilizando sus vecinas.\\
-Como definimos m\'as arriba, dos soluciones son vecinas si difieren en el camino de $u$ a $w$ (donde $w$ es un nodo intermedio del camino) y comparten el camino de $w$ a $v$. Entonces, en nuestro algoritmo vamos a ir recorriendo una a una las aristas de la soluci\'on inicial $s_inicial$, y, reemplazando cada una por el camino m\'inimo en $w_2$ (que ya obtuvimos al correr Floyd) entre los extremos de la misma, siempre y cuando el camino formado siga estando acotado por $K$.\\ 
-As\'i, al terminar de recorrer las aristas de $s_inicial$ tenemos un camino acotado por $K$ que adem\'as es el m\'inimo de la vecindad de $s_inicial$ en $w_2$.\\
+Como definimos m\'as arriba, dos soluciones son vecinas si difieren en el camino de $u$ a $w$ (donde $w$ es un nodo intermedio del camino) y comparten el camino de $w$ a $v$. Entonces, en nuestro algoritmo vamos a ir recorriendo una a una las aristas de la soluci\'on inicial $s_{inicial}$, y, reemplazando cada una por el camino m\'inimo en $w_2$ (que ya obtuvimos al correr Floyd) entre los extremos de la misma, siempre y cuando el camino formado siga estando acotado por $K$.\\ 
+As\'i, al terminar de recorrer las aristas de $s_{inicial}$ tenemos un camino acotado por $K$ que adem\'as es el m\'inimo de la vecindad de $s_{inicial}$ en $w_2$.\\
+Por otro lado, inicialmente (en la primera entrega del tp), cre\'imos que ir borrando los nodos repetidos en cada iteraci\'on mejorar\'ia nuestra heur\'istica, sin darnos cuenta de que podr\'amos romper la vecindad. Por lo tanto decidimos analizar esta situaci\'on y entendemos que no es as\'i ya que, por m\'as que se eliminen nodos intermedios, mientras siga existiendo un nodo $w$ tal que de all\'i hasta $v$ el camino se preserve, seguiremos manteniendo nuestra vecindad.
 
 \newpage
 \subsection{Algoritmo}
@@ -51,45 +57,46 @@ As\'i, al terminar de recorrer las aristas de $s_inicial$ tenemos un camino acot
 }
 \begin{lstlisting}
 
-void heuristicabl(graph* grafo, unsigned int u, unsigned int v, double k){
-	
-	algoritmos* algoritmo = new algoritmos();
+void heuristicabl::execute(graph * grafo) {
 
 	vector<vector<double> > pesos1_orig = grafo->get_weights1();
 	vector<vector<double> > pesos2_orig = grafo->get_weights2();
+	
+	Algoritmos* algoritmo = new Algoritmos();
 
 	vector<vector<double> > pesos1 = grafo->get_weights1();
 	vector<vector<int> > floyd1 = algoritmo->floyd(pesos1);
 
-	/* Generacion del camino minimo para w1 */
 	vector<int> camino1 = algoritmo->reconstruirPathFloyd(u,v,floyd1);
-
-	/* Si este peso supera el K entonces no voy a encontrar uno menor,
-		por lo tanto no hay solucion */
+	
 	if(!pesoEnRegla(camino1,pesos1_orig,k)) {
-		cout << "no";
+		cout << "no" << endl;
 		return;
 	}
 
 	vector<vector<double> > pesos2 = grafo->get_weights2();
 	vector<vector<int> > floyd2 = algoritmo->floyd(pesos2);
 	
-	/* Se recorre todo el camino c1 y para cada par de nodos se va reemplazando el tramo por el 
-		camino minimo entre ese par de nodos para w2. En cada iteracion si no se supera el 
-		valor de K entonces se realiza el reemplazo.*/
-	unsigned int j = 0;
-	while(j<camino1.size() - 1) {
+	vector<int> camino2 = algoritmo->reconstruirPathFloyd(u,v,floyd2);
+
+	if(pesoEnRegla(camino2,pesos1_orig,k)) {
+		imprimirSolucion(camino2, pesos1_orig, pesos2_orig);
+		delete algoritmo;
+		return;
+	}
+	
+	for(unsigned int j=0; j<camino1.size()-1; j++) {
 		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);
 		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);
 		borrarRepetidos(caminoNuevo);
 		if(pesoEnRegla(caminoNuevo,pesos1_orig,k)) {
 			camino1 = caminoNuevo;
 		}
-		j++;
 	}
 	
 	delete algoritmo;
 
+	borrarRepetidos(camino1);
 	imprimirSolucion(camino1, pesos1_orig, pesos2_orig);
 }
 
@@ -99,17 +106,14 @@ vector<int> switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSou
 
 	vector<int> caminoNuevo = vector<int>(sizeCamino1 + sizeTramoNuevo - 2, 0);
 
-	/* El caminoNuevo se mantiene igual que camino1 hasta la posicion indicada como nodoSource */
 	for(int i=0; i<=nodoSource; i++) {
 		caminoNuevo[i] = camino1[i];
 	}
 
-	/* A partir del nodoSource en adelante se agrega el tramoNuevo */
 	for(int i=nodoSource+1; i<(nodoSource + sizeTramoNuevo - 1); i++) {
 		caminoNuevo[i] = tramoNuevo[i-nodoSource];
 	}
 
-	/* Una vez que se completo el tramoNuevo se siguen agregando las ultimas posiciones del camino1 */
 	for(unsigned int i=nodoSource+sizeTramoNuevo - 1; i<caminoNuevo.size(); i++) {
 		caminoNuevo[i] = camino1[i-sizeTramoNuevo+2];
 	}
@@ -141,3 +145,23 @@ void borrarRepetidos(vector<int>& v) {
 }
 
 \end{lstlisting}
+
+\newpage
+\subsection{Familia de grafos}
+\subsubsection{Familia sin soluci\'on \'optima}
+
+\newpage
+\subsection{An\'alisis de complejidad}
+
+Al igual que en la heur\'istica greedy, aqu\'i podemos separar el anal\'isis de complidad en tres tramos:
+\begin{itemize}
+\item Calculo de los caminos m\'inimos con el algoritmo de Floyd que vimos que tiene complejidad O($n^3$).
+\item Anal\'isis de los caso borde, el camino m\'inimo en $w_1$ y $w_2$, donde ya vimos que la complejidad es O($n$).
+\item Por \'ultimo tenemos el tramo de procesamiento y generaci\'on de la soluci\'on.
+Para este tramo se realizo, comentada en el c\'odigo, la evaluaci\'on de complidad, dando una cota de peor caso de 
+O($n^3$) ya que son n iteraciones anidados a ciertas funciones, donde la m\'as costosa es borrarRepetidos con una 
+complejidad de O($n^2$).
+\end{itemize}
+
+Como vemos en este caso tambi\'en podemos ver que, al sumar las complejidades, obtenemos una complejidad temporal de
+peor caso de O($n^3$), al igual que en la heur\'istica greedy.

@@ -183,9 +183,9 @@ Para el an\'alisis de complejidad separaremos el algoritmo en tres tramos:
 	\end{itemize}
 \item Construcci\'on de la soluci\'on:
 	En este tramo vamos a ir armando el camino realizando a lo sumo n iteraciones, caso en el que tendr\'iamos un camino hamiltoniano que pasa por todos los nodos. Por ende, habr\'ia que ver que pasa en cada iteraci\'on y as\'i poder evaluar la complejidad del tramo completo.
-	Para esta parte tambi\'en se utiliza la funci\'on $unirCaminos$ cuya complejidad del peor caso es O($n^2$).
-	Si analizamos el c\'odigo podremos notar que se utilizan por separado las 3 funciones mencionadas al momento, por lo tanto para obtener la complejidad de este tramo tendr\'iamos que "anidar" la mayor complejidad dentro de cada iteraci\'on a la cantidad de iteraciones realizadas. En este caso ser\'ian $n$ iteraciones con complejidad O($n^2$) cada una, obteniendo una complejidad total del peor caso de este tramo de O($n^3$).
+	Para esta parte tambi\'en se utiliza la funci\'on $unirCaminos$ cuya complejidad del peor caso es O($n$).
+	Si analizamos el c\'odigo podremos notar que se utilizan por separado las 3 funciones mencionadas al momento, por lo tanto para obtener la complejidad de este tramo tendr\'iamos que "anidar" la mayor complejidad dentro de cada iteraci\'on a la cantidad de iteraciones realizadas. En este caso ser\'ian $n$ iteraciones con complejidad O($n$) cada una, obteniendo una complejidad total del peor caso de este tramo de O($n^2$).
 \end{itemize}
 
-Acabamos de analizar las complejidades de 3 tramos del algoritmo que se ejecutan de manera separada, por ende si sumamos sus complejidades, O($n^3$) + O($n$) + O($n^3$), vemos que la complejidad total del peor caso de la heur\'istica es O($n^3$).
+Acabamos de analizar las complejidades de 3 tramos del algoritmo que se ejecutan de manera separada, por ende si sumamos sus complejidades, O($n^3$) + O($n$) + O($n^2$), vemos que la complejidad total del peor caso de la heur\'istica es O($n^3$).
 

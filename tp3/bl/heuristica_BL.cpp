@@ -50,37 +50,54 @@ void heuristicabl::execute(graph * grafo) {
 	
 	/* Se recorre todo el camino c1 y para cada par de nodos se va reemplazando el tramo por el 
 		camino minimo entre ese par de nodos para w2. En cada iteracion si no se supera el 
-		valor de K entonces se realiza el reemplazo.*/
-	unsigned int j = 0;
-	while(j != camino1.size() - 1) {
-		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);
-		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);
-		if(pesoEnRegla(caminoNuevo,pesos1_orig,k)) {
-			camino1 = caminoNuevo;
-			j += tramoCamino2.size() - 2;
+		valor de K entonces se realiza el reemplazo.
+	   Como vemos la complejidad de este tramo de procesamiento se corresponde a n iteraciones de 
+	   acciones que en el peor caso demora O(n^2), por ende la complejidad total sera O(n^3).
+	*/
+	for(unsigned int j=0; j<camino1.size()-1; j++) {							// O(n)
+		vector<int> tramoCamino2 = algoritmo->reconstruirPathFloyd(camino1[j],camino1[j+1], floyd2);	// O(n)
+		vector<int> caminoNuevo = switchTramo(camino1, tramoCamino2, j);				// O(n)
+		borrarRepetidos(caminoNuevo);									// O(n^2)
+		if(pesoEnRegla(caminoNuevo,pesos1_orig,k)) {							// O(n)
+			camino1 = caminoNuevo;									// O(n)
 		}
-		j++;
 	}
 	
 	delete algoritmo;
 
-	borrarRepetidos(camino1);
 	imprimirSolucion(camino1, pesos1_orig, pesos2_orig);
+	return;
 }
 
 
-bool heuristicabl::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos, double k) {
-	return k >= getPeso(camino, pesos);
+/***
+ * La funcion pesoEnRegla obtiene el peso del camino y lo compara con la cota K.
+ * La complejidad es O(n) siendo n la longitud del camino.
+ */
+bool heuristicaGreedy::pesoEnRegla(vector<int> camino, vector<vector<double> > pesos) {
+	return k >= getPeso(camino, pesos);	// O(n)
 }
 
-double heuristicabl::getPeso(vector<int> camino, vector<vector<double> > pesos) {
+
+/***
+ * La funcion getPeso recorre todos los nodos del camino pasado por parametro sumando los pesos
+ * de los mismos en un acumulador. Su complejidad es O(n) siendo n la longitud del camino.
+ */
+double heuristicaGreedy::getPeso(vector<int> camino, vector<vector<double> > pesos) {
 	double pesoTotal = 0.0;
-	for(unsigned int i=0; i<camino.size()-1; i++) {
-		pesoTotal += pesos[camino[i]][camino[i+1]];
+	for(unsigned int i=0; i<camino.size()-1; i++) {	// O(n), caso en el cual tenemos un camino hamiltoniano que pasa por todos los nodos.
+		pesoTotal += pesos[camino[i]][camino[i+1]];	// acceso a la matriz en O(1)
 	}
 	return pesoTotal;
 }
 
+/***
+ * La funcion switchTramo recibe un camino, el tramo de camino nuevo a insertar y el nodo desde el
+ * cual se realizara el cambio, asumiendo que se realiza entre el mismo y el siguiente en el camino.
+ * En cuanto a la complejidad, en el peor de los casos tanto el camino como el tramoNuevo tienen
+ * longitud n, de esta manera la complejidad del metodo seria O(2*n), acotado asintoticamente a
+ * O(n).
+ */
 vector<int> heuristicabl::switchTramo(vector<int> camino1, vector<int> tramoNuevo, int nodoSource) {
 	unsigned int sizeCamino1 = camino1.size();
 	unsigned int sizeTramoNuevo = tramoNuevo.size();
@@ -120,25 +137,33 @@ void heuristicabl::imprimirSolucion(vector<int> camino, vector<vector<double> > 
 }
 
 
+/***
+ * El metodo borrarRepetidos comienza a recorrer del final hacia adelante
+ * el camino pasado por parametro y bueca las repeticiones. En caso de haber 
+ * mas de una se queda con la mas cercana al comienzo del camino
+ * y elimina todo el tramo intermedio entre el nodo y su repeticion.
+ * La complejidad esta dada por dos for anidados que en el peor de los casos
+ * recorren n nodos, por ende es O(n^2).
+ */
 void heuristicabl::borrarRepetidos(vector<int>& v) {
-    int i=v.size() - 1;
-    int j=i-1;
-    list<int> camino;
-    while(i>=0) {
-        camino.push_back(v[i]);
-        int aux = j;
-        while(aux >= 0) {
-            if(v[aux] == v[i]) {
-            	j = aux-1;
+    int i=v.size() - 1;				// O(1)
+    int j=i-1;					// O(1)
+    list<int> camino;				// O(1)
+    while(i>=0) {				// O(n)
+        camino.push_back(v[i]);			// O(1)
+        int aux = j;				// O(1)
+        while(aux >= 0) {			// O(n)
+            if(v[aux] == v[i]) {		// O(1)
+            	j = aux-1;			// O(1)
             }
-            aux--;
+            aux--;				// O(1)
         }
-        i=j;
-        j--;
+        i=j;					// O(1)
+        j--;					// O(1)
     }
-    v = vector<int>(camino.size(), 0);
-    for(unsigned int x=0; x<v.size(); x++) {
-        v[x] = camino.back();
-        camino.pop_back();
+    v = vector<int>(camino.size(), 0);		// O(n)
+    for(unsigned int x=0; x<v.size(); x++) {	// O(n)
+        v[x] = camino.back();			// O(1)
+        camino.pop_back();			// O(1)
     }
 }
