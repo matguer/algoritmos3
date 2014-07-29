@@ -94,13 +94,24 @@ void backtrack(graph * grafo, int nodo_objetivo, double k, vector<bool> * nodos_
 Para este punto debemos indicar la complejidad del algoritmo en el peor caso, para esto es necesario primero identificar que ser\'ia un peor caso.
 Analizando el funcionamiento del backtracking, el comportamiento se orienta hacia el peor caso si en cada paso se abren la mayor cantidad de ramas, por lo tanto esto nos lleva a pensar que el peor caso ser\'a un grafo completo, ya que al estar todos los nodos conectados contra todos, en primera instancia recorreremos $n-1$ ramas, correspondientes a los $n-1$ nodos adyacentes al nodo source, luego cada una de estas se abrir\'a a los $n-2$ nodos adyacentes restantes a los que se puede conectar cada uno y as\'i sucesivamente. En este sentido la complejidad del peor caso ser\'ia O($(n-1)!$), acotado asint\'oticamente por O($n!$).
 
+Veamos entonces gr\'aficamente el comportamiento del algoritmo:
 
-%\subsection{Conclusiones}
+\subsection{Gr\'afico de complejidad}
+\begin{figure}[!hp]
+	\centering
+ 	\includegraphics[scale=0.3]{img/exacto_time.png}
+\end{figure}
 
-%A partir de la experimentaci\'on se pudo ver que un algoritmo exacto, si bien resuelve el problema, no es eficiente para un problema de estas caracter\'isticas, ya que verificar todas las soluciones posibles (incluso aunque no sean todas, ya que el backtracking descarta las que sabe que no son viables) lo hace muy lento.\\
-%En casos como \'este puede ser una mejor opci\'on pensar y testear distintas heur\'isticas.\\
+M\'as all\'a de la escala logar\'itmica, podemos apreciar que el comportamiento es el esperado, es deir que los tiempos de ejecuci\'on son muy elevados.
+Tambi\'en podemos apreciar que no necesariamente se apega a la cota de $n!$, esto se debe a que ese es el peor de los casos, cuando todos los grafos tienden a ser completos.
 
-%Una heur\'istica es un algoritmo no necesariamente exacto que permite llegar a la soluci\'on de un problema en tiempo razonable, a diferencia de uno exacto como el probado m\'as arriba.\\
-%Pero, a diferencia de un algoritmo exacto, muchas veces la soluci\'on que se obtiene es aproximada (por eso no es necesariamente exacto). Sin embargo, la soluci\'on alcanzada puede ser suficiente en algunos casos.\\\\
 
-%Veamos a continuaci\'on implementaciones de distintos tipos de heur\'isticas para resolver el mismo problema.\\
+\subsection{Conclusiones}
+
+A partir de la experimentaci\'on se pudo ver que un algoritmo exacto, si bien resuelve el problema, no es eficiente para un problema de estas caracter\'isticas, ya que verificar todas las soluciones posibles (incluso aunque no sean todas, ya que el backtracking descarta las que sabe que no son viables) lo hace muy lento.\\
+En casos como \'este puede ser una mejor opci\'on pensar y testear distintas heur\'isticas.\\
+
+Una heur\'istica es un algoritmo no necesariamente exacto que permite llegar a la soluci\'on de un problema en tiempo razonable, a diferencia de uno exacto como el probado m\'as arriba.\\
+Pero, a diferencia de un algoritmo exacto, muchas veces la soluci\'on que se obtiene es aproximada (por eso no es necesariamente exacto). Sin embargo, la soluci\'on alcanzada puede ser suficiente en algunos casos.\\\\
+
+Veamos a continuaci\'on implementaciones de distintos tipos de heur\'isticas para resolver el mismo problema.\\

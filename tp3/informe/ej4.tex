@@ -149,6 +149,8 @@ void borrarRepetidos(vector<int>& v) {
 \newpage
 \subsection{Familia de grafos}
 \subsubsection{Familia sin soluci\'on \'optima}
+La heur\'istica de b\'usqueda local parte de una soluci\'on inicial y la va mejora de acuerdo a su vecindad. Por lo tanto, si la soluci\'on \'optima se encuentra por fuera de la vecindad no habr\'ia forma de obtenerla. Es decir, al igual que en la greedy, podemos notar que solo evaluamos una parte del grafo, y nos desentendemos del reto del mismo, por lo tanto siempre vamos a tener estos casos donde la soluci\'on \'optima va a ser inalcanzable.
+
 
 \newpage
 \subsection{An\'alisis de complejidad}
@@ -165,3 +167,46 @@ complejidad de O($n^2$).
 
 Como vemos en este caso tambi\'en podemos ver que, al sumar las complejidades, obtenemos una complejidad temporal de
 peor caso de O($n^3$), al igual que en la heur\'istica greedy.
+
+
+Veamos gr\'aficamente que efectivamente el algoritmo se comporta de la forma estimada:
+
+\subsection{Gr\'afico de complejidad}
+\begin{figure}[!hp]
+	\centering
+ 	\includegraphics[scale=0.3]{img/bl_time.png}
+\end{figure}
+
+
+\newpage
+\subsection{Experimentaci\'on}
+
+Para la experimentaci\'on utilizamos los mismos casos de test que en la heur\'istica greedy.
+
+Luego de las 28809 ejecuciones obtuvimos los siguientes resultados:
+
+\subsection{Gr\'afico ejecuciones}
+\begin{figure}[!hp]
+	\centering
+ 	\includegraphics[scale=0.7]{img/bl_soluciones.png}
+\end{figure}
+
+En este caso tenemos 25624 casos, sobre los 28809, en los cuales hemos llegado a una soluci\'on v\'alida y 3185 en los que no se ha podido determinar un camino que cumpla con las condiciones fijadas. Es decir que en un 88,94\% hemos obtenido resultados y en el poco m\'as del 11\% restante o bien no exist\'ia soluci\'on factible o bien la heur\'istica no la ha podido hallar.
+
+Creemos entonces que tambi\'en es necesario realizar una comparaci\'on de resultados contra el algoritmo exacto, y estos son los resultados obtenidos:
+
+\begin{tabular}{ | l | l | l | l | l | }
+\hline
+ejecuciones & sin coluci\'on & con soluci\'on & iguales & distintos \\
+\hline
+179 & 68 & 111 & 74 & 37 \\
+\hline
+\end{tabular}
+\\
+
+Si recordamos los resultados de esta comparaci\'on de la heur\'istica greedy notaremos que los resultados son exactamente iguales. 
+Por lo tanto decidimos de modo urgente comparar los resultados entre ambas heur\'isticas y obtuvimos que en 13 casos con resultados factibles diferentes entre ambas, dentro de las 179 ejecuciones, la heur\'istica de b\'usqueda local retornaba una soluc\'on mejor que la greedy, mientras que esta \'ultima se superpon\'ia en los 7 casos restantes.
+
+
+Como conclusi\'on final y a ra\'iz de la experimentaci\'on realizada podemos ver que el comportamiento es bastante similar al presentado por la heur\'istica greedy. Y en relaci\'on con los tiempos requeridos por el algoritmo exacto, podemos decir que es completamente razonable la utilizaci\'on de estas heur\'isticas ya que tienen una complejidad temporal muchisimo menor y si le sumamos que encuentra soluciones factibles en m\'as del 80\% de los casos, en donde en un 67\% de los mismos la soluci\'on encontrada fue la misma.
+
